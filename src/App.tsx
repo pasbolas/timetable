@@ -69,16 +69,8 @@ export function App() {
         isLoading={isLoading}
       />
 
-      {/* Sleek 5-Week Horizontal Date Selector */}
-      <WeekDateStrip
-        activeDate={activeDate}
-        onSelectDate={setActiveDate}
-        weekSchedule={schedule}
-        currentLiveTime={currentTime}
-      />
-
       {/* Main Minimalist Timeline */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-4">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
@@ -91,6 +83,16 @@ export function App() {
           isLessonPast={isLessonPast}
         />
       </main>
+
+      {/* Sleek Centered 5-Week Horizontal Date Selector at Bottom */}
+      <div className="sticky bottom-0 z-30">
+        <WeekDateStrip
+          activeDate={activeDate}
+          onSelectDate={setActiveDate}
+          weekSchedule={schedule}
+          currentLiveTime={currentTime}
+        />
+      </div>
 
       {/* Expandable Menu & Settings Drawer */}
       <MenuDrawer

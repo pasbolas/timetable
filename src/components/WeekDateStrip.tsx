@@ -161,11 +161,12 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   return (
     <div
       data-tour="date-strip"
-      className="bg-white/50 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800/60 backdrop-blur-sm transition-colors relative"
+      className="bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors relative"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div className="max-w-2xl mx-auto px-3 py-1.5">
+      <div className="max-w-2xl mx-auto px-3 pt-1.5 pb-1">
         {/* Month Header and Micro Navigation */}
-        <div className="flex items-center justify-between px-1 mb-1 text-slate-500 dark:text-slate-400">
+        <div className="flex items-center justify-between px-1 mb-0.5 text-slate-500 dark:text-slate-400">
           <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
             {activeDate.format("MMMM YYYY")}
           </span>
