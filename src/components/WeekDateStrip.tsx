@@ -190,17 +190,11 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
         {/* Date Selector Strip Container */}
         <div className="relative py-1 overflow-hidden">
-          {/* Subtle Centered Background Highlight Indicator */}
-          <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-14 rounded-2xl bg-blue-500/10 dark:bg-blue-400/10 pointer-events-none -z-0 border border-blue-500/20 dark:border-blue-400/20"
-            aria-hidden="true"
-          />
-
           {/* Scrollable Date Track */}
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 scroll-smooth"
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1.5 scroll-smooth"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -228,11 +222,11 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     scrollSnapAlign: "center",
                     transformOrigin: "center center",
                   }}
-                  className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color,box-shadow] duration-200 will-change-transform select-none ${
+                  className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color] duration-150 will-change-transform select-none ${
                     isActive
-                      ? "bg-blue-600 text-white font-bold shadow-lg shadow-blue-600/30 z-10 ring-2 ring-blue-400/40"
+                      ? "bg-blue-600 text-white font-bold shadow-sm shadow-blue-600/20 z-10"
                       : isToday
-                      ? "bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 font-semibold ring-1 ring-blue-300 dark:ring-blue-800"
+                      ? "bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 font-semibold ring-1 ring-blue-200 dark:ring-blue-800/60"
                       : isWeekend
                       ? "text-slate-400 dark:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-900"
                       : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60"
