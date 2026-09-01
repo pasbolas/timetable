@@ -2,6 +2,7 @@ import moment from "moment-timezone";
 import { TIMETABLE_CONFIG } from "../config/timetableConfig";
 import {
   RawTimetableEvent,
+  RawTimetableProperty,
   NormalizedLesson,
   DayData,
   DayBreak,
@@ -63,18 +64,84 @@ export function predictEventType(lessonName: string): string {
 }
 
 /**
- * Extract clean group specification (e.g. "Group A", "01", "Lab 2")
+ * Extract clean group info (e.g. "Group A", "Group 01", "Grp 2")
  */
-export function extractGroupSpec(lessonName: string): string | null {
-  if (!lessonName) return null;
-  const parts = lessonName.split("/").map(p => p.trim());
-  if (parts.length > 2) {
-    const lastPart = parts[parts.length - 1];
-    if (/group\s*[a-z0-9]+/i.test(lastPart) || /^[0-9]+$/.test(lastPart) || /grp\s*[a-z0-9]+/i.test(lastPart)) {
-      return lastPart;
+export function extractGroupInfo(
+  name: string,
+  description?: string,
+  extraProps?: RawTimetableProperty[]
+): string | null {
+  // 1. Check ExtraProperties (Scientia Timetabler Publish often provides Student Set or Group)
+  if (extraProps && extraProps.length > 0) {
+    const groupProp = extraProps.find((p) =>
+      /^(group|student\s*set|student\s*group|groups|set)$/i.test(p.Name.trim())
+    );
+    if (groupProp && groupProp.Value && groupProp.Value.trim()) {
+      const val = groupProp.Value.trim();
+      const slashParts = val.split("/");
+      if (slashParts.length > 1) {
+        const last = slashParts[slashParts.length - 1].trim();
+        if (/^[a-d]$/i.test(last)) return `Group ${last.toUpperCase()}`;
+        if (/^[0-9]+$/.test(last)) return `Group ${last}`;
+        if (/^group\s*[a-z0-9]+/i.test(last) || /^grp\s*[a-z0-9]+/i.test(last)) return last;
+      }
+      return val;
     }
   }
+
+  // 2. Check Description for (Group A) or (Grp 1) or [Group 1]
+  if (description) {
+    const descGroupMatch = description.match(/[\(\[]\s*(?:Group|Grp|Gr|Lab)\s*([A-Za-z0-9]+)\s*[\)\]]/i);
+    if (descGroupMatch) {
+      return `Group ${descGroupMatch[1].toUpperCase()}`;
+    }
+  }
+
+  // 3. Check Name tokens
+  if (name) {
+    const parts = name.split("/").map((p) => p.trim());
+    if (parts.length >= 2) {
+      for (let i = parts.length - 1; i >= 1; i--) {
+        const p = parts[i];
+        if (/^group\s*[a-z0-9]+$/i.test(p) || /^grp\s*[a-z0-9]+$/i.test(p) || /^gr\s*[a-z0-9]+$/i.test(p)) {
+          return p.replace(/^(grp|gr)\s*/i, "Group ");
+        }
+        if (/^[0-9]{1,3}$/.test(p)) {
+          return `Group ${p}`;
+        }
+        if (/^[a-d]$/i.test(p) && parts.length >= 3) {
+          return `Group ${p.toUpperCase()}`;
+        }
+        if (/^(lab|tut|sem)\s*([a-z0-9]+)$/i.test(p)) {
+          return `Group ${p}`;
+        }
+      }
+    }
+  }
+
   return null;
+}
+
+/**
+ * Format group - room information for widget cards
+ */
+export function getLessonGroupRoomStrings(lesson: NormalizedLesson): string[] {
+  if (lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0) {
+    return lesson.Locations.map((loc) => {
+      const g = loc.nameSpecification || "Group";
+      const r = loc.location || "Room TBD";
+      return `${g} - ${r}`;
+    });
+  }
+
+  const group = lesson.groupName || extractGroupInfo(lesson.Name, lesson.Description);
+  const room = lesson.Location || "Room TBD";
+
+  if (group) {
+    return [`${group} - ${room}`];
+  }
+
+  return [`${lesson.EventType || "All Groups"} - ${room}`];
 }
 
 /**
@@ -140,7 +207,7 @@ export function collapseLabGroups(lessons: NormalizedLesson[]): NormalizedLesson
       matchingIndices.forEach((idx) => {
         const item = lessons[idx];
         processed.add(item.id);
-        const groupSpec = extractGroupSpec(item.Name) || `Group ${subLocations.length + 1}`;
+        const groupSpec = extractGroupInfo(item.Name, item.Description) || `Group ${subLocations.length + 1}`;
         subLocations.push({
           nameSpecification: groupSpec,
           location: item.Location,
@@ -225,6 +292,7 @@ export function processWeekSchedule(
     const staff = raw.ExtraProperties?.find((p) => p.Name === "Staff")?.Value || null;
     const type = raw.EventType || predictEventType(raw.Name);
     const shortTitle = predictLessonShortName(raw.Name, raw.Description);
+    const group = extractGroupInfo(raw.Name, raw.Description, raw.ExtraProperties);
 
     return {
       id: raw.Identity || `${raw.Name}-${raw.StartDateTime}`,
@@ -235,6 +303,7 @@ export function processWeekSchedule(
       Name: raw.Name,
       EventType: type,
       staffName: staff,
+      groupName: group,
     };
   });
 
@@ -312,4 +381,136 @@ export function parseProgramCodeAndTitle(
   }
 
   return { code: trimmed, title: description || trimmed };
+}
+
+export interface ColorPalette {
+  name: string;
+  bg: string;
+  accent: string;
+  pill: string;
+  icon: string;
+  border: string;
+  text: string;
+}
+
+export const COLOR_PALETTES: ColorPalette[] = [
+  {
+    name: "indigo",
+    bg: "bg-indigo-50/90 hover:bg-indigo-50/100 dark:bg-indigo-950/40 dark:hover:bg-indigo-950/60 border-indigo-200/90 dark:border-indigo-800/60",
+    accent: "bg-indigo-600 dark:bg-indigo-500",
+    pill: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/80 dark:text-indigo-200",
+    icon: "text-indigo-600 dark:text-indigo-400",
+    border: "border-indigo-200 dark:border-indigo-800",
+    text: "text-indigo-900 dark:text-indigo-100",
+  },
+  {
+    name: "emerald",
+    bg: "bg-emerald-50/90 hover:bg-emerald-50/100 dark:bg-emerald-950/40 dark:hover:bg-emerald-950/60 border-emerald-200/90 dark:border-emerald-800/60",
+    accent: "bg-emerald-600 dark:bg-emerald-500",
+    pill: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/80 dark:text-emerald-200",
+    icon: "text-emerald-600 dark:text-emerald-400",
+    border: "border-emerald-200 dark:border-emerald-800",
+    text: "text-emerald-900 dark:text-emerald-100",
+  },
+  {
+    name: "amber",
+    bg: "bg-amber-50/90 hover:bg-amber-50/100 dark:bg-amber-950/40 dark:hover:bg-amber-950/60 border-amber-200/90 dark:border-amber-800/60",
+    accent: "bg-amber-500 dark:bg-amber-400",
+    pill: "bg-amber-100 text-amber-900 dark:bg-amber-900/80 dark:text-amber-200",
+    icon: "text-amber-600 dark:text-amber-400",
+    border: "border-amber-200 dark:border-amber-800",
+    text: "text-amber-950 dark:text-amber-100",
+  },
+  {
+    name: "purple",
+    bg: "bg-purple-50/90 hover:bg-purple-50/100 dark:bg-purple-950/40 dark:hover:bg-purple-950/60 border-purple-200/90 dark:border-purple-800/60",
+    accent: "bg-purple-600 dark:bg-purple-500",
+    pill: "bg-purple-100 text-purple-800 dark:bg-purple-900/80 dark:text-purple-200",
+    icon: "text-purple-600 dark:text-purple-400",
+    border: "border-purple-200 dark:border-purple-800",
+    text: "text-purple-900 dark:text-purple-100",
+  },
+  {
+    name: "rose",
+    bg: "bg-rose-50/90 hover:bg-rose-50/100 dark:bg-rose-950/40 dark:hover:bg-rose-950/60 border-rose-200/90 dark:border-rose-800/60",
+    accent: "bg-rose-600 dark:bg-rose-500",
+    pill: "bg-rose-100 text-rose-800 dark:bg-rose-900/80 dark:text-rose-200",
+    icon: "text-rose-600 dark:text-rose-400",
+    border: "border-rose-200 dark:border-rose-800",
+    text: "text-rose-900 dark:text-rose-100",
+  },
+  {
+    name: "cyan",
+    bg: "bg-cyan-50/90 hover:bg-cyan-50/100 dark:bg-cyan-950/40 dark:hover:bg-cyan-950/60 border-cyan-200/90 dark:border-cyan-800/60",
+    accent: "bg-cyan-600 dark:bg-cyan-500",
+    pill: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/80 dark:text-cyan-200",
+    icon: "text-cyan-600 dark:text-cyan-400",
+    border: "border-cyan-200 dark:border-cyan-800",
+    text: "text-cyan-900 dark:text-cyan-100",
+  },
+  {
+    name: "orange",
+    bg: "bg-orange-50/90 hover:bg-orange-50/100 dark:bg-orange-950/40 dark:hover:bg-orange-950/60 border-orange-200/90 dark:border-orange-800/60",
+    accent: "bg-orange-500 dark:bg-orange-400",
+    pill: "bg-orange-100 text-orange-900 dark:bg-orange-900/80 dark:text-orange-200",
+    icon: "text-orange-600 dark:text-orange-400",
+    border: "border-orange-200 dark:border-orange-800",
+    text: "text-orange-950 dark:text-orange-100",
+  },
+  {
+    name: "teal",
+    bg: "bg-teal-50/90 hover:bg-teal-50/100 dark:bg-teal-950/40 dark:hover:bg-teal-950/60 border-teal-200/90 dark:border-teal-800/60",
+    accent: "bg-teal-600 dark:bg-teal-500",
+    pill: "bg-teal-100 text-teal-800 dark:bg-teal-900/80 dark:text-teal-200",
+    icon: "text-teal-600 dark:text-teal-400",
+    border: "border-teal-200 dark:border-teal-800",
+    text: "text-teal-900 dark:text-teal-100",
+  },
+  {
+    name: "fuchsia",
+    bg: "bg-fuchsia-50/90 hover:bg-fuchsia-50/100 dark:bg-fuchsia-950/40 dark:hover:bg-fuchsia-950/60 border-fuchsia-200/90 dark:border-fuchsia-800/60",
+    accent: "bg-fuchsia-600 dark:bg-fuchsia-500",
+    pill: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900/80 dark:text-fuchsia-200",
+    icon: "text-fuchsia-600 dark:text-fuchsia-400",
+    border: "border-fuchsia-200 dark:border-fuchsia-800",
+    text: "text-fuchsia-900 dark:text-fuchsia-100",
+  },
+  {
+    name: "blue",
+    bg: "bg-blue-50/90 hover:bg-blue-50/100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 border-blue-200/90 dark:border-blue-800/60",
+    accent: "bg-blue-600 dark:bg-blue-500",
+    pill: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
+    icon: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-200 dark:border-blue-800",
+    text: "text-blue-900 dark:text-blue-100",
+  },
+  {
+    name: "violet",
+    bg: "bg-violet-50/90 hover:bg-violet-50/100 dark:bg-violet-950/40 dark:hover:bg-violet-950/60 border-violet-200/90 dark:border-violet-800/60",
+    accent: "bg-violet-600 dark:bg-violet-500",
+    pill: "bg-violet-100 text-violet-800 dark:bg-violet-900/80 dark:text-violet-200",
+    icon: "text-violet-600 dark:text-violet-400",
+    border: "border-violet-200 dark:border-violet-800",
+    text: "text-violet-900 dark:text-violet-100",
+  },
+  {
+    name: "lime",
+    bg: "bg-lime-50/90 hover:bg-lime-50/100 dark:bg-lime-950/40 dark:hover:bg-lime-950/60 border-lime-200/90 dark:border-lime-800/60",
+    accent: "bg-lime-600 dark:bg-lime-500",
+    pill: "bg-lime-100 text-lime-900 dark:bg-lime-900/80 dark:text-lime-200",
+    icon: "text-lime-600 dark:text-lime-400",
+    border: "border-lime-200 dark:border-lime-800",
+    text: "text-lime-950 dark:text-lime-100",
+  },
+];
+
+export function getLessonColorTheme(lesson: NormalizedLesson): ColorPalette {
+  const key = (lesson.Description || lesson.Name || lesson.id).trim().toLowerCase();
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = (hash << 5) - hash + key.charCodeAt(i);
+    hash |= 0;
+  }
+  const index = Math.abs(hash) % COLOR_PALETTES.length;
+  return COLOR_PALETTES[index];
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, CalendarPlus, MapPin, User, Clock, Copy, Check, Users } from "lucide-react";
 import { NormalizedLesson } from "../types/timetable";
 import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
+import { getLessonColorTheme } from "../services/transformer";
 
 interface LessonDetailModalProps {
   lesson: NormalizedLesson | null;
@@ -15,6 +16,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   const [copied, setCopied] = useState(false);
 
   if (!lesson) return null;
+
+  const colorTheme = getLessonColorTheme(lesson);
 
   const handleExportIcs = () => {
     const icsContent = generateLessonIcs(lesson);
@@ -56,7 +59,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
         {/* Modal Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-start justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 uppercase tracking-wider mb-2">
+            <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-2 ${colorTheme.pill}`}>
+              <span className={`w-2 h-2 rounded-full ${colorTheme.accent}`} />
               {lesson.EventType}
             </div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">

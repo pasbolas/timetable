@@ -40,6 +40,7 @@ export interface NormalizedLesson {
   Name: string;
   EventType: string;
   staffName?: string | null;
+  groupName?: string | null;
   collapsedLocations?: boolean;
   Locations?: StaffLocation[];
 }
