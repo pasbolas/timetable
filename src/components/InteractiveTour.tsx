@@ -1,0 +1,450 @@
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Sparkles,
+  GraduationCap,
+  Calendar,
+  Layers,
+  CalendarPlus,
+  SlidersHorizontal,
+  ChevronRight,
+  ChevronLeft,
+  X,
+  CheckCircle2,
+  HelpCircle,
+} from "lucide-react";
+import { StorageService } from "../services/storage";
+
+export interface TourStep {
+  id: string;
+  targetSelector?: string;
+  title: string;
+  badge: string;
+  icon: React.ReactNode;
+  description: string;
+  tip?: string;
+  highlights?: string[];
+  actionLabel?: string;
+}
+
+interface InteractiveTourProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// Generate an SVG path with an evenodd hole cutout for the targeted element
+function getCutoutPath(
+  rect: DOMRect | null,
+  w: number,
+  h: number,
+  r = 16,
+  pad = 6
+): string {
+  if (!rect) {
+    return `M 0,0 L ${w},0 L ${w},${h} L 0,${h} Z`;
+  }
+
+  const x = Math.max(0, rect.left - pad);
+  const y = Math.max(0, rect.top - pad);
+  const rw = rect.width + pad * 2;
+  const rh = rect.height + pad * 2;
+  const rad = Math.min(r, rw / 2, rh / 2);
+
+  // Outer full-screen rectangle (clockwise) + Inner rounded rectangle (counter-clockwise)
+  return `M 0,0 L ${w},0 L ${w},${h} L 0,${h} Z M ${x + rad},${y} L ${x + rw - rad},${y} A ${rad},${rad} 0 0,1 ${x + rw},${y + rad} L ${x + rw},${y + rh - rad} A ${rad},${rad} 0 0,1 ${x + rw - rad},${y + rh} L ${x + rad},${y + rh} A ${rad},${rad} 0 0,1 ${x},${y + rh - rad} L ${x},${y + rad} A ${rad},${rad} 0 0,1 ${x + rad},${y} Z`;
+}
+
+export const InteractiveTour: React.FC<InteractiveTourProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 1200,
+    height: typeof window !== "undefined" ? window.innerHeight : 800,
+  });
+
+  const steps: TourStep[] = [
+    {
+      id: "welcome",
+      title: "Welcome to MyTimetable! 👋",
+      badge: "Quick Overview",
+      icon: <Sparkles className="w-5 h-5 text-blue-500" />,
+      description:
+        "Your fast, modern student timetable designed for university life. Packed with live schedule updates, offline support, smart break detection, and calendar sync.",
+      highlights: [
+        "Instant course search across all degree programs",
+        "5-week swipeable calendar with class indicators",
+        "Smart lab group grouping & automatic break calculation",
+        "Works offline and installs on your phone as a PWA",
+      ],
+      actionLabel: "Start Quick Tour",
+    },
+    {
+      id: "course-chip",
+      targetSelector: '[data-tour="course-chip"]',
+      title: "Course Selector & Search 🔍",
+      badge: "Step 1 of 5 • Courses",
+      icon: <GraduationCap className="w-5 h-5 text-blue-500" />,
+      description:
+        "Tap your course name or code anytime to search degrees, switch between recent programs, or explore modules with instant autocomplete.",
+      tip: "You can search by course code (e.g. TU856) or title (e.g. Computer Science).",
+    },
+    {
+      id: "date-strip",
+      targetSelector: '[data-tour="date-strip"]',
+      title: "5-Week Calendar Strip 📅",
+      badge: "Step 2 of 5 • Date Strip",
+      icon: <Calendar className="w-5 h-5 text-indigo-500" />,
+      description:
+        "Easily swipe or scroll through 35 continuous days. Days with scheduled lectures or labs feature a blue dot indicator.",
+      tip: "Use the ‹ and › buttons or tap any date to navigate smoothly.",
+    },
+    {
+      id: "timeline",
+      targetSelector: '[data-tour="timeline-stream"], main',
+      title: "Smart Timeline & Breaks ☕",
+      badge: "Step 3 of 5 • Timeline",
+      icon: <Layers className="w-5 h-5 text-emerald-500" />,
+      description:
+        "Classes are color-coded by category (Lectures, Labs, Tutorials, Studios). Free gaps (>6 mins) between classes are automatically calculated and displayed as break cards.",
+      tip: "Your ongoing class is highlighted with a live pulsing green 'NOW' badge.",
+    },
+    {
+      id: "lesson-card",
+      targetSelector: '[data-tour="lesson-card"], [data-tour="timeline-stream"], main',
+      title: "Class Details & Calendar Export 📥",
+      badge: "Step 4 of 5 • Lesson Details",
+      icon: <CalendarPlus className="w-5 h-5 text-purple-500" />,
+      description:
+        "Tap on any lecture or lab card to open rich details: room numbers, assigned lecturers, group breakdowns, and one-tap export to Apple Calendar, Google Calendar, or Outlook.",
+      tip: "You can also export an entire week's schedule into your calendar from the menu!",
+    },
+    {
+      id: "menu-button",
+      targetSelector: '[data-tour="menu-button"]',
+      title: "Preferences, Themes & Offline ⚙️",
+      badge: "Step 5 of 5 • Menu & Settings",
+      icon: <SlidersHorizontal className="w-5 h-5 text-amber-500" />,
+      description:
+        "Open the menu to toggle Light, Dark, or System themes, jump straight back to Today, reload live timetable data, or re-run this interactive tour whenever you like.",
+      tip: "Cached schedules allow the app to work seamlessly without an internet connection.",
+    },
+  ];
+
+  const currentStep = steps[currentStepIndex];
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === steps.length - 1;
+
+  // Reset to first step whenever the tour is newly opened
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentStepIndex(0);
+    }
+  }, [isOpen]);
+
+  // Update target rect and position
+  const updateTargetRect = useCallback(() => {
+    if (!isOpen) return;
+
+    if (!currentStep.targetSelector) {
+      setTargetRect(null);
+      return;
+    }
+
+    const element = document.querySelector(currentStep.targetSelector);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      setTargetRect(element.getBoundingClientRect());
+
+      // Re-query after smooth scroll completes
+      const timer1 = setTimeout(() => {
+        setTargetRect(element.getBoundingClientRect());
+      }, 100);
+      const timer2 = setTimeout(() => {
+        setTargetRect(element.getBoundingClientRect());
+      }, 300);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    } else {
+      setTargetRect(null);
+    }
+  }, [isOpen, currentStep]);
+
+  useEffect(() => {
+    const cleanup = updateTargetRect();
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [updateTargetRect, currentStepIndex, isOpen]);
+
+  // Handle scroll & resize listeners
+  useEffect(() => {
+    const handleScrollOrResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      if (!isOpen || !currentStep.targetSelector) return;
+      const element = document.querySelector(currentStep.targetSelector);
+      if (element) {
+        setTargetRect(element.getBoundingClientRect());
+      }
+    };
+
+    window.addEventListener("resize", handleScrollOrResize, { passive: true });
+    window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", handleScrollOrResize);
+      window.removeEventListener("scroll", handleScrollOrResize);
+    };
+  }, [isOpen, currentStep]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleCompleteTour();
+      } else if (e.key === "ArrowRight") {
+        handleNext();
+      } else if (e.key === "ArrowLeft") {
+        handleBack();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, currentStepIndex]);
+
+  const handleNext = () => {
+    if (isLastStep) {
+      handleCompleteTour();
+    } else {
+      setCurrentStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
+    }
+  };
+
+  const handleBack = () => {
+    setCurrentStepIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleCompleteTour = () => {
+    StorageService.setCompletedTour(true);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden select-none animate-in fade-in duration-200">
+      {/* SVG Mask Definition for Backdrop Blur Cutout */}
+      <svg
+        className="fixed inset-0 w-full h-full pointer-events-none z-40"
+        aria-hidden="true"
+      >
+        <defs>
+          <mask
+            id="tour-spotlight-mask"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width={windowSize.width}
+            height={windowSize.height}
+          >
+            {/* White: backdrop blur is visible across the entire screen */}
+            <rect
+              x="0"
+              y="0"
+              width={windowSize.width}
+              height={windowSize.height}
+              fill="white"
+            />
+            {/* Black: completely removes the blur filter over the selected item so it stays crystal clear */}
+            {targetRect && (
+              <rect
+                x={Math.max(0, targetRect.left - 6)}
+                y={Math.max(0, targetRect.top - 6)}
+                width={targetRect.width + 12}
+                height={targetRect.height + 12}
+                rx="16"
+                ry="16"
+                fill="black"
+              />
+            )}
+          </mask>
+        </defs>
+      </svg>
+
+      {/* SVG EvenOdd Path Overlay: Dims the rest of screen while keeping the selected area 100% transparent & clear */}
+      <svg
+        className="fixed inset-0 w-full h-full z-40 pointer-events-none"
+        width={windowSize.width}
+        height={windowSize.height}
+        viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
+      >
+        <path
+          d={getCutoutPath(targetRect, windowSize.width, windowSize.height)}
+          fill="rgba(2, 6, 23, 0.72)"
+          fillRule="evenodd"
+          className="transition-all duration-200 pointer-events-auto cursor-pointer"
+          onClick={handleCompleteTour}
+        />
+      </svg>
+
+      {/* Backdrop Blur Layer with Mask: Softly blurs everything OUTSIDE the cutout window */}
+      <div
+        className="fixed inset-0 z-40 pointer-events-none transition-all duration-200"
+        style={{
+          mask: targetRect ? "url(#tour-spotlight-mask)" : undefined,
+          WebkitMask: targetRect ? "url(#tour-spotlight-mask)" : undefined,
+          backdropFilter: "blur(3px)",
+          WebkitBackdropFilter: "blur(3px)",
+        }}
+      />
+
+      {/* Spotlight Glowing Border & Beacon around the unblurred cutout */}
+      {targetRect && (
+        <div
+          style={{
+            top: `${targetRect.top - 6}px`,
+            left: `${targetRect.left - 6}px`,
+            width: `${targetRect.width + 12}px`,
+            height: `${targetRect.height + 12}px`,
+          }}
+          className="fixed z-40 pointer-events-none rounded-2xl border-2 border-blue-400 dark:border-blue-400 ring-4 ring-blue-500/30 dark:ring-blue-400/20 shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all duration-200 ease-out"
+        >
+          {/* Subtle pulsating beacon dot */}
+          <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-blue-600" />
+          </span>
+        </div>
+      )}
+
+      {/* Tour Step Card */}
+      <div className="absolute inset-0 pointer-events-none flex flex-col justify-end sm:justify-center items-center p-3 sm:p-6 z-50">
+        <div
+          className="pointer-events-auto w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header Bar */}
+          <div className="p-4 sm:p-5 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                {currentStep.icon}
+              </div>
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block leading-none">
+                  {currentStep.badge}
+                </span>
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mt-0.5">
+                  {currentStep.title}
+                </h3>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCompleteTour}
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Skip Tour"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Body Content */}
+          <div className="p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              {currentStep.description}
+            </p>
+
+            {/* Feature Highlights on Welcome step */}
+            {currentStep.highlights && (
+              <div className="space-y-1.5 py-1">
+                {currentStep.highlights.map((highlight, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                    <span>{highlight}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Helpful Tip box */}
+            {currentStep.tip && (
+              <div className="p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 flex items-start gap-2.5 text-xs text-blue-900 dark:text-blue-200">
+                <HelpCircle className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                <span className="leading-snug">{currentStep.tip}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Footer Controls & Progress */}
+          <div className="p-4 sm:p-5 pt-3 bg-slate-50 dark:bg-slate-900/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+            {/* Step Dots indicator */}
+            <div className="flex items-center gap-1.5">
+              {steps.map((step, idx) => (
+                <button
+                  key={step.id}
+                  onClick={() => setCurrentStepIndex(idx)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    idx === currentStepIndex
+                      ? "w-5 bg-blue-600 dark:bg-blue-400"
+                      : "w-1.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400"
+                  }`}
+                  title={`Go to ${step.title}`}
+                />
+              ))}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              {!isFirstStep && (
+                <button
+                  onClick={handleBack}
+                  className="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 flex items-center gap-1 active:scale-95 transition-all shadow-sm"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  Back
+                </button>
+              )}
+
+              {isFirstStep ? (
+                <button
+                  onClick={handleNext}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1.5 active:scale-95 transition-all"
+                >
+                  <span>{currentStep.actionLabel || "Start Tour"}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              ) : isLastStep ? (
+                <button
+                  onClick={handleCompleteTour}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1.5 active:scale-95 transition-all"
+                >
+                  <span>Got it!</span>
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1 active:scale-95 transition-all"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
