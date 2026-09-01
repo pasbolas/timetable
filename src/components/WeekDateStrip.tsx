@@ -190,11 +190,17 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
         {/* Date Selector Strip Container */}
         <div className="relative py-1 overflow-hidden">
+          {/* Stationary Skeleton Box for the Highlight Slot */}
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[62px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
+            aria-hidden="true"
+          />
+
           {/* Scrollable Date Track */}
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1.5 scroll-smooth"
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1.5 scroll-smooth relative z-10"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
