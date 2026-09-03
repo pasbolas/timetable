@@ -646,43 +646,66 @@ export function getCanonicalEventType(lesson: {
   collapsedLocations?: boolean;
   Locations?: any[];
 }): CanonicalEventType {
-  const typeStr = (lesson.EventType || "").toLowerCase();
-  const nameStr = (lesson.Name || "").toLowerCase();
-  const descStr = (lesson.Description || "").toLowerCase();
+  const typeStr = (lesson.EventType || "").trim();
+  const nameStr = (lesson.Name || "").trim();
+  const descStr = (lesson.Description || "").trim();
 
-  // 1. All Labs (Laboratory, Lab, Practical, Studio, Kitchen, Multi-group collapsed)
-  if (
-    typeStr.includes("lab") ||
-    typeStr.includes("pract") ||
-    typeStr.includes("studio") ||
-    typeStr.includes("kitchen") ||
-    typeStr.includes("clinic") ||
-    nameStr.includes("lab") ||
-    nameStr.includes("pract") ||
-    descStr.includes("lab") ||
-    descStr.includes("pract") ||
-    Boolean(lesson.collapsedLocations) ||
-    (lesson.Locations && lesson.Locations.length > 1)
-  ) {
+  // 1. Direct check on API EventType if provided
+  if (typeStr) {
+    if (/\b(lab|laboratory|pract|practical|studio|kitchen|clinic)\b/i.test(typeStr)) {
+      return "Laboratory";
+    }
+    if (/\b(tut|tutorial|tutorials)\b/i.test(typeStr)) {
+      return "Tutorial";
+    }
+    if (/\b(lec|lecture|lectures)\b/i.test(typeStr)) {
+      return "Lecture";
+    }
+    if (/\b(seminar|workshop)\b/i.test(typeStr)) {
+      return "Tutorial";
+    }
+  }
+
+  // 2. Multi-group collapsed locations are always Laboratories
+  if (Boolean(lesson.collapsedLocations) || (lesson.Locations && lesson.Locations.length > 1)) {
     return "Laboratory";
   }
 
-  // 2. All Tutorials (Tutorial, Seminar, Workshop)
-  if (
-    typeStr.includes("tut") ||
-    typeStr.includes("sem") ||
-    typeStr.includes("work") ||
-    nameStr.includes("tut") ||
-    nameStr.includes("sem") ||
-    nameStr.includes("work") ||
-    descStr.includes("tut") ||
-    descStr.includes("sem") ||
-    descStr.includes("workshop")
-  ) {
+  // 3. Inspect slash/dash separated segments from Name (e.g. "CMPU2016/Lecture/01", "CMPU2016/LEC/01")
+  const nameTokens = nameStr.split(/[\/\-_,\s]+/).map((t) => t.trim().toLowerCase());
+
+  // Priority check on Name tokens:
+  // If Name has "lec" or "lecture", it's definitively a Lecture
+  if (nameTokens.some((t) => t === "lec" || t === "lecture" || t === "lectures")) {
+    return "Lecture";
+  }
+
+  // If Name has "lab", "laboratory", or "pract", it's definitively a Laboratory
+  if (nameTokens.some((t) => t === "lab" || t === "laboratory" || t === "pract" || t === "practical")) {
+    return "Laboratory";
+  }
+
+  // If Name has "tut" or "tutorial", it's definitively a Tutorial
+  if (nameTokens.some((t) => t === "tut" || t === "tutorial" || t === "tutorials")) {
     return "Tutorial";
   }
 
-  // 3. All Lectures (Default for all other classes/sessions)
+  // 4. Inspect Description with strict word boundaries
+  // Note: NEVER use loose substring "sem" or "work" as they clash with "Semester" and "Networks"!
+  if (/\b(lab|laboratory|practical)\b/i.test(descStr)) {
+    return "Laboratory";
+  }
+  if (/\b(tutorial|tutorials)\b/i.test(descStr)) {
+    return "Tutorial";
+  }
+  if (/\b(lecture|lectures)\b/i.test(descStr)) {
+    return "Lecture";
+  }
+  if (/\b(seminar|workshop)\b/i.test(descStr)) {
+    return "Tutorial";
+  }
+
+  // 5. Default fallback to Lecture (the primary university session type)
   return "Lecture";
 }
 
