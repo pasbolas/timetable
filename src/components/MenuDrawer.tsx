@@ -101,42 +101,68 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             onClick={onClose}
           />
 
-          {/* Clean Bottom Sheet: Strictly 2 States Only (Fully Open & Fully Close) */}
+          {/* Clean Bottom Sheet: Strictly 2 States Only (Fully Open & Fully Close) with bouncy smooth spring */}
           <motion.div
-            initial={{ y: "100%", opacity: 0.9 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "100%", opacity: 0 }}
-            transition={{
-              type: "spring",
-              damping: 28,
-              stiffness: 340,
-              mass: 0.8,
+            variants={{
+              hidden: {
+                y: "105%",
+                opacity: 0.85,
+                scale: 0.96,
+              },
+              visible: {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                transition: {
+                  type: "spring",
+                  damping: 18, // Supple, bouncy overshoot
+                  stiffness: 260, // Smooth momentum
+                  mass: 0.85,
+                  restDelta: 0.001,
+                },
+              },
+              exit: {
+                y: "105%",
+                opacity: 0,
+                scale: 0.96,
+                transition: {
+                  type: "spring",
+                  damping: 20, // Responsive, bouncy exit
+                  stiffness: 280,
+                  mass: 0.75,
+                },
+              },
             }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             drag="y"
             dragConstraints={{ top: 0 }}
-            dragElastic={0.2}
+            dragElastic={0.35} // Fluid elastic resistance
             onDragEnd={(_, info) => {
-              // Only 2 states: if pulled down past 90px or with flick velocity > 350 -> Fully Close
-              if (info.offset.y > 90 || info.velocity.y > 350) {
+              // Only 2 states: if pulled down past 80px or with flick velocity > 320 -> Fully Close
+              if (info.offset.y > 80 || info.velocity.y > 320) {
                 triggerHapticFeedback();
                 onClose();
               }
-              // Otherwise Framer Motion automatically springs back to Fully Open (y: 0)
+              // Otherwise Framer Motion automatically springs back to Fully Open (y: 0) with bouncy spring
             }}
             className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-white dark:bg-[#363636] rounded-t-[32px] sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-neutral-600/70 flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Big Minimise Handle at the Top (Tap or drag down to dismiss) */}
-            <div
+            <motion.div
               onClick={() => {
                 triggerHapticFeedback();
                 onClose();
               }}
-              className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group active:scale-95 transition-transform shrink-0"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0"
               title="Tap or drag down to minimise"
             >
               <div className="w-20 h-2 bg-slate-300 dark:bg-neutral-500 group-hover:bg-slate-400 dark:group-hover:bg-neutral-400 rounded-full transition-colors shadow-xs" />
-            </div>
+            </motion.div>
 
             {/* Drawer Header */}
             <div className="px-4 py-3 border-b border-slate-100 dark:border-neutral-600/70 flex items-center justify-between shrink-0">
