@@ -26,8 +26,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   );
 
   return (
-    <header className="sticky top-0 z-30 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/80 transition-colors">
-      <div className="max-w-2xl mx-auto px-3.5 py-2.5 flex items-center justify-between gap-2">
+    <header className="sticky top-0 z-30 h-[52px] bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/80 transition-colors">
+      <div className="max-w-2xl h-full mx-auto px-3.5 flex items-center justify-between gap-2">
         {/* Left: Course Chip (Tap opens Menu Drawer) */}
         <button
           onClick={onOpenMenu}

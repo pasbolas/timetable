@@ -242,74 +242,40 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
 
   if (!isOpen) return null;
 
+  // Determine if card should be placed at the top (e.g. when target element is near bottom)
+  const isTargetNearBottom = Boolean(
+    targetRect && targetRect.top > windowSize.height * 0.52
+  );
+
   return (
     <div className="fixed inset-0 z-50 overflow-hidden select-none animate-in fade-in duration-200">
-      {/* SVG Mask Definition for Backdrop Blur Cutout */}
-      <svg
-        className="fixed inset-0 w-full h-full pointer-events-none z-40"
-        aria-hidden="true"
-      >
-        <defs>
-          <mask
-            id="tour-spotlight-mask"
-            maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width={windowSize.width}
-            height={windowSize.height}
-          >
-            {/* White: backdrop blur is visible across the entire screen */}
-            <rect
-              x="0"
-              y="0"
-              width={windowSize.width}
-              height={windowSize.height}
-              fill="white"
-            />
-            {/* Black: completely removes the blur filter over the selected item so it stays crystal clear */}
-            {targetRect && (
-              <rect
-                x={Math.max(0, targetRect.left - 6)}
-                y={Math.max(0, targetRect.top - 6)}
-                width={targetRect.width + 12}
-                height={targetRect.height + 12}
-                rx="16"
-                ry="16"
-                fill="black"
-              />
-            )}
-          </mask>
-        </defs>
-      </svg>
-
-      {/* SVG EvenOdd Path Overlay: Dims the rest of screen while keeping the selected area 100% transparent & clear */}
-      <svg
-        className="fixed inset-0 w-full h-full z-40 pointer-events-none"
-        width={windowSize.width}
-        height={windowSize.height}
-        viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
-      >
-        <path
-          d={getCutoutPath(targetRect, windowSize.width, windowSize.height)}
-          fill="rgba(2, 6, 23, 0.72)"
-          fillRule="evenodd"
-          className="transition-all duration-200 pointer-events-auto cursor-pointer"
+      {/* Full screen backdrop for modal steps without a specific target (e.g. welcome) */}
+      {!targetRect && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-950/75 backdrop-blur-sm pointer-events-auto cursor-pointer"
           onClick={handleCompleteTour}
         />
-      </svg>
+      )}
 
-      {/* Backdrop Blur Layer with Mask: Softly blurs everything OUTSIDE the cutout window */}
-      <div
-        className="fixed inset-0 z-40 pointer-events-none transition-all duration-200"
-        style={{
-          mask: targetRect ? "url(#tour-spotlight-mask)" : undefined,
-          WebkitMask: targetRect ? "url(#tour-spotlight-mask)" : undefined,
-          backdropFilter: "blur(3px)",
-          WebkitBackdropFilter: "blur(3px)",
-        }}
-      />
+      {/* SVG EvenOdd Path Overlay: Dims everything outside the target while leaving the cutout completely transparent & crystal clear */}
+      {targetRect && (
+        <svg
+          className="fixed inset-0 w-full h-full z-40 pointer-events-none"
+          width={windowSize.width}
+          height={windowSize.height}
+          viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
+        >
+          <path
+            d={getCutoutPath(targetRect, windowSize.width, windowSize.height)}
+            fill="rgba(2, 6, 23, 0.78)"
+            fillRule="evenodd"
+            className="transition-all duration-200 pointer-events-auto cursor-pointer"
+            onClick={handleCompleteTour}
+          />
+        </svg>
+      )}
 
-      {/* Spotlight Glowing Border & Beacon around the unblurred cutout */}
+      {/* Spotlight Glowing Border & Beacon around the crystal clear cutout */}
       {targetRect && (
         <div
           style={{
@@ -329,7 +295,15 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
       )}
 
       {/* Tour Step Card */}
-      <div className="absolute inset-0 pointer-events-none flex flex-col justify-end sm:justify-center items-center p-3 sm:p-6 z-50">
+      <div
+        className={`absolute inset-0 pointer-events-none flex flex-col items-center p-3 sm:p-6 z-50 transition-all duration-300 ${
+          isTargetNearBottom
+            ? "justify-start pt-14 sm:pt-16"
+            : !targetRect
+            ? "justify-center"
+            : "justify-end pb-8 sm:pb-12"
+        }`}
+      >
         <div
           className="pointer-events-auto w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95"
           onClick={(e) => e.stopPropagation()}

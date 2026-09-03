@@ -42,7 +42,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const isWeekend = activeDate.isoWeekday() >= 6;
   const lessons = dayData?.lessons || [];
 
-  // Determine grid hour bounds (default 8 AM to 7 PM, dynamically expanded if lessons exist outside)
+  // Determine grid hour bounds (dynamically expanded if lessons or current time exist outside)
   const { startHour, endHour, hoursList } = useMemo(() => {
     let minH = 9;
     let maxH = 18;
@@ -54,26 +54,33 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       if (eH > maxH) maxH = Math.min(22, eH);
     });
 
+    if (isToday) {
+      const nowH = currentLiveTime.hour();
+      if (nowH < minH) minH = Math.max(7, nowH);
+      if (nowH >= maxH) maxH = Math.min(22, nowH + 1);
+    }
+
     const list: number[] = [];
     for (let h = minH; h <= maxH; h++) {
       list.push(h);
     }
     return { startHour: minH, endHour: maxH, hoursList: list };
-  }, [lessons]);
+  }, [lessons, isToday, currentLiveTime]);
 
   const HOUR_HEIGHT = 72; // Pixels per hour row
+  const GRID_PADDING_Y = 16; // Top and bottom padding for timetable grid in pixels
 
   // Calculate live current time position in pixels
   const nowHour = currentLiveTime.hour();
   const nowMinute = currentLiveTime.minute();
   const isWithinGrid = nowHour >= startHour && nowHour <= endHour;
   const currentMinutesFromStart = (nowHour - startHour) * 60 + nowMinute;
-  const currentLiveY = (currentMinutesFromStart / 60) * HOUR_HEIGHT;
+  const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
     <div className="w-full pb-2">
-      {/* Subheader: Date & class counter */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-2 mb-1">
+      {/* Subheader: Date & class counter - Sticky below TopBar */}
+      <div className="sticky top-[52px] z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
             {activeDate.format("dddd, D MMMM")}
@@ -131,56 +138,81 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex w-full border-t border-slate-200/70 dark:border-slate-800/80 bg-white/20 dark:bg-slate-950/20"
+          className="relative flex w-full bg-white/20 dark:bg-slate-950/20"
         >
           {/* Left Time Column (Hours Gutter) */}
-          <div className="w-16 sm:w-20 shrink-0 border-r border-slate-200/70 dark:border-slate-800/80 relative select-none bg-slate-50/50 dark:bg-slate-900/30">
+          <div
+            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: `${GRID_PADDING_Y}px` }}
+            className="w-16 sm:w-20 shrink-0 border-r border-slate-200/70 dark:border-slate-800/80 relative select-none bg-slate-50/50 dark:bg-slate-900/30"
+          >
             {hoursList.map((hour) => (
               <div
                 key={hour}
                 style={{ height: `${HOUR_HEIGHT}px` }}
                 className="relative"
               >
-                <span className="absolute -top-2.5 right-2 sm:right-3 text-[11px] font-semibold text-slate-400 dark:text-slate-500 tracking-tight">
+                <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-semibold text-slate-400 dark:text-slate-500 tracking-tight">
                   {formatHourLabel(hour)}
                 </span>
               </div>
             ))}
 
-            {/* Live Time Text in Gutter */}
+            {/* Current Time Slider Track & Badge in Gutter */}
             {isToday && isWithinGrid && (
-              <div
-                style={{ top: `${currentLiveY}px` }}
-                className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-300"
-              >
-                <span className="text-[10px] sm:text-[11px] font-extrabold text-blue-600 dark:text-blue-400 bg-white/95 dark:bg-slate-900/95 px-1 py-0.5 rounded shadow-sm ring-1 ring-blue-500/20">
-                  {currentLiveTime.format("h:mm A")}
-                </span>
-              </div>
+              <>
+                {/* Vertical slider track rail along the right edge of gutter */}
+                <div
+                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-slate-200/60 dark:bg-slate-800/60 pointer-events-none"
+                  aria-hidden="true"
+                >
+                  {/* Elapsed day progress fill */}
+                  <div
+                    style={{ height: `${currentLiveY}px` }}
+                    className="w-full bg-gradient-to-b from-blue-400/40 via-blue-500/50 to-blue-600 dark:from-blue-500/30 dark:to-blue-400 transition-all duration-300"
+                  />
+                </div>
+
+                {/* Floating Current Time Pill Badge */}
+                <div
+                  style={{ top: `${currentLiveY}px` }}
+                  className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-300 flex items-center justify-end"
+                >
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-blue-600 dark:text-blue-400 bg-white/95 dark:bg-slate-900/95 px-1.5 py-0.5 rounded shadow-sm ring-1 ring-blue-500/25 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+                    {currentLiveTime.format("h:mm A")}
+                  </span>
+                </div>
+              </>
             )}
           </div>
 
           {/* Right Main Grid Slot Area */}
-          <div className="relative flex-1">
+          <div
+            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: `${GRID_PADDING_Y}px` }}
+            className="relative flex-1"
+          >
             {/* Grid Divider Lines */}
             {hoursList.map((hour) => (
               <div
                 key={hour}
                 style={{ height: `${HOUR_HEIGHT}px` }}
-                className="border-t first:border-t-0 border-slate-100 dark:border-slate-800/60 w-full"
+                className="border-t border-slate-100 dark:border-slate-800/60 w-full"
               />
             ))}
 
-            {/* Live Time Horizontal Line & Blue Dot Indicator */}
+            {/* Full-width Current Time Slider & Knob (Traversing Top-to-Bottom across the Day) */}
             {isToday && isWithinGrid && (
               <div
                 style={{ top: `${currentLiveY}px` }}
                 className="absolute left-0 right-0 z-20 flex items-center pointer-events-none -translate-y-1/2 transition-all duration-300"
               >
-                {/* Blue circle dot at line start */}
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 ring-2 ring-white dark:ring-slate-950 -ml-1.25 shrink-0 shadow-md" />
-                {/* Horizontal time guide line */}
-                <div className="flex-1 h-[2px] bg-blue-600 dark:bg-blue-400 shadow-sm" />
+                {/* Slider Thumb / Knob on the rail boundary */}
+                <div className="relative -ml-[7px] flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-blue-500/20 animate-ping absolute" />
+                  <div className="w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-blue-400 ring-2 ring-white dark:ring-slate-950 shadow-md shadow-blue-500/30 relative z-10" />
+                </div>
+                {/* Horizontal slider beam spanning across the calendar grid */}
+                <div className="flex-1 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400/80 dark:from-blue-400 dark:via-blue-500 dark:to-blue-400/60 shadow-[0_0_8px_rgba(59,130,246,0.35)]" />
               </div>
             )}
 
@@ -195,7 +227,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 "minutes"
               );
 
-              const topPx = (startMinutes / 60) * HOUR_HEIGHT;
+              const topPx = GRID_PADDING_Y + (startMinutes / 60) * HOUR_HEIGHT;
               const heightPx = Math.max(
                 46,
                 (durationMinutes / 60) * HOUR_HEIGHT - 4
@@ -217,15 +249,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border p-2.5 cursor-pointer shadow-sm transition-all overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${
-                    theme.bg
-                  } ${
-                    active
+                  className={`absolute rounded-xl border p-2.5 cursor-pointer shadow-sm transition-all overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg
+                    } ${active
                       ? "ring-2 ring-blue-500 shadow-md shadow-blue-500/15 z-10"
                       : past
-                      ? "opacity-60 saturate-50"
-                      : "z-0"
-                  }`}
+                        ? "opacity-60 saturate-50"
+                        : "z-0"
+                    }`}
                 >
                   {/* Left accent color strip */}
                   <div

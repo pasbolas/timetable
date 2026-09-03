@@ -39,6 +39,8 @@ export interface NormalizedLesson {
   Description: string;
   Name: string;
   EventType: string;
+  moduleCode?: string | null;
+  moduleName?: string;
   staffName?: string | null;
   groupName?: string | null;
   collapsedLocations?: boolean;

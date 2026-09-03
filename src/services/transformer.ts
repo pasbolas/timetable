@@ -145,30 +145,119 @@ export function getLessonGroupRoomStrings(lesson: NormalizedLesson): string[] {
 }
 
 /**
- * Predict human-friendly short title from code and description
+ * Helper to check if a token is metadata (event type, semester, group, etc.)
+ */
+function isMetaToken(token: string): boolean {
+  if (!token) return true;
+  const l = token.toLowerCase();
+  if (/^sem(ester)?\s*[0-9]/i.test(l)) return true;
+  if (/^term\s*[0-9]/i.test(l)) return true;
+  if (/^stage\s*[0-9]/i.test(l)) return true;
+  if (/^year\s*[0-9]/i.test(l)) return true;
+  if (/^(group|grp)\s*[a-z0-9]+$/i.test(l)) return true;
+  if (/^[a-f]$/i.test(l)) return true;
+  if (/^[a-f]{2,4}$/i.test(l)) return true;
+  if (/^[0-9]{1,3}$/.test(l)) return true;
+  if (
+    KNOWN_EVENT_TYPES.some(
+      (k) =>
+        l === k.toLowerCase() ||
+        l === "lec" ||
+        l === "tut" ||
+        l === "sem" ||
+        l === "lab" ||
+        l === "lec&lab" ||
+        l.startsWith(k.toLowerCase() + "&") ||
+        l.endsWith("&" + k.toLowerCase())
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Check if a string looks like a module code / ID (e.g. "CMPU 2007(22391C)", "CMPU2007", "AUTH H6666")
+ */
+function isModuleCodeLike(str: string): boolean {
+  if (!str) return false;
+  return /^[A-Za-z]{2,5}\s*(?:H)?[0-9]{3,5}(?:\([0-9A-Za-z]+\))?$/i.test(str.trim());
+}
+
+/**
+ * Strips leading module code prefix (e.g. "CMPU 2007(22391C) Databases 1" -> "Databases 1")
+ */
+function cleanLeadingModuleCode(str: string): string {
+  if (!str) return "";
+  return str
+    .replace(/^[A-Za-z]{2,5}\s*(?:H)?[0-9]{3,5}(?:\([0-9A-Za-z]+\))?\s*[-–:]?\s*/i, "")
+    .trim();
+}
+
+/**
+ * Extract clean module code/ID (e.g. "CMPU 2007", "CMPU 2007(22391C)")
+ */
+export function extractModuleCode(
+  name: string,
+  extraProps?: RawTimetableProperty[]
+): string | null {
+  if (extraProps && extraProps.length > 0) {
+    const modProp = extraProps.find((p) => /^module$/i.test(p.Name.trim()));
+    if (modProp && modProp.Value && modProp.Value.trim()) {
+      return modProp.Value.split(",")[0].trim();
+    }
+  }
+
+  if (name) {
+    const firstPart = name.split("/")[0].trim();
+    const codeMatch = firstPart.match(/^([A-Za-z]{2,5}\s*(?:H)?[0-9]{3,5}(?:\([0-9A-Za-z]+\))?)/i);
+    if (codeMatch) {
+      return codeMatch[1].trim();
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Predict human-friendly actual module name (e.g. "Databases 1", "Object Oriented Programming")
+ * instead of the raw module ID / code.
  */
 export function predictLessonShortName(name: string, description?: string): string {
   if (description && description.trim().length > 0) {
-    return fixDescr(description);
+    const desc = fixDescr(description);
+    const cleanedDesc = cleanLeadingModuleCode(desc);
+    if (cleanedDesc.length > 0) return cleanedDesc;
+    return desc;
   }
   if (!name) return "Class";
 
-  const parts = name.split("/").map(p => p.trim());
-  // Filter out event types, sem tags, and group numbers
-  const cleanedParts = parts.filter(p => {
-    const lower = p.toLowerCase();
-    if (/^sem(ester)?\s*[0-9]/i.test(lower)) return false;
-    if (/^(group|grp)\s*[a-z0-9]+$/i.test(lower)) return false;
-    if (/^[0-9]{1,3}$/.test(lower)) return false;
-    if (KNOWN_EVENT_TYPES.some(t => lower === t.toLowerCase())) return false;
-    return true;
-  });
+  const parts = name.split("/").map((p) => p.trim());
+  const nonMeta = parts.filter((p) => !isMetaToken(p));
 
-  if (cleanedParts.length > 0) {
-    return fixDescr(cleanedParts[0]);
+  if (nonMeta.length >= 2) {
+    // If first element is a module code/ID (e.g. "CMPU 2007(22391C)"), return the actual module name (second element)
+    if (isModuleCodeLike(nonMeta[0])) {
+      return fixDescr(nonMeta[1]);
+    }
+
+    const stripped0 = cleanLeadingModuleCode(nonMeta[0]);
+    const stripped1 = cleanLeadingModuleCode(nonMeta[1]);
+    if (stripped1.length > 0 && !isModuleCodeLike(stripped1)) {
+      return fixDescr(stripped1);
+    }
+    if (stripped0.length > 0) {
+      return fixDescr(stripped0);
+    }
+    return fixDescr(nonMeta[1]);
+  } else if (nonMeta.length === 1) {
+    const stripped = cleanLeadingModuleCode(nonMeta[0]);
+    if (stripped.length > 0) return fixDescr(stripped);
+    return fixDescr(nonMeta[0]);
   }
 
-  return fixDescr(name);
+  const fallback = cleanLeadingModuleCode(name);
+  return fixDescr(fallback || name);
 }
 
 /**
@@ -293,6 +382,7 @@ export function processWeekSchedule(
     const type = raw.EventType || predictEventType(raw.Name);
     const shortTitle = predictLessonShortName(raw.Name, raw.Description);
     const group = extractGroupInfo(raw.Name, raw.Description, raw.ExtraProperties);
+    const moduleCode = extractModuleCode(raw.Name, raw.ExtraProperties);
 
     return {
       id: raw.Identity || `${raw.Name}-${raw.StartDateTime}`,
@@ -302,6 +392,8 @@ export function processWeekSchedule(
       Description: shortTitle,
       Name: raw.Name,
       EventType: type,
+      moduleCode: moduleCode,
+      moduleName: shortTitle,
       staffName: staff,
       groupName: group,
     };
