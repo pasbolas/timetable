@@ -6,30 +6,17 @@
   color-scheme: light dark;
 }
 
-html,
+html {
+  background-color: #f4f1e0;
+}
+
 body {
-  background-color: #dde4df;
-  background-image:
-    radial-gradient(ellipse 65% 55% at 92% 85%, rgba(243, 221, 215, 0.85) 0%, rgba(243, 221, 215, 0) 70%),
-    radial-gradient(ellipse 60% 50% at 8% 70%, rgba(197, 216, 230, 0.90) 0%, rgba(197, 216, 230, 0) 70%),
-    radial-gradient(ellipse 85% 45% at 50% 12%, rgba(221, 228, 223, 0.90) 0%, rgba(221, 228, 223, 0) 70%),
-    linear-gradient(180deg, #dde4df 0%, #d8e2e5 45%, #ded8d6 100%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #f4f1e0;
 }
 
 html.dark,
 html.dark body {
-  background-color: #1a1e23;
-  background-image:
-    radial-gradient(ellipse 65% 55% at 92% 85%, rgba(110, 50, 70, 0.35) 0%, rgba(110, 50, 70, 0) 70%),
-    radial-gradient(ellipse 60% 50% at 8% 70%, rgba(35, 65, 105, 0.40) 0%, rgba(35, 65, 105, 0) 70%),
-    radial-gradient(ellipse 85% 45% at 50% 12%, rgba(35, 55, 48, 0.30) 0%, rgba(35, 55, 48, 0) 70%),
-    linear-gradient(180deg, #22272e 0%, #1a1e24 45%, #1e1b20 100%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #1e1e1e;
 }
 
 /* Viewport expansion and overscroll prevention for PWAs */

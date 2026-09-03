@@ -96,8 +96,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="fixed inset-0 bg-slate-950/65 dark:bg-black/75 backdrop-blur-sm cursor-pointer"
+            className="fixed inset-0 bg-black/60 cursor-pointer"
             onClick={onClose}
           />
 
@@ -147,7 +146,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               }
               // Otherwise Framer Motion automatically springs back to Fully Open (y: 0) with bouncy spring
             }}
-            className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-white dark:bg-[#363636] rounded-t-[32px] sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-neutral-600/70 flex flex-col touch-pan-y"
+            className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-[#f4f1e0] dark:bg-[#1e1e1e] rounded-t-3xl sm:rounded-2xl border-2 border-stone-300 dark:border-neutral-700 overflow-hidden flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Big Minimise Handle at the Top (Tap or drag down to dismiss) */}
@@ -205,9 +204,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
               Current Course
             </div>
-            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/40 dark:from-[#834655]/30 dark:to-[#9F5069]/20 border border-slate-200/80 dark:border-[#9F5069]/40 space-y-2 shadow-sm">
+            <div className="p-3.5 rounded-xl bg-stone-100 dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-blue-600 text-white dark:bg-[#834655] dark:text-[#F6CAC9] dark:border dark:border-[#9F5069]/50 shadow-sm">
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-blue-600 text-white dark:bg-[#834655] dark:text-[#F6CAC9]">
                   {shortCode}
                 </span>
               </div>
@@ -282,10 +281,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 onClose();
                 onStartTour();
               }}
-              className="w-full p-3 rounded-xl bg-gradient-to-r from-blue-50/80 to-indigo-50/80 hover:from-blue-100/80 hover:to-indigo-100/80 dark:from-[#834655]/30 dark:to-[#9F5069]/30 border border-blue-200/70 dark:border-[#9F5069]/40 flex items-center justify-between text-left transition-all active:scale-98 group shadow-sm"
+              className="w-full p-3 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-stone-200 dark:border-neutral-700 flex items-center justify-between text-left transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] flex items-center justify-center shrink-0">
                   <Compass className="w-4 h-4" />
                 </div>
                 <div>

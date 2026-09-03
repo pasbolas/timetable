@@ -196,7 +196,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     >
       <div
         data-tour="date-strip"
-        className="pointer-events-auto max-w-lg mx-auto rounded-2xl bg-white/70 dark:bg-[#1a1e23]/80 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_14px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)] px-2.5 pt-1.5 pb-1 transition-colors"
+        className="pointer-events-auto max-w-lg mx-auto rounded-2xl bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 px-2.5 pt-1.5 pb-1 transition-colors"
       >
         {/* Month Header and Micro Navigation */}
         <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
@@ -206,14 +206,14 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           <div className="flex items-center gap-0.5">
             <button
               onClick={handlePrevDay}
-              className="p-0.5 rounded-full hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               title="Previous day"
             >
               <ChevronLeft className="w-3 h-3" />
             </button>
             <button
               onClick={handleNextDay}
-              className="p-0.5 rounded-full hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               title="Next day"
             >
               <ChevronRight className="w-3 h-3" />
@@ -225,7 +225,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border border-slate-300/60 dark:border-white/10 bg-white/40 dark:bg-white/5 pointer-events-none -z-0 shadow-inner"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-stone-400 dark:border-neutral-600 bg-stone-200/50 dark:bg-neutral-800 pointer-events-none -z-0"
             aria-hidden="true"
           />
 
@@ -271,14 +271,14 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     transformOrigin: "center center",
                     touchAction: "pan-x",
                   }}
-                  className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-[background-color,color] duration-150 will-change-transform select-none touch-pan-x ${
+                  className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-colors duration-150 will-change-transform select-none touch-pan-x ${
                     isActive
-                      ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] font-black shadow-sm shadow-blue-600/20 dark:shadow-[#C8B273]/30 z-10"
+                      ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-neutral-900 font-black z-10"
                       : isToday
-                      ? "bg-blue-50 text-blue-700 dark:bg-[#834655]/40 dark:text-[#F6CAC9] font-semibold ring-1 ring-blue-200 dark:ring-[#C8B273]/50"
+                      ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
                       : isWeekend
-                      ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200/50 dark:hover:bg-neutral-600/40"
-                      : "text-slate-700 dark:text-[#F6CAC9]/90 hover:bg-stone-200/50 dark:hover:bg-neutral-600/40"
+                      ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-neutral-700"
+                      : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
                   }`}
                 >
                   {/* Day of Week */}

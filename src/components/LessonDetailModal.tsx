@@ -104,7 +104,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="fixed inset-0 bg-slate-950/65 dark:bg-slate-950/80 backdrop-blur-sm cursor-pointer"
+            className="fixed inset-0 bg-black/60 cursor-pointer"
             onClick={onClose}
           />
 
@@ -154,7 +154,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                 }
               }
             }}
-            className="relative z-10 w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-[28px] sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col touch-pan-y"
+            className="relative z-10 w-full sm:max-w-md bg-white dark:bg-[#1e1e1e] rounded-t-3xl sm:rounded-2xl border-2 border-stone-300 dark:border-neutral-700 overflow-hidden flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Pull Handle: Tap toggles half/full, drag snaps magnetically */}

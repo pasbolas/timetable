@@ -274,7 +274,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
       {/* Full screen backdrop for modal steps without a specific target (e.g. welcome) */}
       {!targetRect && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/75 backdrop-blur-sm pointer-events-auto cursor-pointer"
+          className="fixed inset-0 z-40 bg-black/60 pointer-events-auto cursor-pointer"
           onClick={handleCompleteTour}
         />
       )}
@@ -297,7 +297,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         </svg>
       )}
 
-      {/* Spotlight Glowing Border & Beacon around the crystal clear cutout */}
+      {/* Spotlight Plain 2D Border around target */}
       {targetRect && (
         <div
           style={{
@@ -306,13 +306,10 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
             width: `${targetRect.width + 12}px`,
             height: `${targetRect.height + 12}px`,
           }}
-          className="fixed z-40 pointer-events-none rounded-2xl border-2 border-blue-400 dark:border-blue-400 ring-4 ring-blue-500/30 dark:ring-blue-400/20 shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all duration-200 ease-out"
+          className="fixed z-40 pointer-events-none rounded-xl border-2 border-blue-600 dark:border-blue-400 transition-all duration-200 ease-out"
         >
-          {/* Subtle pulsating beacon dot */}
-          <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-blue-600" />
-          </span>
+          {/* Solid 2D indicator dot */}
+          <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3 rounded-full bg-blue-600 dark:bg-blue-400" />
         </div>
       )}
 
@@ -327,7 +324,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         }`}
       >
         <div
-          className="pointer-events-auto w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95"
+          className="pointer-events-auto w-full max-w-md bg-white dark:bg-[#1e1e1e] rounded-2xl border-2 border-stone-300 dark:border-neutral-700 overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Bar */}

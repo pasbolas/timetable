@@ -103,20 +103,20 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4 bg-black/60 animate-in fade-in duration-200"
       onClick={isMandatory ? undefined : onClose}
     >
       <div
-        className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[85vh] bg-white dark:bg-slate-900 sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800"
+        className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[85vh] bg-white dark:bg-neutral-900 sm:rounded-2xl border-2 border-stone-300 dark:border-neutral-700 flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mandatory First-Launch Header Banner */}
         {isMandatory && (
           <div
-            className="px-5 pt-5 pb-3.5 bg-gradient-to-b from-blue-50/90 via-blue-50/40 to-transparent dark:from-blue-950/40 dark:via-blue-950/20 dark:to-transparent border-b border-slate-200/80 dark:border-slate-800/80"
+            className="px-5 pt-5 pb-3.5 bg-stone-100 dark:bg-neutral-800 border-b border-stone-200 dark:border-neutral-700"
             style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
           >
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-600 text-white shadow-sm shadow-blue-500/25 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-600 text-white mb-2">
               <GraduationCap className="w-3.5 h-3.5" />
               Required Setup • Select Course
             </div>

@@ -24,14 +24,14 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     <div
       data-tour={dataTour}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl border transition-all cursor-pointer active:scale-[0.99] p-3.5 my-2 shadow-sm ${
+      className={`relative overflow-hidden rounded-xl border transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 ${
         theme.bg
       } ${
         isActiveNow
-          ? "ring-2 ring-blue-500/70 shadow-md shadow-blue-500/10"
+          ? "border-2 border-blue-600 dark:border-blue-400"
           : isPast
-          ? "opacity-60 saturate-50"
-          : ""
+          ? "opacity-60 saturate-50 border-stone-200 dark:border-neutral-800"
+          : "border-stone-200 dark:border-neutral-800"
       }`}
     >
       {/* Sleek vertical accent line */}
@@ -45,7 +45,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
           </span>
           {isActiveNow && (
             <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               NOW
             </span>
           )}

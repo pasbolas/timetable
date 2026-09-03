@@ -81,7 +81,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
     <div className="w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
-        className="sticky z-20 bg-white/45 dark:bg-[#1a1e23]/60 backdrop-blur-xl border-b border-slate-300/40 dark:border-white/10 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-all shadow-xs"
+        className="sticky z-20 bg-[#f4f1e0] dark:bg-[#1e1e1e] border-b border-stone-300 dark:border-neutral-800 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
         style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
       >
         <div className="flex items-baseline gap-2">
@@ -141,7 +141,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex-1 flex w-full bg-white/10 dark:bg-white/[0.02] min-h-[calc(100vh-100px)]"
+          className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)]"
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
@@ -149,7 +149,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               paddingTop: `${GRID_PADDING_Y}px`,
               paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
             }}
-            className="w-16 sm:w-20 shrink-0 border-r border-slate-300/40 dark:border-white/10 relative select-none bg-white/25 dark:bg-white/[0.03] min-h-full"
+            className="w-16 sm:w-20 shrink-0 border-r border-stone-300 dark:border-neutral-800 relative select-none bg-stone-200/30 dark:bg-neutral-800/30 min-h-full"
           >
             {hoursList.map((hour) => {
               const isLast = hour === endHour;
@@ -175,23 +175,23 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     top: `${GRID_PADDING_Y}px`,
                     height: `${(endHour - startHour) * HOUR_HEIGHT}px`,
                   }}
-                  className="absolute right-0 w-[3px] bg-stone-300/60 dark:bg-[#834655]/40 pointer-events-none"
+                  className="absolute right-0 w-[3px] bg-stone-300 dark:bg-neutral-700 pointer-events-none"
                   aria-hidden="true"
                 >
                   {/* Elapsed day progress fill */}
                   <div
                     style={{ height: `${Math.max(0, currentLiveY - GRID_PADDING_Y)}px` }}
-                    className="w-full bg-gradient-to-b from-blue-400/40 via-blue-500/50 to-blue-600 dark:from-[#834655] dark:via-[#9F5069] dark:to-[#C8B273] transition-all duration-300"
+                    className="w-full bg-blue-600 dark:bg-[#C8B273]"
                   />
                 </div>
 
                 {/* Floating Current Time Pill Badge */}
                 <div
                   style={{ top: `${currentLiveY}px` }}
-                  className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-300 flex items-center justify-end"
+                  className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-end"
                 >
-                  <span className="text-[10px] sm:text-[11px] font-extrabold text-blue-600 dark:text-[#C8B273] bg-white/95 dark:bg-[#303030]/95 px-1.5 py-0.5 rounded shadow-sm ring-1 ring-blue-500/25 dark:ring-[#C8B273]/40 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#C8B273] animate-pulse" />
+                  <span className="text-[10px] sm:text-[11px] font-bold text-blue-600 dark:text-[#C8B273] bg-white dark:bg-neutral-800 px-1.5 py-0.5 rounded border border-stone-300 dark:border-neutral-700 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#C8B273]" />
                     {currentLiveTime.format("h:mm A")}
                   </span>
                 </div>
@@ -214,24 +214,23 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div
                   key={hour}
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
-                  className="border-t border-slate-300/40 dark:border-white/10 w-full"
+                  className="border-t border-stone-200 dark:border-neutral-800 w-full"
                 />
               );
             })}
 
-            {/* Full-width Current Time Slider & Knob (Traversing Top-to-Bottom across the Day) */}
+            {/* Full-width Current Time Slider & Knob (Plain 2D) */}
             {isToday && isWithinGrid && (
               <div
                 style={{ top: `${currentLiveY}px` }}
-                className="absolute left-0 right-0 z-20 flex items-center pointer-events-none -translate-y-1/2 transition-all duration-300"
+                className="absolute left-0 right-0 z-20 flex items-center pointer-events-none -translate-y-1/2"
               >
-                {/* Slider Thumb / Knob on the rail boundary */}
-                <div className="relative -ml-[7px] flex items-center justify-center shrink-0">
-                  <div className="w-5 h-5 rounded-full bg-blue-500/20 dark:bg-[#C8B273]/20 animate-ping absolute" />
-                  <div className="w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-[#C8B273] ring-2 ring-white dark:ring-[#424242] shadow-md shadow-blue-500/30 dark:shadow-[#C8B273]/50 relative z-10" />
+                {/* 2D Knob on the rail boundary */}
+                <div className="relative -ml-[6px] flex items-center justify-center shrink-0">
+                  <div className="w-3 h-3 rounded-full bg-blue-600 dark:bg-[#C8B273] border-2 border-white dark:border-neutral-900 relative z-10" />
                 </div>
-                {/* Horizontal slider beam spanning across the calendar grid */}
-                <div className="flex-1 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400/80 dark:from-[#C8B273] dark:via-[#F6CAC9] dark:to-[#C8B273]/60 shadow-[0_0_8px_rgba(59,130,246,0.35)] dark:shadow-[0_0_10px_rgba(200,178,115,0.45)]" />
+                {/* Horizontal slider beam (solid 2D line) */}
+                <div className="flex-1 h-[2px] bg-blue-600 dark:bg-[#C8B273]" />
               </div>
             )}
 
@@ -275,7 +274,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border cursor-pointer shadow-sm transition-all overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg} ${
+                  className={`absolute rounded-xl border cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg} ${
                     isCompact
                       ? "p-2 sm:px-2.5 sm:py-2"
                       : isExtended
@@ -283,10 +282,10 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         : "p-2.5 sm:p-3"
                   } ${
                     active
-                      ? "ring-2 ring-blue-500 dark:ring-[#C8B273] shadow-md shadow-blue-500/15 dark:shadow-[#C8B273]/25 z-10"
+                      ? "border-2 border-blue-600 dark:border-[#C8B273] z-10"
                       : past
-                        ? "opacity-60 saturate-50"
-                        : "z-0"
+                        ? "opacity-60 saturate-50 border-stone-200 dark:border-neutral-800 z-0"
+                        : "border-stone-200 dark:border-neutral-800 z-0"
                   }`}
                 >
                   {/* Left accent color strip */}

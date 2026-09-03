@@ -83,7 +83,7 @@ export function App() {
 
   return (
     <div
-      className="min-h-screen w-full bg-transparent text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white"
+      className="min-h-screen w-full bg-[#f4f1e0] dark:bg-[#1e1e1e] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white"
       style={{
         minHeight: "calc(100dvh + env(safe-area-inset-bottom, 0px))",
       }}
