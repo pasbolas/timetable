@@ -1,5 +1,6 @@
 import React from "react";
 import { SlidersHorizontal, Sparkles, WifiOff } from "lucide-react";
+import { Button, Chip } from "@heroui/react";
 import { ProgramSearchResult } from "../types/timetable";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 
@@ -30,18 +31,23 @@ export const TopBar: React.FC<TopBarProps> = ({
       className="sticky top-0 z-30 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/80 transition-colors"
       style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 0px)" }}
     >
-      <div className="max-w-2xl h-[52px] mx-auto px-3.5 flex items-center justify-between gap-2">
+      <div className="max-w-2xl h-[54px] mx-auto px-3 flex items-center justify-between gap-2">
         {/* Left: Course Chip (Tap opens Menu Drawer) */}
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-2 overflow-hidden text-left py-1 px-2 -ml-1 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/60 active:scale-98 transition-all group"
+          className="flex items-center gap-2 overflow-hidden text-left py-1 px-1.5 -ml-1 rounded-2xl hover:bg-slate-100/80 dark:hover:bg-slate-800/60 active:scale-98 transition-all group max-w-[calc(100%-140px)] sm:max-w-md"
           title="Open course details and menu"
         >
-          <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-lg bg-blue-600 text-white shadow-sm shadow-blue-500/20">
+          <Chip
+            size="sm"
+            color="primary"
+            variant="shadow"
+            className="font-bold text-xs shrink-0 cursor-pointer shadow-sm shadow-blue-500/25"
+          >
             {shortCode}
-          </span>
-          <span className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate max-w-[170px] sm:max-w-xs group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          </Chip>
+          <span className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {programTitle}
           </span>
         </button>
@@ -50,38 +56,46 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           {/* Offline indicator */}
           {isOffline && (
-            <span
-              className="p-1.5 rounded-lg text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50"
-              title="Viewing offline cached schedule"
+            <Chip
+              size="sm"
+              color="warning"
+              variant="flat"
+              startContent={<WifiOff className="w-3 h-3" />}
+              className="text-[11px] font-medium"
             >
-              <WifiOff className="w-3.5 h-3.5" />
-            </span>
+              Offline
+            </Chip>
           )}
 
           {/* Jump to Today (shown only when not currently on today) */}
           {!isTodayActive && (
-            <button
-              onClick={onGoToToday}
+            <Button
+              size="sm"
+              color="primary"
+              variant="flat"
+              onPress={onGoToToday}
               data-tour="today-button"
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/60 active:scale-95 transition-all flex items-center gap-1"
+              startContent={<Sparkles className="w-3.5 h-3.5 text-blue-500" />}
+              className="h-8 px-2.5 text-xs font-semibold rounded-xl min-w-0 shadow-sm"
               title="Jump to today"
             >
-              <Sparkles className="w-3 h-3" />
-              <span>Today</span>
-            </button>
+              Today
+            </Button>
           )}
 
-          {/* Expandable Pane Button */}
-          <button
-            onClick={onOpenMenu}
+          {/* Expandable Menu Button with Ripple */}
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            onPress={onOpenMenu}
             data-tour="menu-button"
-            className={`p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all relative ${
-              isLoading ? "animate-pulse text-blue-600" : ""
-            }`}
+            isLoading={isLoading}
+            className="w-8 h-8 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             title="Menu & Settings"
           >
             <SlidersHorizontal className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </header>
