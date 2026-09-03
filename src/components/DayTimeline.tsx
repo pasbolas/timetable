@@ -168,7 +168,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               <>
                 {/* Vertical slider track rail along the right edge of gutter */}
                 <div
-                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-slate-200/60 dark:bg-slate-800/60 pointer-events-none"
+                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-stone-300/60 dark:bg-slate-800/60 pointer-events-none"
                   aria-hidden="true"
                 >
                   {/* Elapsed day progress fill */}
@@ -204,7 +204,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div
                   key={hour}
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
-                  className="border-t border-slate-100 dark:border-slate-800/60 w-full"
+                  className="border-t border-stone-300/40 dark:border-slate-800/60 w-full"
                 />
               );
             })}

@@ -189,7 +189,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   return (
     <footer
       data-tour="date-strip"
-      className="sticky bottom-0 z-30 bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
+      className="sticky bottom-0 z-30 bg-[#f4f1e0]/90 dark:bg-slate-950/95 border-t border-stone-300/60 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
       style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
       <div className="max-w-2xl mx-auto px-3 pt-1 pb-0.5">
@@ -201,14 +201,14 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           <div className="flex items-center gap-0.5">
             <button
               onClick={handlePrevDay}
-              className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md hover:bg-stone-200/60 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Previous day"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleNextDay}
-              className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md hover:bg-stone-200/60 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Next day"
             >
               <ChevronRight className="w-3.5 h-3.5" />
@@ -220,7 +220,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         <div className="relative py-1 overflow-hidden touch-pan-x select-none">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[66px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[66px] rounded-2xl border border-stone-300/70 dark:border-slate-800/90 bg-stone-200/50 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
             aria-hidden="true"
           />
 

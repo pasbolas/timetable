@@ -7,10 +7,15 @@
 }
 
 html {
-  background-color: #f8fafc;
+  background-color: #f4f1e0;
 }
 
-html.dark {
+body {
+  background-color: #f4f1e0;
+}
+
+html.dark,
+html.dark body {
   background-color: #020617;
 }
 
