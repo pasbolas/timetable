@@ -79,8 +79,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
   return (
     <div className="w-full flex-1 flex flex-col pb-6">
-      {/* Subheader: Date & class counter - Sticky at top of timeline scrollport */}
-      <div className="sticky top-0 z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
+      {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
+      <div
+        className="sticky z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-all shadow-xs"
+        style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
+      >
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
             {activeDate.format("dddd, D MMMM")}
