@@ -78,9 +78,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full pb-2">
-      {/* Subheader: Date & class counter - Sticky below TopBar */}
-      <div className="sticky top-[52px] z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
+    <div className="w-full pb-6">
+      {/* Subheader: Date & class counter - Sticky at top of timeline scrollport */}
+      <div className="sticky top-0 z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
             {activeDate.format("dddd, D MMMM")}

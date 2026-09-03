@@ -58,8 +58,8 @@ export function App() {
   const isTodayActive = isToday(activeDate);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white">
-      {/* Minimal Top Header */}
+    <div className="h-full h-[100dvh] max-h-[100dvh] w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col overflow-hidden selection:bg-blue-500 selection:text-white">
+      {/* Pinned Minimal Top Header */}
       <TopBar
         selectedProgram={selectedProgram}
         onOpenMenu={() => setIsMenuOpen(true)}
@@ -69,8 +69,8 @@ export function App() {
         isLoading={isLoading}
       />
 
-      {/* Main Minimalist Timeline */}
-      <main className="flex-1 pb-4">
+      {/* Main Scrollable Timeline Stream */}
+      <main className="flex-1 overflow-y-auto overscroll-y-contain relative">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
@@ -84,8 +84,8 @@ export function App() {
         />
       </main>
 
-      {/* Sleek Centered 5-Week Horizontal Date Selector at Bottom */}
-      <div className="sticky bottom-0 z-30">
+      {/* Pinned 5-Week Horizontal Date Selector Dock at Bottom */}
+      <div className="shrink-0 z-30">
         <WeekDateStrip
           activeDate={activeDate}
           onSelectDate={setActiveDate}
