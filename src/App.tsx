@@ -9,6 +9,7 @@ import { WeekDateStrip } from "./components/WeekDateStrip";
 import { DayTimeline } from "./components/DayTimeline";
 import { MenuDrawer } from "./components/MenuDrawer";
 import { SearchModal } from "./components/SearchModal";
+import { CourseYearSetupModal } from "./components/CourseYearSetupModal";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { InteractiveTour } from "./components/InteractiveTour";
 import { TIMETABLE_CONFIG } from "./config/timetableConfig";
@@ -27,6 +28,7 @@ export function App() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCourseSetupOpen, setIsCourseSetupOpen] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [isMandatoryCourseSelectOpen, setIsMandatoryCourseSelectOpen] = useState(false);
 
@@ -56,6 +58,7 @@ export function App() {
     selectProgram(program);
     StorageService.setCompletedCourseOnboarding(true);
     setIsSearchOpen(false);
+    setIsCourseSetupOpen(false);
     setIsMandatoryCourseSelectOpen(false);
   };
 
@@ -123,7 +126,7 @@ export function App() {
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         selectedProgram={selectedProgram}
-        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenSearch={() => setIsCourseSetupOpen(true)}
         recentPrograms={recents}
         onSelectProgram={selectProgram}
         onGoToToday={handleGoToToday}
@@ -136,15 +139,25 @@ export function App() {
         onStartTour={() => setIsTourOpen(true)}
       />
 
-      {/* Search Modal (Regular or Mandatory First-Launch Setup) */}
-      <SearchModal
-        isOpen={isSearchOpen || isMandatoryCourseSelectOpen}
+      {/* Starting Phase & Rotary Year Selector Modal */}
+      <CourseYearSetupModal
+        isOpen={isMandatoryCourseSelectOpen || isCourseSetupOpen}
         isMandatory={isMandatoryCourseSelectOpen}
         onClose={() => {
+          setIsCourseSetupOpen(false);
           if (!isMandatoryCourseSelectOpen) {
-            setIsSearchOpen(false);
+            setIsMandatoryCourseSelectOpen(false);
           }
         }}
+        onSelectProgram={handleSelectProgram}
+        currentProgramId={selectedProgram.Identity}
+      />
+
+      {/* Quick Program Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        isMandatory={false}
+        onClose={() => setIsSearchOpen(false)}
         onSelectProgram={handleSelectProgram}
         recentPrograms={recents}
         currentProgramId={selectedProgram.Identity}
