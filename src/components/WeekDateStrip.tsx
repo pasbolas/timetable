@@ -3,6 +3,7 @@ import moment from "moment-timezone";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayData } from "../types/timetable";
 import { TIMETABLE_CONFIG } from "../config/timetableConfig";
+import { triggerHapticFeedback } from "../services/haptics";
 
 interface WeekDateStripProps {
   activeDate: moment.Moment;
@@ -20,6 +21,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastHapticDateRef = useRef<string | null>(null);
   const tz = TIMETABLE_CONFIG.timezone;
 
   // Generate 5 continuous weeks (35 days) centered around the current week
@@ -52,22 +54,36 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     const containerCenter = container.scrollLeft + containerWidth / 2;
     const buttons = container.querySelectorAll<HTMLElement>("[data-date]");
 
+    let closestDateStr: string | null = null;
+    let minDistance = Infinity;
+
     buttons.forEach((btn) => {
       const btnCenter = btn.offsetLeft + btn.clientWidth / 2;
       const dist = Math.abs(btnCenter - containerCenter);
+
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestDateStr = btn.getAttribute("data-date");
+      }
 
       // Distance radius across which zoom scaling takes effect
       const radius = 160;
       const progress = Math.max(0, 1 - dist / radius);
       
-      // Scale smoothly from 0.78x at edges to 1.10x at the exact middle
-      const scale = 0.78 + 0.32 * Math.pow(progress, 1.3);
+      // Scale smoothly from 0.82x at edges to 1.08x at the exact middle
+      const scale = 0.82 + 0.26 * Math.pow(progress, 1.3);
       // Fade slightly as items move away from center
-      const opacity = 0.45 + 0.55 * progress;
+      const opacity = 0.50 + 0.50 * progress;
 
       btn.style.transform = `scale(${scale.toFixed(3)})`;
       btn.style.opacity = `${opacity.toFixed(3)}`;
     });
+
+    // Provide instant tactile response when a date bubble enters the center highlight box
+    if (closestDateStr && minDistance < 22 && closestDateStr !== lastHapticDateRef.current) {
+      lastHapticDateRef.current = closestDateStr;
+      triggerHapticFeedback();
+    }
   }, []);
 
   // Smoothly center the active date in the middle of the scroll view
@@ -156,10 +172,12 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   };
 
   const handlePrevDay = () => {
+    triggerHapticFeedback();
     onSelectDate(activeDate.clone().subtract(1, "days"));
   };
 
   const handleNextDay = () => {
+    triggerHapticFeedback();
     onSelectDate(activeDate.clone().add(1, "days"));
   };
 
@@ -194,18 +212,18 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         </div>
 
         {/* Date Selector Strip Container */}
-        <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
+        <div className="relative py-1 overflow-hidden touch-pan-x select-none">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[60px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[66px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
             aria-hidden="true"
           />
 
-          {/* Scrollable Date Track */}
+          {/* Scrollable Date Track with generous height to prevent top/bottom clipping */}
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar py-0.5 scroll-smooth relative z-10"
+            className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[74px] scroll-smooth relative z-10"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -230,6 +248,10 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   data-date={dateStr}
                   data-active={isActive ? "true" : "false"}
                   onClick={() => {
+                    if (lastHapticDateRef.current !== dateStr) {
+                      lastHapticDateRef.current = dateStr;
+                      triggerHapticFeedback();
+                    }
                     onSelectDate(dayMoment);
                   }}
                   style={{
