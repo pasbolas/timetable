@@ -21,7 +21,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastHapticDateRef = useRef<string | null>(null);
+  const lastHapticDateRef = useRef<string | null>(activeDate.format("YYYY-MM-DD"));
   const tz = TIMETABLE_CONFIG.timezone;
 
   // Generate 5 continuous weeks (35 days) centered around the current week
@@ -79,8 +79,13 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
       btn.style.opacity = `${opacity.toFixed(3)}`;
     });
 
-    // Provide instant tactile response when a date bubble enters the center highlight box
-    if (closestDateStr && minDistance < 22 && closestDateStr !== lastHapticDateRef.current) {
+    // Provide instant tactile response when a date bubble enters the center highlight box during manual user scrolling
+    if (
+      !isProgrammaticScrollRef.current &&
+      closestDateStr &&
+      minDistance < 22 &&
+      closestDateStr !== lastHapticDateRef.current
+    ) {
       lastHapticDateRef.current = closestDateStr;
       triggerHapticFeedback();
     }

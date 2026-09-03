@@ -1,9 +1,32 @@
 /**
  * Universal Mobile Haptic Feedback Utility
- * Supports Android Vibration API and iOS 17.4+ native Taptic Engine switch feedback
+ * Supports Android Vibration API and iOS 17.4+ native Taptic Engine switch feedback.
+ * Guards against non-interactive / automated calls to prevent browser intervention warnings.
  */
 
+let userHasInteracted = false;
+
+if (typeof window !== "undefined") {
+  const markInteracted = () => {
+    userHasInteracted = true;
+    window.removeEventListener("pointerdown", markInteracted);
+    window.removeEventListener("touchstart", markInteracted);
+    window.removeEventListener("keydown", markInteracted);
+  };
+  window.addEventListener("pointerdown", markInteracted, { capture: true, passive: true });
+  window.addEventListener("touchstart", markInteracted, { capture: true, passive: true });
+  window.addEventListener("keydown", markInteracted, { capture: true, passive: true });
+}
+
 export function triggerHapticFeedback(): void {
+  // Check whether user has interacted or modern userActivation is active
+  const nav = typeof navigator !== "undefined" ? (navigator as unknown as { userActivation?: { hasBeenActive?: boolean } }) : null;
+  const hasGesture = userHasInteracted || Boolean(nav?.userActivation?.hasBeenActive);
+
+  if (!hasGesture) {
+    return;
+  }
+
   // 1. Android & standard Web Vibration API
   if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
     try {

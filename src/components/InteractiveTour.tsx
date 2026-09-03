@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sparkles,
   GraduationCap,
@@ -53,6 +53,74 @@ function getCutoutPath(
   return `M 0,0 L ${w},0 L ${w},${h} L 0,${h} Z M ${x + rad},${y} L ${x + rw - rad},${y} A ${rad},${rad} 0 0,1 ${x + rw},${y + rad} L ${x + rw},${y + rh - rad} A ${rad},${rad} 0 0,1 ${x + rw - rad},${y + rh} L ${x + rad},${y + rh} A ${rad},${rad} 0 0,1 ${x},${y + rh - rad} L ${x},${y + rad} A ${rad},${rad} 0 0,1 ${x + rad},${y} Z`;
 }
 
+const TOUR_STEPS: TourStep[] = [
+  {
+    id: "welcome",
+    title: "Welcome to MyTimetable! 👋",
+    badge: "Quick Overview",
+    icon: <Sparkles className="w-5 h-5 text-blue-500" />,
+    description:
+      "Your fast, modern student timetable designed for university life. Packed with live schedule updates, offline support, smart break detection, and calendar sync.",
+    highlights: [
+      "Instant course search across all degree programs",
+      "5-week swipeable calendar with class indicators",
+      "Smart lab group grouping & automatic break calculation",
+      "Works offline and installs on your phone as a PWA",
+    ],
+    actionLabel: "Start Quick Tour",
+  },
+  {
+    id: "course-chip",
+    targetSelector: '[data-tour="course-chip"]',
+    title: "Course Selector & Search 🔍",
+    badge: "Step 1 of 5 • Courses",
+    icon: <GraduationCap className="w-5 h-5 text-blue-500" />,
+    description:
+      "Tap your course name or code anytime to search degrees, switch between recent programs, or explore modules with instant autocomplete.",
+    tip: "You can search by course code (e.g. TU856) or title (e.g. Computer Science).",
+  },
+  {
+    id: "date-strip",
+    targetSelector: '[data-tour="date-strip"]',
+    title: "5-Week Calendar Strip 📅",
+    badge: "Step 2 of 5 • Date Strip",
+    icon: <Calendar className="w-5 h-5 text-indigo-500" />,
+    description:
+      "Easily swipe or scroll through 35 continuous days. Days with scheduled lectures or labs feature a blue dot indicator.",
+    tip: "Use the ‹ and › buttons or tap any date to navigate smoothly.",
+  },
+  {
+    id: "timeline",
+    targetSelector: '[data-tour="timeline-stream"], main',
+    title: "Smart Timeline & Breaks ☕",
+    badge: "Step 3 of 5 • Timeline",
+    icon: <Layers className="w-5 h-5 text-emerald-500" />,
+    description:
+      "Classes are color-coded by category (Lectures, Labs, Tutorials, Studios). Free gaps (>6 mins) between classes are automatically calculated and displayed as break cards.",
+    tip: "Your ongoing class is highlighted with a live pulsing green 'NOW' badge.",
+  },
+  {
+    id: "lesson-card",
+    targetSelector: '[data-tour="lesson-card"], [data-tour="timeline-stream"], main',
+    title: "Class Details & Calendar Export 📥",
+    badge: "Step 4 of 5 • Lesson Details",
+    icon: <CalendarPlus className="w-5 h-5 text-purple-500" />,
+    description:
+      "Tap on any lecture or lab card to open rich details: room numbers, assigned lecturers, group breakdowns, and one-tap export to Apple Calendar, Google Calendar, or Outlook.",
+    tip: "You can also export an entire week's schedule into your calendar from the menu!",
+  },
+  {
+    id: "menu-button",
+    targetSelector: '[data-tour="menu-button"]',
+    title: "Preferences, Themes & Offline ⚙️",
+    badge: "Step 5 of 5 • Menu & Settings",
+    icon: <SlidersHorizontal className="w-5 h-5 text-amber-500" />,
+    description:
+      "Open the menu to toggle Light, Dark, or System themes, jump straight back to Today, reload live timetable data, or re-run this interactive tour whenever you like.",
+    tip: "Cached schedules allow the app to work seamlessly without an internet connection.",
+  },
+];
+
 export const InteractiveTour: React.FC<InteractiveTourProps> = ({
   isOpen,
   onClose,
@@ -64,77 +132,10 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
     height: typeof window !== "undefined" ? window.innerHeight : 800,
   });
 
-  const steps: TourStep[] = [
-    {
-      id: "welcome",
-      title: "Welcome to MyTimetable! 👋",
-      badge: "Quick Overview",
-      icon: <Sparkles className="w-5 h-5 text-blue-500" />,
-      description:
-        "Your fast, modern student timetable designed for university life. Packed with live schedule updates, offline support, smart break detection, and calendar sync.",
-      highlights: [
-        "Instant course search across all degree programs",
-        "5-week swipeable calendar with class indicators",
-        "Smart lab group grouping & automatic break calculation",
-        "Works offline and installs on your phone as a PWA",
-      ],
-      actionLabel: "Start Quick Tour",
-    },
-    {
-      id: "course-chip",
-      targetSelector: '[data-tour="course-chip"]',
-      title: "Course Selector & Search 🔍",
-      badge: "Step 1 of 5 • Courses",
-      icon: <GraduationCap className="w-5 h-5 text-blue-500" />,
-      description:
-        "Tap your course name or code anytime to search degrees, switch between recent programs, or explore modules with instant autocomplete.",
-      tip: "You can search by course code (e.g. TU856) or title (e.g. Computer Science).",
-    },
-    {
-      id: "date-strip",
-      targetSelector: '[data-tour="date-strip"]',
-      title: "5-Week Calendar Strip 📅",
-      badge: "Step 2 of 5 • Date Strip",
-      icon: <Calendar className="w-5 h-5 text-indigo-500" />,
-      description:
-        "Easily swipe or scroll through 35 continuous days. Days with scheduled lectures or labs feature a blue dot indicator.",
-      tip: "Use the ‹ and › buttons or tap any date to navigate smoothly.",
-    },
-    {
-      id: "timeline",
-      targetSelector: '[data-tour="timeline-stream"], main',
-      title: "Smart Timeline & Breaks ☕",
-      badge: "Step 3 of 5 • Timeline",
-      icon: <Layers className="w-5 h-5 text-emerald-500" />,
-      description:
-        "Classes are color-coded by category (Lectures, Labs, Tutorials, Studios). Free gaps (>6 mins) between classes are automatically calculated and displayed as break cards.",
-      tip: "Your ongoing class is highlighted with a live pulsing green 'NOW' badge.",
-    },
-    {
-      id: "lesson-card",
-      targetSelector: '[data-tour="lesson-card"], [data-tour="timeline-stream"], main',
-      title: "Class Details & Calendar Export 📥",
-      badge: "Step 4 of 5 • Lesson Details",
-      icon: <CalendarPlus className="w-5 h-5 text-purple-500" />,
-      description:
-        "Tap on any lecture or lab card to open rich details: room numbers, assigned lecturers, group breakdowns, and one-tap export to Apple Calendar, Google Calendar, or Outlook.",
-      tip: "You can also export an entire week's schedule into your calendar from the menu!",
-    },
-    {
-      id: "menu-button",
-      targetSelector: '[data-tour="menu-button"]',
-      title: "Preferences, Themes & Offline ⚙️",
-      badge: "Step 5 of 5 • Menu & Settings",
-      icon: <SlidersHorizontal className="w-5 h-5 text-amber-500" />,
-      description:
-        "Open the menu to toggle Light, Dark, or System themes, jump straight back to Today, reload live timetable data, or re-run this interactive tour whenever you like.",
-      tip: "Cached schedules allow the app to work seamlessly without an internet connection.",
-    },
-  ];
-
-  const currentStep = steps[currentStepIndex];
+  const currentStep = TOUR_STEPS[currentStepIndex] || TOUR_STEPS[0];
   const isFirstStep = currentStepIndex === 0;
-  const isLastStep = currentStepIndex === steps.length - 1;
+  const isLastStep = currentStepIndex === TOUR_STEPS.length - 1;
+  const targetSelector = currentStep.targetSelector;
 
   // Reset to first step whenever the tour is newly opened
   useEffect(() => {
@@ -143,28 +144,42 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
     }
   }, [isOpen]);
 
-  // Update target rect and position
-  const updateTargetRect = useCallback(() => {
+  // Measure target element rect safely without infinite state update loops
+  useEffect(() => {
     if (!isOpen) return;
 
-    if (!currentStep.targetSelector) {
+    if (!targetSelector) {
       setTargetRect(null);
       return;
     }
 
-    const element = document.querySelector(currentStep.targetSelector);
+    const measureRect = () => {
+      const element = document.querySelector(targetSelector);
+      if (element) {
+        const r = element.getBoundingClientRect();
+        setTargetRect((prev) => {
+          if (
+            prev &&
+            Math.round(prev.top) === Math.round(r.top) &&
+            Math.round(prev.left) === Math.round(r.left) &&
+            Math.round(prev.width) === Math.round(r.width) &&
+            Math.round(prev.height) === Math.round(r.height)
+          ) {
+            return prev;
+          }
+          return r;
+        });
+      } else {
+        setTargetRect(null);
+      }
+    };
+
+    const element = document.querySelector(targetSelector);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
-      setTargetRect(element.getBoundingClientRect());
-
-      // Re-query after smooth scroll completes
-      const timer1 = setTimeout(() => {
-        setTargetRect(element.getBoundingClientRect());
-      }, 100);
-      const timer2 = setTimeout(() => {
-        setTargetRect(element.getBoundingClientRect());
-      }, 300);
-
+      measureRect();
+      const timer1 = setTimeout(measureRect, 100);
+      const timer2 = setTimeout(measureRect, 300);
       return () => {
         clearTimeout(timer1);
         clearTimeout(timer2);
@@ -172,27 +187,34 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
     } else {
       setTargetRect(null);
     }
-  }, [isOpen, currentStep]);
+  }, [isOpen, currentStepIndex, targetSelector]);
 
+  // Window resize & scroll listeners only active while tour is open
   useEffect(() => {
-    const cleanup = updateTargetRect();
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, [updateTargetRect, currentStepIndex, isOpen]);
+    if (!isOpen) return;
 
-  // Handle scroll & resize listeners
-  useEffect(() => {
     const handleScrollOrResize = () => {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
       });
 
-      if (!isOpen || !currentStep.targetSelector) return;
-      const element = document.querySelector(currentStep.targetSelector);
+      if (!targetSelector) return;
+      const element = document.querySelector(targetSelector);
       if (element) {
-        setTargetRect(element.getBoundingClientRect());
+        const r = element.getBoundingClientRect();
+        setTargetRect((prev) => {
+          if (
+            prev &&
+            Math.round(prev.top) === Math.round(r.top) &&
+            Math.round(prev.left) === Math.round(r.left) &&
+            Math.round(prev.width) === Math.round(r.width) &&
+            Math.round(prev.height) === Math.round(r.height)
+          ) {
+            return prev;
+          }
+          return r;
+        });
       }
     };
 
@@ -203,7 +225,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
       window.removeEventListener("resize", handleScrollOrResize);
       window.removeEventListener("scroll", handleScrollOrResize);
     };
-  }, [isOpen, currentStep]);
+  }, [isOpen, targetSelector]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -227,7 +249,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
     if (isLastStep) {
       handleCompleteTour();
     } else {
-      setCurrentStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
+      setCurrentStepIndex((prev) => Math.min(prev + 1, TOUR_STEPS.length - 1));
     }
   };
 
@@ -364,7 +386,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
           <div className="p-4 sm:p-5 pt-3 bg-slate-50 dark:bg-slate-900/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
             {/* Step Dots indicator */}
             <div className="flex items-center gap-1.5">
-              {steps.map((step, idx) => (
+              {TOUR_STEPS.map((step, idx) => (
                 <button
                   key={step.id}
                   onClick={() => setCurrentStepIndex(idx)}
