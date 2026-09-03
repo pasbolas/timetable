@@ -79,25 +79,6 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
   return (
     <div className="w-full flex-1 flex flex-col pb-6">
-      {/* Subheader: Date & class counter - Sticky at top of timeline scrollport */}
-      <div className="sticky top-0 z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">
-            {activeDate.format("dddd, D MMMM")}
-          </h2>
-          {isToday && (
-            <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">
-              • {currentLiveTime.format("h:mm A")}
-            </span>
-          )}
-        </div>
-
-        {!isLoading && !error && lessons.length > 0 && (
-          <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
-            {lessons.length} {lessons.length === 1 ? "class" : "classes"}
-          </span>
-        )}
-      </div>
 
       {/* Loading Skeleton */}
       {isLoading && (

@@ -85,18 +85,26 @@ export function App() {
         minHeight: "calc(100dvh + env(safe-area-inset-bottom, 0px))",
       }}
     >
-      {/* Pinned Minimal Top Header */}
-      <TopBar
-        selectedProgram={selectedProgram}
-        onOpenMenu={() => setIsMenuOpen(true)}
-        onGoToToday={handleGoToToday}
-        isTodayActive={isTodayActive}
-        isOffline={isOfflineData}
-        isLoading={isLoading}
-      />
+      {/* Sticky Floating Top Section (TopBar + Date Selector Strip) */}
+      <div className="sticky top-0 z-30 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 transition-colors shadow-xs">
+        <TopBar
+          selectedProgram={selectedProgram}
+          onOpenMenu={() => setIsMenuOpen(true)}
+          onGoToToday={handleGoToToday}
+          isTodayActive={isTodayActive}
+          isOffline={isOfflineData}
+          isLoading={isLoading}
+        />
+        <WeekDateStrip
+          activeDate={activeDate}
+          onSelectDate={setActiveDate}
+          weekSchedule={schedule}
+          currentLiveTime={currentTime}
+        />
+      </div>
 
       {/* Main Timeline Stream */}
-      <main className="flex-1 flex flex-col relative pb-4">
+      <main className="flex-1 flex flex-col relative pb-8">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
@@ -109,14 +117,6 @@ export function App() {
           isLessonPast={isLessonPast}
         />
       </main>
-
-      {/* Footer Date Selector Dock Fixed to the Very Bottom */}
-      <WeekDateStrip
-        activeDate={activeDate}
-        onSelectDate={setActiveDate}
-        weekSchedule={schedule}
-        currentLiveTime={currentTime}
-      />
 
       {/* Expandable Menu & Settings Drawer */}
       <MenuDrawer
