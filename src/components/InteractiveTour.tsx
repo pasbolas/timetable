@@ -425,8 +425,8 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
                   onClick={handleCompleteTour}
                   className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1.5 active:scale-95 transition-all"
                 >
-                  <span>Got it!</span>
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Select My Course</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               ) : (
                 <button

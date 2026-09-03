@@ -13,6 +13,7 @@ import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { InteractiveTour } from "./components/InteractiveTour";
 import { TIMETABLE_CONFIG } from "./config/timetableConfig";
 import { StorageService } from "./services/storage";
+import { ProgramSearchResult } from "./types/timetable";
 
 export function App() {
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
@@ -27,16 +28,36 @@ export function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
+  const [isMandatoryCourseSelectOpen, setIsMandatoryCourseSelectOpen] = useState(false);
 
-  // Automatically trigger tour for first-time visitors once page is mounted
+  // First-time onboarding sequence: Tour -> Mandatory Unskippable Course Selection
   useEffect(() => {
     if (!StorageService.hasCompletedTour()) {
       const timer = setTimeout(() => {
         setIsTourOpen(true);
       }, 700);
       return () => clearTimeout(timer);
+    } else if (!StorageService.hasCompletedCourseOnboarding()) {
+      setIsMandatoryCourseSelectOpen(true);
     }
   }, []);
+
+  const handleTourClose = () => {
+    setIsTourOpen(false);
+    // Mandatory unskippable task immediately after the intro tour
+    if (!StorageService.hasCompletedCourseOnboarding()) {
+      setTimeout(() => {
+        setIsMandatoryCourseSelectOpen(true);
+      }, 250);
+    }
+  };
+
+  const handleSelectProgram = (program: ProgramSearchResult) => {
+    selectProgram(program);
+    StorageService.setCompletedCourseOnboarding(true);
+    setIsSearchOpen(false);
+    setIsMandatoryCourseSelectOpen(false);
+  };
 
   // Fetch schedule for selected program and active date's week
   const {
@@ -115,11 +136,16 @@ export function App() {
         onStartTour={() => setIsTourOpen(true)}
       />
 
-      {/* Search Modal */}
+      {/* Search Modal (Regular or Mandatory First-Launch Setup) */}
       <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSelectProgram={selectProgram}
+        isOpen={isSearchOpen || isMandatoryCourseSelectOpen}
+        isMandatory={isMandatoryCourseSelectOpen}
+        onClose={() => {
+          if (!isMandatoryCourseSelectOpen) {
+            setIsSearchOpen(false);
+          }
+        }}
+        onSelectProgram={handleSelectProgram}
         recentPrograms={recents}
         currentProgramId={selectedProgram.Identity}
       />
@@ -127,7 +153,7 @@ export function App() {
       {/* Interactive Feature Tour */}
       <InteractiveTour
         isOpen={isTourOpen}
-        onClose={() => setIsTourOpen(false)}
+        onClose={handleTourClose}
       />
 
       {/* PWA Install Banner */}

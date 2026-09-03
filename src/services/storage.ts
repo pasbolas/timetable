@@ -8,6 +8,7 @@ const KEYS = {
   THEME: "mytimetable_theme",
   SAVED_GROUPS: "mytimetable_saved_groups", // e.g. custom preferred lab groups
   TOUR_COMPLETED: "mytimetable_tour_completed",
+  COURSE_ONBOARDED: "mytimetable_course_onboarded",
 };
 
 export class StorageService {
@@ -122,6 +123,26 @@ export class StorageService {
       localStorage.removeItem(KEYS.TOUR_COMPLETED);
     } catch (e) {
       console.warn("Error resetting tour state:", e);
+    }
+  }
+
+  static hasCompletedCourseOnboarding(): boolean {
+    try {
+      return localStorage.getItem(KEYS.COURSE_ONBOARDED) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  static setCompletedCourseOnboarding(completed: boolean = true): void {
+    try {
+      if (completed) {
+        localStorage.setItem(KEYS.COURSE_ONBOARDED, "true");
+      } else {
+        localStorage.removeItem(KEYS.COURSE_ONBOARDED);
+      }
+    } catch (e) {
+      console.warn("Error saving course onboarding state:", e);
     }
   }
 }
