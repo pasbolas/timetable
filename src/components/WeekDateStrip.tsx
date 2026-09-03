@@ -266,12 +266,12 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   }}
                   className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color] duration-150 will-change-transform select-none touch-pan-x ${
                     isActive
-                      ? "bg-blue-600 text-white font-bold shadow-sm shadow-blue-600/20 z-10"
+                      ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] font-black shadow-sm shadow-blue-600/20 dark:shadow-[#C8B273]/30 z-10"
                       : isToday
-                      ? "bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 font-semibold ring-1 ring-blue-200 dark:ring-blue-800/60"
+                      ? "bg-blue-50 text-blue-700 dark:bg-[#834655]/40 dark:text-[#F6CAC9] font-semibold ring-1 ring-blue-200 dark:ring-[#C8B273]/50"
                       : isWeekend
-                      ? "text-slate-400 dark:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-900"
-                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                      ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200/50 dark:hover:bg-neutral-600/40"
+                      : "text-slate-700 dark:text-[#F6CAC9]/90 hover:bg-stone-200/50 dark:hover:bg-neutral-600/40"
                   }`}
                 >
                   {/* Day of Week */}
@@ -289,7 +289,9 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     {hasClasses && (
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
-                          isActive ? "bg-white" : "bg-blue-500 dark:bg-blue-400"
+                          isActive
+                            ? "bg-white dark:bg-[#424242]"
+                            : "bg-blue-500 dark:bg-[#C8B273]"
                         }`}
                       />
                     )}

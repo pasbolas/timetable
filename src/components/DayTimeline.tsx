@@ -168,13 +168,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               <>
                 {/* Vertical slider track rail along the right edge of gutter */}
                 <div
-                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-stone-300/60 dark:bg-slate-800/60 pointer-events-none"
+                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-stone-300/60 dark:bg-[#834655]/40 pointer-events-none"
                   aria-hidden="true"
                 >
                   {/* Elapsed day progress fill */}
                   <div
                     style={{ height: `${currentLiveY}px` }}
-                    className="w-full bg-gradient-to-b from-blue-400/40 via-blue-500/50 to-blue-600 dark:from-blue-500/30 dark:to-blue-400 transition-all duration-300"
+                    className="w-full bg-gradient-to-b from-blue-400/40 via-blue-500/50 to-blue-600 dark:from-[#834655] dark:via-[#9F5069] dark:to-[#C8B273] transition-all duration-300"
                   />
                 </div>
 
@@ -183,8 +183,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                   style={{ top: `${currentLiveY}px` }}
                   className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-300 flex items-center justify-end"
                 >
-                  <span className="text-[10px] sm:text-[11px] font-extrabold text-blue-600 dark:text-blue-400 bg-white/95 dark:bg-slate-900/95 px-1.5 py-0.5 rounded shadow-sm ring-1 ring-blue-500/25 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-blue-600 dark:text-[#C8B273] bg-white/95 dark:bg-[#303030]/95 px-1.5 py-0.5 rounded shadow-sm ring-1 ring-blue-500/25 dark:ring-[#C8B273]/40 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#C8B273] animate-pulse" />
                     {currentLiveTime.format("h:mm A")}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div
                   key={hour}
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
-                  className="border-t border-stone-300/40 dark:border-slate-800/60 w-full"
+                  className="border-t border-stone-300/40 dark:border-neutral-600/40 w-full"
                 />
               );
             })}
@@ -217,11 +217,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               >
                 {/* Slider Thumb / Knob on the rail boundary */}
                 <div className="relative -ml-[7px] flex items-center justify-center shrink-0">
-                  <div className="w-5 h-5 rounded-full bg-blue-500/20 animate-ping absolute" />
-                  <div className="w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-blue-400 ring-2 ring-white dark:ring-slate-950 shadow-md shadow-blue-500/30 relative z-10" />
+                  <div className="w-5 h-5 rounded-full bg-blue-500/20 dark:bg-[#C8B273]/20 animate-ping absolute" />
+                  <div className="w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-[#C8B273] ring-2 ring-white dark:ring-[#424242] shadow-md shadow-blue-500/30 dark:shadow-[#C8B273]/50 relative z-10" />
                 </div>
                 {/* Horizontal slider beam spanning across the calendar grid */}
-                <div className="flex-1 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400/80 dark:from-blue-400 dark:via-blue-500 dark:to-blue-400/60 shadow-[0_0_8px_rgba(59,130,246,0.35)]" />
+                <div className="flex-1 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400/80 dark:from-[#C8B273] dark:via-[#F6CAC9] dark:to-[#C8B273]/60 shadow-[0_0_8px_rgba(59,130,246,0.35)] dark:shadow-[0_0_10px_rgba(200,178,115,0.45)]" />
               </div>
             )}
 
@@ -273,7 +273,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         : "p-2.5 sm:p-3"
                   } ${
                     active
-                      ? "ring-2 ring-blue-500 shadow-md shadow-blue-500/15 z-10"
+                      ? "ring-2 ring-blue-500 dark:ring-[#C8B273] shadow-md shadow-blue-500/15 dark:shadow-[#C8B273]/25 z-10"
                       : past
                         ? "opacity-60 saturate-50"
                         : "z-0"

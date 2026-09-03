@@ -303,18 +303,18 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       return (
                         <div
                           key={idx}
-                          className="p-3.5 sm:p-4 rounded-2xl bg-slate-50/70 hover:bg-slate-50 dark:bg-slate-800/50 dark:hover:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-xs transition-all space-y-2.5 group"
+                          className="p-3.5 sm:p-4 rounded-2xl bg-slate-50/70 hover:bg-slate-50 dark:bg-[#424242]/70 dark:hover:bg-[#424242] border border-slate-200/80 dark:border-neutral-600/70 shadow-xs transition-all space-y-2.5 group"
                         >
                           {/* Header: Group Badge + Room Tag */}
                           <div className="flex items-center justify-between gap-2">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold text-xs tracking-tight border border-blue-200/60 dark:border-blue-900/40 shadow-2xs">
-                              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-[#834655]/40 text-blue-700 dark:text-[#F6CAC9] font-bold text-xs tracking-tight border border-blue-200/60 dark:border-[#9F5069]/40 shadow-2xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#C8B273]" />
                               {groupLabel}
                             </span>
 
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-                              <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                              <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-[#303030] border border-slate-200/80 dark:border-neutral-600/70 shadow-2xs">
+                              <MapPin className="w-3.5 h-3.5 text-emerald-500 dark:text-[#C8B273] shrink-0" />
+                              <span className="text-xs font-extrabold text-slate-800 dark:text-[#F6CAC9]">
                                 {roomCode}
                               </span>
                             </div>
@@ -322,16 +322,16 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                           {/* Room Specification (e.g. Specialist Computer Lab 5) */}
                           {roomDesc && (
-                            <div className="text-xs font-medium text-slate-600 dark:text-slate-300 pl-1 leading-relaxed">
+                            <div className="text-xs font-medium text-slate-600 dark:text-[#F6CAC9]/80 pl-1 leading-relaxed">
                               {roomDesc}
                             </div>
                           )}
 
                           {/* Instructor Line */}
                           {staffFormatted && (
-                            <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60 dark:border-slate-700/40 text-xs text-slate-500 dark:text-slate-400 pl-1">
-                              <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span className="font-medium text-slate-700 dark:text-slate-300">
+                            <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60 dark:border-neutral-600/50 text-xs text-slate-500 dark:text-[#F6CAC9]/70 pl-1">
+                              <User className="w-3.5 h-3.5 text-slate-400 dark:text-[#C8B273] shrink-0" />
+                              <span className="font-medium text-slate-700 dark:text-[#fbf7ed]">
                                 {staffFormatted}
                               </span>
                             </div>
@@ -345,13 +345,12 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="p-4 sm:p-5 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 flex gap-2.5">
+            <div className="p-4 sm:p-5 bg-slate-50 dark:bg-[#363636] border-t border-slate-200 dark:border-neutral-600/60 flex gap-2.5">
               <Button
-                color="primary"
                 variant="solid"
                 onPress={handleExportIcs}
                 startContent={<CalendarPlus className="w-4 h-4" />}
-                className="flex-1 h-11 font-semibold text-xs rounded-xl shadow-md shadow-blue-600/20"
+                className="flex-1 h-11 font-semibold text-xs rounded-xl shadow-md bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] dark:hover:bg-[#C8B273]/90 shadow-blue-600/20 dark:shadow-[#C8B273]/30"
               >
                 Add to Calendar
               </Button>
@@ -359,8 +358,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               <Button
                 variant="flat"
                 onPress={handleCopyInfo}
-                startContent={copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                className="h-11 px-4 font-semibold text-xs rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
+                startContent={copied ? <Check className="w-4 h-4 text-emerald-500 dark:text-[#C8B273]" /> : <Copy className="w-4 h-4 text-slate-500 dark:text-[#F6CAC9]" />}
+                className="h-11 px-4 font-semibold text-xs rounded-xl bg-slate-200 dark:bg-[#834655]/40 text-slate-800 dark:text-[#F6CAC9] dark:hover:bg-[#834655]/60"
               >
                 {copied ? "Copied!" : "Copy"}
               </Button>

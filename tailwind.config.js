@@ -11,6 +11,13 @@ export default {
   theme: {
     extend: {
       colors: {
+        palette: {
+          gold: "#C8B273",
+          plum: "#834655",
+          mauve: "#9F5069",
+          blush: "#F6CAC9",
+          charcoal: "#424242",
+        },
         brand: {
           50: "#eff6ff",
           100: "#dbeafe",
