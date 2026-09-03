@@ -187,32 +187,28 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   };
 
   return (
-    <div
+    <footer
       data-tour="date-strip"
-      className="w-full transition-colors"
+      className="sticky bottom-0 z-30 bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
-      <div className="max-w-2xl mx-auto px-3 pt-1 pb-1">
+      <div className="max-w-2xl mx-auto px-3 pt-1 pb-0.5">
         {/* Month Header and Micro Navigation */}
-        <div className="flex items-center justify-between px-1 mb-1 text-slate-500 dark:text-slate-400">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-              {activeDate.format("dddd, D MMMM")}
-            </span>
-            <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-              {activeDate.format("YYYY")}
-            </span>
-          </div>
+        <div className="flex items-center justify-between px-1 mb-0.5 text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+            {activeDate.format("MMMM YYYY")}
+          </span>
           <div className="flex items-center gap-0.5">
             <button
               onClick={handlePrevDay}
-              className="p-1 rounded-md hover:bg-slate-200/60 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Previous day"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleNextDay}
-              className="p-1 rounded-md hover:bg-slate-200/60 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Next day"
             >
               <ChevronRight className="w-3.5 h-3.5" />
@@ -304,7 +300,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
