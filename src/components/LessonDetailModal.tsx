@@ -136,60 +136,110 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Location */}
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Room / Venue
+              {/* Location (Only when NOT broken down into sub-groups) */}
+              {!lesson.collapsedLocations && (
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800/80">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <MapPin className="w-4 h-4" />
                   </div>
-                  <div className="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">
-                    {lesson.Location || "Location to be confirmed"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Lecturer / Staff */}
-              {lesson.staffName && (
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                  <User className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Lecturer / Instructor
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                      Room / Venue
                     </div>
                     <div className="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">
-                      {lesson.staffName}
+                      {lesson.Location || "Location to be confirmed"}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Multi-group Breakdown if collapsed */}
-              {lesson.collapsedLocations && lesson.Locations && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <Users className="w-4 h-4" />
-                    Sub-groups & Rooms
+              {/* Lecturer / Staff (Only when NOT broken down into sub-groups) */}
+              {!lesson.collapsedLocations && lesson.staffName && (
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800/80">
+                  <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-4 h-4" />
                   </div>
-                  <div className="space-y-1.5">
-                    {lesson.Locations.map((loc, idx) => (
-                      <div
-                        key={idx}
-                        className="p-3 rounded-xl bg-purple-50/60 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/40 flex items-center justify-between text-xs"
-                      >
-                        <div>
-                          <span className="font-bold text-purple-900 dark:text-purple-200 block">
-                            {loc.nameSpecification || `Group ${idx + 1}`}
-                          </span>
-                          <span className="text-slate-500 dark:text-slate-400">
-                            {loc.staffName || "Staff assigned"}
-                          </span>
+                  <div>
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                      Lecturer / Instructor
+                    </div>
+                    <div className="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">
+                      {lesson.staffName.includes(",")
+                        ? `${lesson.staffName.split(",")[1].trim()} ${lesson.staffName.split(",")[0].trim()}`
+                        : lesson.staffName}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Multi-group Breakdown if collapsed: Spaced, Clean & Visually Pleasing */}
+              {lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0 && (
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      <Users className="w-4 h-4 text-blue-500" />
+                      <span>Sub-Groups & Rooms</span>
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-0.5 rounded-full border border-slate-200/60 dark:border-slate-700/60">
+                      {lesson.Locations.length} Groups
+                    </span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {lesson.Locations.map((loc, idx) => {
+                      // Separate room code from venue description
+                      const rawLoc = loc.location || "Room TBD";
+                      const locMatch = rawLoc.match(/^([A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z]+[0-9]+|[A-Za-z0-9]{2,6})\s+(.*)$/);
+                      const roomCode = locMatch ? locMatch[1] : rawLoc;
+                      const roomDesc = locMatch ? locMatch[2] : null;
+
+                      // Format staff name e.g. "Lawless, Deirdre" -> "Deirdre Lawless"
+                      const rawStaff = loc.staffName;
+                      const staffFormatted = rawStaff && rawStaff.includes(",")
+                        ? `${rawStaff.split(",")[1].trim()} ${rawStaff.split(",")[0].trim()}`
+                        : rawStaff;
+
+                      const groupLabel = loc.nameSpecification || `Group ${String.fromCharCode(65 + idx)}`;
+
+                      return (
+                        <div
+                          key={idx}
+                          className="p-3.5 sm:p-4 rounded-2xl bg-slate-50/70 hover:bg-slate-50 dark:bg-slate-800/50 dark:hover:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-xs transition-all space-y-2.5 group"
+                        >
+                          {/* Header: Group Badge + Room Tag */}
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold text-xs tracking-tight border border-blue-200/60 dark:border-blue-900/40 shadow-2xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+                              {groupLabel}
+                            </span>
+
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+                              <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                              <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
+                                {roomCode}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Room Specification (e.g. Specialist Computer Lab 5) */}
+                          {roomDesc && (
+                            <div className="text-xs font-medium text-slate-600 dark:text-slate-300 pl-1 leading-relaxed">
+                              {roomDesc}
+                            </div>
+                          )}
+
+                          {/* Instructor Line */}
+                          {staffFormatted && (
+                            <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60 dark:border-slate-700/40 text-xs text-slate-500 dark:text-slate-400 pl-1">
+                              <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span className="font-medium text-slate-700 dark:text-slate-300">
+                                {staffFormatted}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <span className="font-bold px-2 py-1 rounded bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-slate-700">
-                          {loc.location || "TBD"}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
