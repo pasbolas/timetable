@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import moment from "moment-timezone";
-import { Clock, Info, ChevronRight } from "lucide-react";
+import { Clock, Info, ChevronRight, MapPin, User } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
@@ -233,6 +233,10 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 (durationMinutes / 60) * HOUR_HEIGHT - 4
               );
 
+              const isCompact = durationMinutes <= 60; // 1 hour or less (~68px)
+              const isExtended = durationMinutes > 120; // 3 hours or more (~212px+)
+              const isMedium = !isCompact && !isExtended; // 1.5 - 2 hours (~104px - 140px)
+
               const active =
                 isToday &&
                 isLessonActive(lesson.StartDateTime, lesson.EndDateTime);
@@ -249,57 +253,201 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border p-2.5 cursor-pointer shadow-sm transition-all overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg
-                    } ${active
+                  className={`absolute rounded-xl border cursor-pointer shadow-sm transition-all overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg} ${
+                    isCompact
+                      ? "p-2 sm:px-2.5 sm:py-2"
+                      : isExtended
+                        ? "p-3 sm:p-4"
+                        : "p-2.5 sm:p-3"
+                  } ${
+                    active
                       ? "ring-2 ring-blue-500 shadow-md shadow-blue-500/15 z-10"
                       : past
                         ? "opacity-60 saturate-50"
                         : "z-0"
-                    }`}
+                  }`}
                 >
                   {/* Left accent color strip */}
                   <div
                     className={`absolute left-0 top-0 bottom-0 w-1.5 ${theme.accent}`}
                   />
 
-                  {/* Top line: Time & Category */}
-                  <div className="flex items-center justify-between gap-1.5 pl-1.5 leading-none">
-                    <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-slate-400 shrink-0" />
-                      {lesson.StartDateTime.format("HH:mm")} –{" "}
-                      {lesson.EndDateTime.format("HH:mm")}
-                    </span>
+                  {/* --- TIER 1: COMPACT LAYOUT (1 HOUR / <= 60 MINS) --- */}
+                  {isCompact && (
+                    <div className="flex flex-col justify-between h-full pl-1.5">
+                      {/* Top Row: Time + Badge + Tucked Mini Info Button */}
+                      <div className="flex items-center justify-between gap-1 leading-none">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1 shrink-0">
+                            <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+                            {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
+                          </span>
+                          <span
+                            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate ${theme.pill}`}
+                          >
+                            {lesson.EventType}
+                          </span>
+                        </div>
 
-                    <span
-                      className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md ${theme.pill}`}
-                    >
-                      {lesson.EventType}
-                    </span>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLesson(lesson);
+                          }}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs active:scale-95 transition-all group/btn shrink-0"
+                          title="View class details"
+                        >
+                          <span>Info</span>
+                          <ChevronRight className="w-2.5 h-2.5 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                        </button>
+                      </div>
 
-                  {/* Title */}
-                  <div className="pl-1.5 my-auto py-0.5">
-                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-snug">
-                      {lesson.Description}
-                    </h4>
-                  </div>
+                      {/* Bottom Row: Title + Location inline (No overlap) */}
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate flex-1 leading-snug">
+                          {lesson.Description}
+                        </h4>
+                        {lesson.Location && (
+                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-0.5 shrink-0">
+                            <MapPin className="w-2.5 h-2.5 text-slate-400 shrink-0" />
+                            <span className="truncate max-w-[110px] sm:max-w-[160px]">
+                              {lesson.Location}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
-                  {/* Bottom: Expand Details Button */}
-                  <div className="pl-1.5 pt-1 mt-auto">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedLesson(lesson);
-                      }}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-white/75 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-sm active:scale-95 transition-all group/btn"
-                      title="View class details, groups, and rooms"
-                    >
-                      <Info className="w-3 h-3 text-blue-500 shrink-0" />
-                      <span>More Info</span>
-                      <ChevronRight className="w-3 h-3 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
+                  {/* --- TIER 2: MEDIUM LAYOUT (1.5 - 2 HOURS) --- */}
+                  {isMedium && (
+                    <div className="flex flex-col justify-between h-full pl-1.5">
+                      {/* Top Row: Time + Duration + Badge */}
+                      <div className="flex items-center justify-between gap-2 leading-none">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
+                          </span>
+                          <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                            ({Math.round((durationMinutes / 60) * 10) / 10}h)
+                          </span>
+                        </div>
+
+                        <span
+                          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${theme.pill}`}
+                        >
+                          {lesson.EventType}
+                        </span>
+                      </div>
+
+                      {/* Middle: Title & Room */}
+                      <div className="my-auto py-1">
+                        <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-snug">
+                          {lesson.Description}
+                        </h4>
+                        {lesson.Location && (
+                          <div className="flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-1">
+                            <MapPin className={`w-3 h-3 ${theme.icon} shrink-0`} />
+                            <span className="truncate">{lesson.Location}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Bottom: More Info Button & Lecturer */}
+                      <div className="pt-1 mt-auto flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLesson(lesson);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-white/75 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-sm active:scale-95 transition-all group/btn"
+                          title="View class details, groups, and rooms"
+                        >
+                          <Info className="w-3 h-3 text-blue-500 shrink-0" />
+                          <span>More Info</span>
+                          <ChevronRight className="w-3 h-3 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                        </button>
+
+                        {lesson.staffName && (
+                          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate max-w-[160px] hidden sm:inline-block">
+                            {lesson.staffName}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- TIER 3: EXTENDED LAYOUT (3+ HOURS) --- */}
+                  {isExtended && (
+                    <div className="flex flex-col justify-between h-full pl-2 space-y-2">
+                      {/* Top Row: Time, Extended Duration Tag, Event Badge */}
+                      <div className="flex items-center justify-between gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                            {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
+                          </span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
+                            {Math.round((durationMinutes / 60) * 10) / 10} hrs session
+                          </span>
+                        </div>
+
+                        <span
+                          className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg ${theme.pill}`}
+                        >
+                          {lesson.EventType}
+                        </span>
+                      </div>
+
+                      {/* Main Body: Title, Module Code & Metadata Cards */}
+                      <div className="space-y-2 flex-1 my-auto">
+                        <div>
+                          <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">
+                            {lesson.Description}
+                          </h4>
+                          <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+                            {lesson.Name}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+                          {lesson.Location && (
+                            <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/50 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
+                              <MapPin className={`w-3.5 h-3.5 ${theme.icon} shrink-0`} />
+                              <span className="truncate font-medium">{lesson.Location}</span>
+                            </div>
+                          )}
+
+                          {lesson.staffName && (
+                            <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/50 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
+                              <User className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                              <span className="truncate font-medium">{lesson.staffName}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Bottom Action Footer */}
+                      <div className="pt-2 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between gap-2 mt-auto">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLesson(lesson);
+                          }}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 hover:bg-white/90 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 shadow-sm active:scale-95 transition-all group/btn"
+                          title="View full session details, groups, and rooms"
+                        >
+                          <Info className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                          <span>Session Details & Groups</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
