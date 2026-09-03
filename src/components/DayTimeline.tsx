@@ -78,10 +78,10 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full flex-1 flex flex-col pb-2">
+    <div className="w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
-        className="sticky z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-all shadow-xs"
+        className="sticky z-20 bg-white/45 dark:bg-[#1a1e23]/60 backdrop-blur-xl border-b border-slate-300/40 dark:border-white/10 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-all shadow-xs"
         style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
       >
         <div className="flex items-baseline gap-2">
@@ -129,7 +129,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
       {/* Empty State when no classes */}
       {!isLoading && !error && lessons.length === 0 && (
-        <div className="max-w-md mx-auto px-4 py-6 flex-1 flex items-center justify-center">
+        <div className="max-w-md mx-auto px-4 py-6 flex-1 flex items-center justify-center pb-32">
           <EmptyState
             type={isWeekend ? "weekend" : "free-day"}
             date={activeDate}
@@ -141,12 +141,15 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex w-full bg-white/20 dark:bg-slate-950/20"
+          className="relative flex-1 flex w-full bg-white/10 dark:bg-white/[0.02] min-h-[calc(100vh-100px)]"
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
-            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: "10px" }}
-            className="w-16 sm:w-20 shrink-0 border-r border-slate-200/70 dark:border-slate-800/80 relative select-none bg-slate-50/50 dark:bg-slate-900/30"
+            style={{
+              paddingTop: `${GRID_PADDING_Y}px`,
+              paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
+            }}
+            className="w-16 sm:w-20 shrink-0 border-r border-slate-300/40 dark:border-white/10 relative select-none bg-white/25 dark:bg-white/[0.03] min-h-full"
           >
             {hoursList.map((hour) => {
               const isLast = hour === endHour;
@@ -168,12 +171,16 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               <>
                 {/* Vertical slider track rail along the right edge of gutter */}
                 <div
-                  className="absolute right-0 top-0 bottom-0 w-[3px] bg-stone-300/60 dark:bg-[#834655]/40 pointer-events-none"
+                  style={{
+                    top: `${GRID_PADDING_Y}px`,
+                    height: `${(endHour - startHour) * HOUR_HEIGHT}px`,
+                  }}
+                  className="absolute right-0 w-[3px] bg-stone-300/60 dark:bg-[#834655]/40 pointer-events-none"
                   aria-hidden="true"
                 >
                   {/* Elapsed day progress fill */}
                   <div
-                    style={{ height: `${currentLiveY}px` }}
+                    style={{ height: `${Math.max(0, currentLiveY - GRID_PADDING_Y)}px` }}
                     className="w-full bg-gradient-to-b from-blue-400/40 via-blue-500/50 to-blue-600 dark:from-[#834655] dark:via-[#9F5069] dark:to-[#C8B273] transition-all duration-300"
                   />
                 </div>
@@ -194,8 +201,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
           {/* Right Main Grid Slot Area */}
           <div
-            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: "10px" }}
-            className="relative flex-1"
+            style={{
+              paddingTop: `${GRID_PADDING_Y}px`,
+              paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
+            }}
+            className="relative flex-1 min-h-full"
           >
             {/* Grid Divider Lines */}
             {hoursList.map((hour) => {
@@ -204,7 +214,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div
                   key={hour}
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
-                  className="border-t border-stone-300/40 dark:border-neutral-600/40 w-full"
+                  className="border-t border-slate-300/40 dark:border-white/10 w-full"
                 />
               );
             })}

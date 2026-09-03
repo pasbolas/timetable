@@ -67,13 +67,13 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
       }
 
       // Distance radius across which zoom scaling takes effect
-      const radius = 160;
+      const radius = 130;
       const progress = Math.max(0, 1 - dist / radius);
       
-      // Scale smoothly from 0.82x at edges to 1.08x at the exact middle
-      const scale = 0.82 + 0.26 * Math.pow(progress, 1.3);
+      // Scale smoothly from 0.86x at edges to 1.05x at the exact middle
+      const scale = 0.86 + 0.19 * Math.pow(progress, 1.3);
       // Fade slightly as items move away from center
-      const opacity = 0.50 + 0.50 * progress;
+      const opacity = 0.55 + 0.45 * progress;
 
       btn.style.transform = `scale(${scale.toFixed(3)})`;
       btn.style.opacity = `${opacity.toFixed(3)}`;
@@ -188,56 +188,63 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
   return (
     <footer
-      data-tour="date-strip"
-      className="sticky bottom-0 z-30 bg-[#f4f1e0]/90 dark:bg-[#424242]/90 border-t border-stone-300/60 dark:border-neutral-600/70 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.35)] transition-colors"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
+      className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none w-full px-3 sm:px-4 transition-all"
+      style={{
+        paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
+        paddingTop: "4px",
+      }}
     >
-      <div className="max-w-2xl mx-auto px-3 pt-1 pb-0.5">
+      <div
+        data-tour="date-strip"
+        className="pointer-events-auto max-w-lg mx-auto rounded-2xl bg-white/70 dark:bg-[#1a1e23]/80 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_14px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)] px-2.5 pt-1.5 pb-1 transition-colors"
+      >
         {/* Month Header and Micro Navigation */}
-        <div className="flex items-center justify-between px-1 mb-0.5 text-slate-500 dark:text-slate-400">
-          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+        <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
+          <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase">
             {activeDate.format("MMMM YYYY")}
           </span>
           <div className="flex items-center gap-0.5">
             <button
               onClick={handlePrevDay}
-              className="p-1 rounded-md hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-0.5 rounded-full hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Previous day"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3 h-3" />
             </button>
             <button
               onClick={handleNextDay}
-              className="p-1 rounded-md hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              className="p-0.5 rounded-full hover:bg-stone-200/60 dark:hover:bg-neutral-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               title="Next day"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3 h-3" />
             </button>
           </div>
         </div>
 
         {/* Date Selector Strip Container */}
-        <div className="relative py-1 overflow-hidden touch-pan-x select-none">
+        <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[66px] rounded-2xl border border-stone-300/70 dark:border-neutral-500/50 bg-stone-200/50 dark:bg-neutral-700/50 pointer-events-none -z-0 shadow-inner"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border border-slate-300/60 dark:border-white/10 bg-white/40 dark:bg-white/5 pointer-events-none -z-0 shadow-inner"
             aria-hidden="true"
           />
 
-          {/* Scrollable Date Track with generous height to prevent top/bottom clipping */}
+          {/* Scrollable Date Track */}
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[74px] scroll-smooth relative z-10"
+            className="flex items-center gap-1.5 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[54px] scroll-smooth relative z-10"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              paddingLeft: "calc(50% - 24px)",
-              paddingRight: "calc(50% - 24px)",
+              paddingLeft: "calc(50% - 21px)",
+              paddingRight: "calc(50% - 21px)",
               scrollSnapType: "x mandatory",
               overflowY: "hidden",
               touchAction: "pan-x",
               overscrollBehaviorY: "none",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
+              maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
             }}
           >
             {datePills.map((dayMoment) => {
@@ -264,7 +271,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     transformOrigin: "center center",
                     touchAction: "pan-x",
                   }}
-                  className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color] duration-150 will-change-transform select-none touch-pan-x ${
+                  className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-[background-color,color] duration-150 will-change-transform select-none touch-pan-x ${
                     isActive
                       ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-[#424242] font-black shadow-sm shadow-blue-600/20 dark:shadow-[#C8B273]/30 z-10"
                       : isToday
@@ -275,20 +282,20 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   }`}
                 >
                   {/* Day of Week */}
-                  <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 leading-tight">
+                  <span className="text-[9px] font-semibold uppercase tracking-wider opacity-85 leading-none">
                     {dayMoment.format("ddd")}
                   </span>
 
                   {/* Day Number */}
-                  <span className="text-base font-bold my-0.5 leading-none">
+                  <span className="text-sm font-extrabold my-0.5 leading-none">
                     {dayMoment.format("D")}
                   </span>
 
                   {/* Micro Dot Badge */}
-                  <div className="h-1.5 flex items-center justify-center mt-0.5">
+                  <div className="h-1 flex items-center justify-center">
                     {hasClasses && (
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${
+                        className={`w-1 h-1 rounded-full ${
                           isActive
                             ? "bg-white dark:bg-[#424242]"
                             : "bg-blue-500 dark:bg-[#C8B273]"

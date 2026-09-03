@@ -6,7 +6,8 @@ import {
   GraduationCap,
   ArrowRight,
   Maximize2,
-  RotateCcw
+  RotateCcw,
+  Sparkles
 } from "lucide-react";
 import { ProgramSearchResult } from "../types/timetable";
 import { TimetableAPI } from "../services/apiClient";
@@ -224,20 +225,25 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       onClick={isMandatory ? undefined : onClose}
     >
       <div
-        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-[#f7f7f8] dark:bg-[#0c1017] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/80 dark:border-slate-800 relative transition-all"
+        className="w-full sm:max-w-2xl h-full sm:h-[640px] bg-white/95 dark:bg-[#12161e]/95 backdrop-blur-2xl sm:rounded-[32px] shadow-2xl flex flex-col overflow-hidden border border-slate-200/80 dark:border-white/10 relative transition-all"
         onClick={(e) => e.stopPropagation()}
         style={{
-          minHeight: "100dvh sm:620px",
+          minHeight: "100dvh sm:640px",
         }}
       >
+        {/* Ambient Glowing Background Lights */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[450px] h-[360px] bg-gradient-to-b from-blue-500/25 via-indigo-500/15 to-transparent dark:from-blue-500/30 dark:via-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-gradient-to-tl from-purple-500/20 to-transparent dark:from-purple-500/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-gradient-to-tr from-sky-500/15 to-transparent dark:from-sky-500/20 rounded-full blur-3xl pointer-events-none" />
+
         {/* Top Minimal Bar */}
         <div
-          className="px-6 pt-5 pb-3 flex items-center justify-between z-40"
+          className="px-6 pt-5 pb-2 flex items-center justify-between z-40 relative"
           style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
         >
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 dark:bg-blue-500/15 border border-blue-500/20 text-blue-600 dark:text-blue-400">
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <span className="text-[10px] font-extrabold uppercase tracking-widest">
               {phase === "input" ? "Step 1 • Enter Course ID" : "Step 2 • Select Course Year"}
             </span>
           </div>
@@ -245,7 +251,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {!isMandatory && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition-colors"
+              className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/10 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -258,48 +264,57 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {/* PHASE 1: ENTER COURSE ID                                  */}
           {/* ========================================================= */}
           {phase === "input" && (
-            <div className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full py-4 animate-in fade-in zoom-in-95 duration-200">
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 mb-3 shadow-sm">
-                  <GraduationCap className="w-6 h-6" />
+            <div className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full py-2 animate-in fade-in zoom-in-95 duration-200 relative z-10">
+              <div className="text-center mb-5">
+                <div className="relative inline-flex items-center justify-center mb-3.5 group">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 blur-xl opacity-50 group-hover:opacity-80 transition-opacity" />
+                  <div className="relative w-16 h-16 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 text-white flex items-center justify-center shadow-xl shadow-blue-500/30 ring-4 ring-white/30 dark:ring-white/10 group-hover:scale-105 transition-transform">
+                    <GraduationCap className="w-8 h-8" />
+                  </div>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  Enter Your Course ID
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                  Enter Your <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-400 bg-clip-text text-transparent">Course ID</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  Type your degree code (e.g. <span className="font-bold text-blue-600 dark:text-blue-400">TU856</span>) or course keyword to begin.
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+                  Type your degree code (e.g. <span className="font-bold text-blue-600 dark:text-blue-400">TU856</span>) or keyword to find your timetable.
                 </p>
               </div>
 
-              {/* Main Course ID Input Bar */}
-              <div className="relative mb-4">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={courseQuery}
-                  onChange={(e) => setCourseQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && courseQuery.trim()) {
-                      handleSelectCourse(courseQuery.trim());
-                    }
-                  }}
-                  placeholder="e.g. TU856, TU857, TU756..."
-                  className="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 font-semibold text-base shadow-sm border border-slate-200/80 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-                {courseQuery && (
-                  <button
-                    onClick={() => setCourseQuery("")}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
+              {/* Main Course ID Input Bar with Glowing Animated Gradient Border */}
+              <div className="relative group p-[1.5px] rounded-2xl bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 dark:from-slate-700/60 dark:via-slate-600/60 dark:to-slate-700/60 focus-within:from-blue-500 focus-within:via-indigo-500 focus-within:to-purple-500 transition-all duration-300 shadow-md shadow-black/5 dark:shadow-black/20 mb-3.5">
+                <div className="relative flex items-center w-full rounded-[14.5px] bg-white dark:bg-slate-900/95 backdrop-blur-xl">
+                  <Search className="w-5 h-5 ml-4 text-slate-400 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors shrink-0" />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={courseQuery}
+                    onChange={(e) => setCourseQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && courseQuery.trim()) {
+                        handleSelectCourse(courseQuery.trim());
+                      }
+                    }}
+                    placeholder="e.g. TU856, TU857, TU756..."
+                    className="w-full pl-3.5 pr-4 py-3.5 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 font-bold text-base focus:outline-none"
+                  />
+                  {courseQuery ? (
+                    <button
+                      onClick={() => setCourseQuery("")}
+                      className="mr-3 p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 mr-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200/70 dark:border-slate-700/60 select-none">
+                      ↵ Enter
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Live Search Results or Suggestions */}
               {isSearching && (
-                <div className="flex items-center justify-center py-6 text-slate-400 gap-2">
+                <div className="flex items-center justify-center py-5 text-slate-400 gap-2">
                   <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
                   <span className="text-xs font-medium">Checking TU Dublin timetable records...</span>
                 </div>
@@ -307,7 +322,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 
               {/* Matching Search Results Dropdown List */}
               {!isSearching && searchResults.length > 0 && (
-                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1 mb-4 rounded-2xl bg-white/70 dark:bg-slate-900/60 p-2 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-sm shadow-sm">
+                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1 mb-4 rounded-2xl bg-white/85 dark:bg-slate-900/85 p-2 border border-slate-200/80 dark:border-white/10 backdrop-blur-md shadow-xl">
                   {searchResults.slice(0, 5).map((prog) => {
                     const { code: shortCode, title: progTitle } = parseProgramCodeAndTitle(
                       prog.Name,
@@ -318,19 +333,19 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                       <button
                         key={prog.Identity}
                         onClick={() => handleSelectCourse(baseCode, progTitle, searchResults)}
-                        className="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-slate-800 border border-transparent hover:border-blue-200 dark:hover:border-blue-900/50 flex items-center justify-between group transition-all"
+                        className="w-full text-left p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-slate-800 border border-transparent hover:border-blue-200 dark:hover:border-blue-900/50 flex items-center justify-between group transition-all"
                       >
                         <div className="min-w-0 pr-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-blue-600 text-white shrink-0">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-xs font-black px-2 py-1 rounded-lg bg-blue-600 text-white shrink-0 shadow-sm">
                               {baseCode}
                             </span>
-                            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                            <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
                               {progTitle}
                             </span>
                           </div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all shrink-0" />
                       </button>
                     );
                   })}
@@ -339,27 +354,38 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 
               {/* Search Error Notice */}
               {!isSearching && searchError && (
-                <div className="p-3 mb-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-400 text-center">
+                <div className="p-3 mb-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-400 text-center font-medium">
                   {searchError}
                 </div>
               )}
 
-              {/* Quick Pick Chips */}
+              {/* Quick Pick Chips / Popular Courses as Interactive Grid Cards */}
               <div className="pt-2">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
-                  Popular Course IDs
+                <div className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5 px-1">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Popular Course IDs</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {POPULAR_COURSES.map((c) => (
                     <button
                       key={c.code}
                       onClick={() => handleSelectCourse(c.code, c.name)}
-                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-2xs transition-all flex items-center gap-1.5"
+                      className="group relative flex items-center justify-between p-2.5 sm:p-3 rounded-2xl bg-white/70 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800/90 border border-slate-200/80 dark:border-white/10 hover:border-blue-500/40 dark:hover:border-blue-400/40 shadow-xs hover:shadow-md hover:shadow-blue-500/10 active:scale-98 transition-all text-left"
                     >
-                      <span className="font-bold text-blue-600 dark:text-blue-400">{c.code}</span>
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline">
-                        {c.name.split(" ")[0]}
-                      </span>
+                      <div className="flex items-center gap-2.5 min-w-0 pr-1">
+                        <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 shrink-0 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-blue-500 dark:group-hover:text-white transition-all shadow-2xs">
+                          {c.code}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                            {c.name.split(" (")[0]}
+                          </div>
+                          <div className="text-[10px] font-medium text-slate-400 dark:text-slate-500 truncate">
+                            TU Dublin
+                          </div>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -374,11 +400,11 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
             <div className="flex-1 flex flex-col relative w-full h-full animate-in fade-in duration-300">
               {/* Minimized Course Badge / Card on the Left */}
               <div className="flex items-center justify-between pb-2 z-40">
-                <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all">
-                  <span className="text-xs font-extrabold px-2 py-0.5 rounded-lg bg-blue-600 text-white">
+                <div className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm transition-all">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-xl bg-blue-600 text-white shadow-sm">
                     {selectedCourseCode}
                   </span>
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 max-w-[170px] sm:max-w-xs truncate">
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 max-w-[170px] sm:max-w-xs truncate">
                     {selectedCourseTitle}
                   </span>
                   <button
@@ -391,7 +417,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 </div>
               </div>
 
-              {/* The Rotary Arc Wheel ("This Thing") */}
+              {/* The Rotary Arc Wheel */}
               <div className="flex-1 relative w-full flex items-center">
                 <CourseYearDial
                   years={availableYears}
@@ -401,14 +427,13 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
               </div>
 
               {/* Bottom Right Floating Action / Confirm Button */}
-              {/* Mirrors the rounded action button in the reference screenshot */}
               <div className="absolute right-2 bottom-2 sm:right-4 sm:bottom-4 z-40">
                 <button
                   type="button"
                   onClick={handleConfirmSelection}
-                  className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-xl active:scale-96 transition-all group font-bold text-sm cursor-pointer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-blue-500/25 active:scale-96 transition-all group cursor-pointer"
                 >
-                  <Maximize2 className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:rotate-45 transition-transform duration-300" />
+                  <Maximize2 className="w-4 h-4 text-white group-hover:rotate-45 transition-transform duration-300" />
                   <span>Confirm & Continue</span>
                 </button>
               </div>
