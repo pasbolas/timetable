@@ -78,7 +78,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full flex-1 flex flex-col pb-6">
+    <div className="w-full flex-1 flex flex-col pb-2">
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
         className="sticky z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-all shadow-xs"
@@ -145,20 +145,23 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
-            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: `${GRID_PADDING_Y}px` }}
+            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: "10px" }}
             className="w-16 sm:w-20 shrink-0 border-r border-slate-200/70 dark:border-slate-800/80 relative select-none bg-slate-50/50 dark:bg-slate-900/30"
           >
-            {hoursList.map((hour) => (
-              <div
-                key={hour}
-                style={{ height: `${HOUR_HEIGHT}px` }}
-                className="relative"
-              >
-                <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-semibold text-slate-400 dark:text-slate-500 tracking-tight">
-                  {formatHourLabel(hour)}
-                </span>
-              </div>
-            ))}
+            {hoursList.map((hour) => {
+              const isLast = hour === endHour;
+              return (
+                <div
+                  key={hour}
+                  style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
+                  className="relative"
+                >
+                  <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-semibold text-slate-400 dark:text-slate-500 tracking-tight">
+                    {formatHourLabel(hour)}
+                  </span>
+                </div>
+              );
+            })}
 
             {/* Current Time Slider Track & Badge in Gutter */}
             {isToday && isWithinGrid && (
@@ -191,17 +194,20 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
           {/* Right Main Grid Slot Area */}
           <div
-            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: `${GRID_PADDING_Y}px` }}
+            style={{ paddingTop: `${GRID_PADDING_Y}px`, paddingBottom: "10px" }}
             className="relative flex-1"
           >
             {/* Grid Divider Lines */}
-            {hoursList.map((hour) => (
-              <div
-                key={hour}
-                style={{ height: `${HOUR_HEIGHT}px` }}
-                className="border-t border-slate-100 dark:border-slate-800/60 w-full"
-              />
-            ))}
+            {hoursList.map((hour) => {
+              const isLast = hour === endHour;
+              return (
+                <div
+                  key={hour}
+                  style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
+                  className="border-t border-slate-100 dark:border-slate-800/60 w-full"
+                />
+              );
+            })}
 
             {/* Full-width Current Time Slider & Knob (Traversing Top-to-Bottom across the Day) */}
             {isToday && isWithinGrid && (

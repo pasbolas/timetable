@@ -96,7 +96,7 @@ export function App() {
       />
 
       {/* Main Timeline Stream */}
-      <main className="flex-1 flex flex-col relative pb-4">
+      <main className="flex-1 flex flex-col relative">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
