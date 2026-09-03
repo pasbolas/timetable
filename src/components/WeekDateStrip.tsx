@@ -85,6 +85,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
       container.scrollTo({
         left: targetScroll,
+        top: 0,
         behavior: smooth ? "smooth" : "auto",
       });
 
@@ -114,6 +115,10 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
   // Handle scroll events (user swiping through the strip)
   const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container && container.scrollTop !== 0) {
+      container.scrollTop = 0;
+    }
     updatePillScales();
 
     // If user is manually scrolling, snap/select the centered date when scrolling settles
@@ -189,7 +194,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         </div>
 
         {/* Date Selector Strip Container */}
-        <div className="relative py-0.5 overflow-hidden">
+        <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[60px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
@@ -200,13 +205,16 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 scroll-smooth relative z-10"
+            className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar py-0.5 scroll-smooth relative z-10"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
               paddingLeft: "calc(50% - 24px)",
               paddingRight: "calc(50% - 24px)",
               scrollSnapType: "x mandatory",
+              overflowY: "hidden",
+              touchAction: "pan-x",
+              overscrollBehaviorY: "none",
             }}
           >
             {datePills.map((dayMoment) => {
@@ -227,8 +235,9 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   style={{
                     scrollSnapAlign: "center",
                     transformOrigin: "center center",
+                    touchAction: "pan-x",
                   }}
-                  className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color] duration-150 will-change-transform select-none ${
+                  className={`relative shrink-0 flex flex-col items-center justify-center w-12 py-2 rounded-2xl text-center transition-[background-color,color] duration-150 will-change-transform select-none touch-pan-x ${
                     isActive
                       ? "bg-blue-600 text-white font-bold shadow-sm shadow-blue-600/20 z-10"
                       : isToday
