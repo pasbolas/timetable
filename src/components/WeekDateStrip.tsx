@@ -159,12 +159,12 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   };
 
   return (
-    <div
+    <footer
       data-tour="date-strip"
-      className="bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors relative"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0px)" }}
     >
-      <div className="max-w-2xl mx-auto px-3 pt-1.5 pb-1">
+      <div className="max-w-2xl mx-auto px-3 pt-1 pb-0.5">
         {/* Month Header and Micro Navigation */}
         <div className="flex items-center justify-between px-1 mb-0.5 text-slate-500 dark:text-slate-400">
           <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
@@ -189,10 +189,10 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         </div>
 
         {/* Date Selector Strip Container */}
-        <div className="relative py-1 overflow-hidden">
+        <div className="relative py-0.5 overflow-hidden">
           {/* Stationary Skeleton Box for the Highlight Slot */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[62px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52px] h-[60px] rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-slate-100/70 dark:bg-slate-900/60 pointer-events-none -z-0 shadow-inner"
             aria-hidden="true"
           />
 
@@ -200,7 +200,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1.5 scroll-smooth relative z-10"
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 scroll-smooth relative z-10"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -264,7 +264,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
