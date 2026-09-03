@@ -78,7 +78,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full pb-6">
+    <div className="w-full flex-1 flex flex-col pb-6">
       {/* Subheader: Date & class counter - Sticky at top of timeline scrollport */}
       <div className="sticky top-0 z-20 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between px-4 sm:px-6 py-2.5">
         <div className="flex items-baseline gap-2">
@@ -126,7 +126,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
       {/* Empty State when no classes */}
       {!isLoading && !error && lessons.length === 0 && (
-        <div className="max-w-md mx-auto px-4 py-6">
+        <div className="max-w-md mx-auto px-4 py-6 flex-1 flex items-center justify-center">
           <EmptyState
             type={isWeekend ? "weekend" : "free-day"}
             date={activeDate}

@@ -58,7 +58,12 @@ export function App() {
   const isTodayActive = isToday(activeDate);
 
   return (
-    <div className="fixed inset-0 w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col overflow-hidden selection:bg-blue-500 selection:text-white">
+    <div
+      className="min-h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white"
+      style={{
+        minHeight: "calc(100dvh + env(safe-area-inset-bottom, 0px))",
+      }}
+    >
       {/* Pinned Minimal Top Header */}
       <TopBar
         selectedProgram={selectedProgram}
@@ -69,8 +74,8 @@ export function App() {
         isLoading={isLoading}
       />
 
-      {/* Main Scrollable Timeline Stream */}
-      <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain relative pb-6">
+      {/* Main Timeline Stream */}
+      <main className="flex-1 flex flex-col relative pb-4">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
