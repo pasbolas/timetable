@@ -161,8 +161,8 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   return (
     <footer
       data-tour="date-strip"
-      className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0px)" }}
+      className="shrink-0 z-30 bg-white/95 dark:bg-slate-950/95 border-t border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.5)] transition-colors"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
       <div className="max-w-2xl mx-auto px-3 pt-1 pb-0.5">
         {/* Month Header and Micro Navigation */}

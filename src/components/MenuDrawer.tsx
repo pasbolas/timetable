@@ -164,7 +164,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
         <div className="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mt-2.5 mb-1 sm:hidden opacity-60" />
 
         {/* Drawer Header */}
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div
+          className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
+          style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 16px)" }}
+        >
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
               <GraduationCap className="w-4 h-4" />
@@ -433,7 +436,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
         </div>
 
         {/* Drawer Footer */}
-        <div className="p-3 bg-slate-50/80 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 text-center text-[10px] text-slate-400">
+        <div
+          className="p-3 bg-slate-50/80 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 text-center text-[10px] text-slate-400"
+          style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
+        >
           Scientia Timetabler EU • Dublin (Europe/Dublin)
         </div>
       </div>

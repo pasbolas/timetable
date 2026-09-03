@@ -61,7 +61,10 @@ export const PWAInstallPrompt: React.FC = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-28 left-4 right-4 max-w-md mx-auto z-40 animate-in slide-in-from-bottom-6 duration-300">
+    <div
+      className="fixed left-4 right-4 max-w-md mx-auto z-40 animate-in slide-in-from-bottom-6 duration-300"
+      style={{ bottom: "calc(max(env(safe-area-inset-bottom, 0px), 8px) + 5.5rem)" }}
+    >
       <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-600/30">

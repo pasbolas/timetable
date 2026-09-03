@@ -106,7 +106,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header & Search Bar */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
+        <div
+          className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3"
+          style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 16px)" }}
+        >
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
