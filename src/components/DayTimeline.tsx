@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import moment from "moment-timezone";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, Info, ChevronRight } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
-import { getLessonColorTheme, getLessonGroupRoomStrings } from "../services/transformer";
+import { getLessonColorTheme } from "../services/transformer";
 
 interface DayTimelineProps {
   activeDate: moment.Moment;
@@ -229,7 +229,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
               const topPx = GRID_PADDING_Y + (startMinutes / 60) * HOUR_HEIGHT;
               const heightPx = Math.max(
-                46,
+                54,
                 (durationMinutes / 60) * HOUR_HEIGHT - 4
               );
 
@@ -284,12 +284,21 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     </h4>
                   </div>
 
-                  {/* Bottom: Group - Room */}
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-700 dark:text-slate-300 pl-1.5 truncate">
-                    <MapPin className={`w-3 h-3 ${theme.icon} shrink-0`} />
-                    <span className="truncate font-medium">
-                      {getLessonGroupRoomStrings(lesson).join(" · ")}
-                    </span>
+                  {/* Bottom: Expand Details Button */}
+                  <div className="pl-1.5 pt-1 mt-auto">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedLesson(lesson);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-white/75 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-sm active:scale-95 transition-all group/btn"
+                      title="View class details, groups, and rooms"
+                    >
+                      <Info className="w-3 h-3 text-blue-500 shrink-0" />
+                      <span>More Info</span>
+                      <ChevronRight className="w-3 h-3 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
                 </div>
               );
