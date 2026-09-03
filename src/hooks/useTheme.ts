@@ -20,6 +20,13 @@ export function useTheme() {
         root.classList.remove("dark");
         root.setAttribute("data-theme", "light");
       }
+
+      // Synchronize mobile PWA status bar theme-color
+      const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
+      const targetColor = isDark ? "#020617" : "#f8fafc";
+      themeColorMetas.forEach((meta) => {
+        meta.setAttribute("content", targetColor);
+      });
     };
 
     applyTheme();

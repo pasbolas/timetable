@@ -6,6 +6,14 @@
   color-scheme: light dark;
 }
 
+html {
+  background-color: #f8fafc;
+}
+
+html.dark {
+  background-color: #020617;
+}
+
 /* Viewport expansion and overscroll prevention for PWAs */
 html,
 body,

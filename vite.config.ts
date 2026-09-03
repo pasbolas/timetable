@@ -12,7 +12,7 @@ export default defineConfig({
         name: "MyTimetable - University Schedule",
         short_name: "Timetable",
         description: "Mobile-first PWA for university course schedules and lectures",
-        theme_color: "#2563eb",
+        theme_color: "#f8fafc",
         background_color: "#0f172a",
         display: "standalone",
         orientation: "portrait",
