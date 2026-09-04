@@ -206,7 +206,7 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
           d={arcPathData}
           fill="none"
           stroke="currentColor"
-          className="text-black"
+          className="text-white"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -244,8 +244,8 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
                 r={isSelected ? 5 : 2.5}
                 className={
                   isSelected
-                    ? "fill-black"
-                    : "fill-zinc-300"
+                    ? "fill-white"
+                    : "fill-zinc-700"
                 }
               />
 
@@ -263,8 +263,8 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
                 }}
                 className={
                   isSelected
-                    ? "font-black fill-black cursor-pointer select-none"
-                    : "font-bold fill-zinc-400 hover:fill-black cursor-pointer select-none transition-colors duration-150"
+                    ? "font-black fill-white cursor-pointer select-none"
+                    : "font-bold fill-zinc-500 hover:fill-white cursor-pointer select-none transition-colors duration-150"
                 }
                 style={{
                   fontSize: isSelected ? "4.25rem" : "2.5rem",
@@ -292,11 +292,11 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
         }}
       >
         <div className="space-y-1 animate-in fade-in slide-in-from-left-2 duration-150" key={activeYear.yearNumber}>
-          <h3 className="text-xl sm:text-2xl font-black text-black tracking-tight leading-none">
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-none">
             {activeYear.title}
           </h3>
           {activeYear.subtitle && (
-            <p className="text-xs sm:text-sm text-black leading-relaxed font-bold">
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-bold">
               {activeYear.subtitle}
             </p>
           )}

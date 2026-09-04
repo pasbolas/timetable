@@ -522,12 +522,12 @@ export interface ColorPalette {
 
 const MONO_PALETTE: ColorPalette = {
   name: "monochrome",
-  bg: "bg-white hover:bg-zinc-50 border-black",
-  accent: "bg-black",
-  pill: "bg-black text-white border border-black",
-  icon: "text-black",
-  border: "border-black",
-  text: "text-black",
+  bg: "bg-black hover:bg-zinc-900 border-white",
+  accent: "bg-white",
+  pill: "bg-white text-black border border-white",
+  icon: "text-white",
+  border: "border-white",
+  text: "text-white",
 };
 
 export const COLOR_PALETTES: ColorPalette[] = [MONO_PALETTE];
@@ -542,7 +542,7 @@ export const EVENT_TYPE_PALETTES: Record<"laboratory" | "lecture" | "tutorial", 
   lecture: {
     ...MONO_PALETTE,
     name: "lecture",
-    pill: "bg-[#228B22] text-white border border-black",
+    pill: "bg-[#228B22] text-white border border-white/30",
   },
   tutorial: {
     ...MONO_PALETTE,

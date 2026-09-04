@@ -2,20 +2,20 @@ import { useEffect } from "react";
 import { StorageService } from "../services/storage";
 
 export function useTheme() {
-  const theme = "light" as const;
+  const theme = "dark" as const;
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove("dark");
-    root.setAttribute("data-theme", "light");
+    root.classList.add("dark");
+    root.setAttribute("data-theme", "dark");
 
-    // Ensure status bar theme-color is white
+    // Ensure status bar theme-color is black
     const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
     themeColorMetas.forEach((meta) => {
-      meta.setAttribute("content", "#ffffff");
+      meta.setAttribute("content", "#000000");
     });
 
-    StorageService.setTheme("light");
+    StorageService.setTheme("dark");
   }, []);
 
   const toggleTheme = () => {};

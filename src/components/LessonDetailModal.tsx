@@ -190,7 +190,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="fixed inset-0 bg-black/60 cursor-pointer"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
             onClick={onClose}
           />
 
@@ -240,7 +240,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                 }
               }
             }}
-            className="relative z-10 w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl border-2 border-black overflow-hidden flex flex-col touch-pan-y"
+            className="relative z-10 w-full sm:max-w-md bg-black text-white rounded-t-3xl sm:rounded-2xl border-2 border-white overflow-hidden flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Pull Handle: Tap toggles half/full, drag snaps magnetically */}
@@ -252,27 +252,34 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               className="w-full pt-3 pb-1 cursor-pointer flex flex-col items-center justify-center group"
               title={snapState === "half" ? "Tap to expand fully" : "Tap to collapse to half"}
             >
-              <div className="w-12 h-1.5 bg-black group-hover:bg-zinc-700 rounded-full transition-colors" />
+              <div className="w-12 h-1.5 bg-white group-hover:bg-zinc-300 rounded-full transition-colors" />
             </div>
 
             {/* Modal Header */}
-            <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b-2 border-black flex items-start justify-between gap-3 shrink-0">
+            <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b-2 border-white flex items-start justify-between gap-3 shrink-0 bg-black">
               <div>
                 <div
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 text-white border border-black ${
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 border ${
                     lesson.EventType?.toLowerCase().includes("lecture") ||
                     lesson.EventType?.toLowerCase() === "lec"
-                      ? "bg-[#228B22]"
-                      : "bg-black"
+                      ? "bg-[#228B22] text-white border-white/20"
+                      : "bg-white text-black border-white"
                   }`}
                 >
-                  <span className="w-2 h-2 rounded-full bg-white" />
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      lesson.EventType?.toLowerCase().includes("lecture") ||
+                      lesson.EventType?.toLowerCase() === "lec"
+                        ? "bg-white"
+                        : "bg-black"
+                    }`}
+                  />
                   {lesson.EventType}
                 </div>
-                <h2 className="text-base sm:text-lg font-black text-black leading-snug">
+                <h2 className="text-base sm:text-lg font-black text-white leading-snug">
                   {lesson.Description}
                 </h2>
-                <div className="text-[11px] text-black font-mono mt-0.5">
+                <div className="text-[11px] text-zinc-300 font-mono mt-0.5">
                   {lesson.Name}
                 </div>
               </div>
@@ -287,13 +294,13 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                     setSnapState((prev) => (prev === "half" ? "full" : "half"));
                     triggerHapticFeedback();
                   }}
-                  className="w-8 h-8 rounded-xl text-black border border-black hover:bg-zinc-100"
+                  className="w-8 h-8 rounded-xl text-white border border-white hover:bg-zinc-800"
                   title={snapState === "half" ? "Expand to full" : "Collapse to half"}
                 >
                   {snapState === "half" ? (
-                    <ChevronUp className="w-4 h-4 text-black" />
+                    <ChevronUp className="w-4 h-4 text-white" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-black" />
+                    <ChevronDown className="w-4 h-4 text-white" />
                   )}
                 </Button>
 
@@ -302,27 +309,27 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                   size="sm"
                   variant="light"
                   onPress={onClose}
-                  className="w-8 h-8 rounded-xl text-black border border-black hover:bg-zinc-100"
+                  className="w-8 h-8 rounded-xl text-white border border-white hover:bg-zinc-800"
                   title="Close panel"
                 >
-                  <X className="w-5 h-5 text-black" />
+                  <X className="w-5 h-5 text-white" />
                 </Button>
               </div>
             </div>
 
             {/* Modal Content - Expands cleanly in both half and full */}
-            <div className="p-4 sm:p-5 space-y-3.5 flex-1 overflow-y-auto bg-white">
+            <div className="p-4 sm:p-5 space-y-3.5 flex-1 overflow-y-auto bg-black text-white">
               {/* Time & Date */}
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border-2 border-black">
-                <Clock className="w-5 h-5 text-black shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
+                <Clock className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-xs font-bold text-black uppercase tracking-wider">
+                  <div className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
                     Date & Time
                   </div>
-                  <div className="text-sm font-bold text-black mt-0.5">
+                  <div className="text-sm font-bold text-white mt-0.5">
                     {lesson.StartDateTime.format("dddd, D MMMM YYYY")}
                   </div>
-                  <div className="text-xs font-bold text-black mt-0.5">
+                  <div className="text-xs font-bold text-white mt-0.5">
                     {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")} ({lesson.EndDateTime.diff(lesson.StartDateTime, "minutes")} mins)
                   </div>
                 </div>
@@ -330,15 +337,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
               {/* Location (Only when NOT broken down into sub-groups) */}
               {!lesson.collapsedLocations && (
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border-2 border-black">
-                  <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center shrink-0 mt-0.5">
-                    <MapPin className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
+                  <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center shrink-0 mt-0.5">
+                    <MapPin className="w-4 h-4 text-black" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-black uppercase tracking-wider">
+                    <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
                       Room / Venue
                     </div>
-                    <div className="text-sm font-bold text-black mt-0.5">
+                    <div className="text-sm font-bold text-white mt-0.5">
                       {lesson.Location || "Location to be confirmed"}
                     </div>
                   </div>
@@ -347,15 +354,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
               {/* Lecturer / Staff (Only when NOT broken down into sub-groups) */}
               {!lesson.collapsedLocations && lesson.staffName && (
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border-2 border-black">
-                  <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
+                  <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-4 h-4 text-black" />
                   </div>
                   <div>
-                    <div className="text-[11px] font-bold text-black uppercase tracking-wider">
+                    <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
                       Lecturer / Instructor
                     </div>
-                    <div className="text-sm font-bold text-black mt-0.5">
+                    <div className="text-sm font-bold text-white mt-0.5">
                       {lesson.staffName.includes(",")
                         ? `${lesson.staffName.split(",")[1].trim()} ${lesson.staffName.split(",")[0].trim()}`
                         : lesson.staffName}
@@ -368,15 +375,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               {lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0 && (
                 <div className="space-y-3 pt-1">
                   <div className="flex items-center justify-between px-1">
-                    <div className="flex items-center gap-2 text-xs font-bold text-black uppercase tracking-wider">
-                      <Users className="w-4 h-4 text-black" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
+                      <Users className="w-4 h-4 text-white" />
                       <span>Sub-Groups & Rooms</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-semibold text-zinc-400 hidden sm:inline">
                         Tap heart to favourite
                       </span>
-                      <span className="text-[11px] font-bold text-black bg-white px-2.5 py-0.5 rounded-full border border-black">
+                      <span className="text-[11px] font-bold text-white bg-black px-2.5 py-0.5 rounded-full border border-white">
                         {lesson.Locations.length} Groups
                       </span>
                     </div>
@@ -404,21 +411,21 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       return (
                         <div
                           key={`${loc.originalIdx}-${groupLabel}`}
-                          className={`p-3.5 sm:p-4 rounded-xl bg-white border-2 border-black shadow-xs space-y-2.5 transition-all ${
-                            isFav ? "ring-2 ring-black bg-zinc-50/80 shadow-sm" : ""
+                          className={`p-3.5 sm:p-4 rounded-xl bg-black border-2 border-white space-y-2.5 transition-all ${
+                            isFav ? "ring-2 ring-white bg-zinc-900/90" : ""
                           }`}
                         >
                           {/* Header: Group Badge + Room Tag & Favourite Heart Button */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1.5 flex-1 min-w-0">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black text-white font-bold text-xs tracking-tight border border-black">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white text-black font-bold text-xs tracking-tight border border-white">
+                                <span className="w-1.5 h-1.5 rounded-full bg-black" />
                                 {groupLabel}
                               </span>
 
                               {/* Room Specification (e.g. Specialist Computer Lab 5) */}
                               {roomDesc && (
-                                <div className="text-xs font-bold text-black pl-0.5 leading-relaxed">
+                                <div className="text-xs font-bold text-white pl-0.5 leading-relaxed">
                                   {roomDesc}
                                 </div>
                               )}
@@ -426,9 +433,9 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                             {/* Right side: Room Tag with Heart Favourite Button under it */}
                             <div className="flex flex-col items-end gap-1.5 shrink-0">
-                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-black">
-                                <MapPin className="w-3.5 h-3.5 text-black shrink-0" />
-                                <span className="text-xs font-black text-black">
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black border border-white">
+                                <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
+                                <span className="text-xs font-black text-white">
                                   {roomCode}
                                 </span>
                               </div>
@@ -438,8 +445,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                                 onClick={() => handleToggleFavoriteGroup(groupLabel)}
                                 className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer select-none active:scale-90 border ${
                                   isFav
-                                    ? "bg-red-50 text-red-600 border-red-400 shadow-xs"
-                                    : "bg-white text-zinc-500 hover:text-red-500 border-black/20 hover:border-black/50"
+                                    ? "bg-red-950/60 text-red-400 border-red-500 shadow-xs"
+                                    : "bg-black text-zinc-400 hover:text-red-400 border-white/30 hover:border-white/60"
                                 }`}
                                 title={
                                   isFav
@@ -463,9 +470,9 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                           {/* Instructor Line */}
                           {staffFormatted && (
-                            <div className="flex items-center gap-2 pt-1 border-t border-black text-xs text-black pl-1">
-                              <User className="w-3.5 h-3.5 text-black shrink-0" />
-                              <span className="font-bold text-black">
+                            <div className="flex items-center gap-2 pt-1 border-t border-white/30 text-xs text-white pl-1">
+                              <User className="w-3.5 h-3.5 text-white shrink-0" />
+                              <span className="font-bold text-white">
                                 {staffFormatted}
                               </span>
                             </div>
@@ -479,12 +486,12 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="p-4 sm:p-5 bg-white border-t-2 border-black flex gap-2.5">
+            <div className="p-4 sm:p-5 bg-black border-t-2 border-white flex gap-2.5">
               <Button
                 variant="solid"
                 onPress={handleExportIcs}
-                startContent={<CalendarPlus className="w-4 h-4 text-white" />}
-                className="flex-1 h-11 font-bold text-xs rounded-xl bg-black hover:bg-zinc-800 text-white border-2 border-black shadow-sm"
+                startContent={<CalendarPlus className="w-4 h-4 text-black" />}
+                className="flex-1 h-11 font-bold text-xs rounded-xl bg-white hover:bg-zinc-200 text-black border-2 border-white shadow-sm"
               >
                 Add to Calendar
               </Button>
@@ -492,8 +499,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               <Button
                 variant="flat"
                 onPress={handleCopyInfo}
-                startContent={copied ? <Check className="w-4 h-4 text-black" /> : <Copy className="w-4 h-4 text-black" />}
-                className="h-11 px-4 font-bold text-xs rounded-xl bg-white text-black hover:bg-zinc-100 border-2 border-black shadow-sm"
+                startContent={copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
+                className="h-11 px-4 font-bold text-xs rounded-xl bg-black text-white hover:bg-zinc-800 border-2 border-white shadow-sm"
               >
                 {copied ? "Copied!" : "Copy"}
               </Button>

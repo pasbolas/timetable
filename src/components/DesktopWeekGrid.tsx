@@ -209,28 +209,28 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
 
       {/* Loading Skeleton (Only on initial cold start when no days are loaded) */}
       {isLoading && displayedDays.length === 0 && (
-        <div className="w-full flex-1 min-h-0 rounded-2xl border-2 border-black bg-white/30 backdrop-blur-xs overflow-hidden mb-2 animate-pulse select-none">
-          <div className="grid grid-cols-[60px_repeat(5,1fr)] border-b-2 border-black bg-white/50 shrink-0">
-            <div className="p-3 border-r-2 border-black" />
+        <div className="w-full flex-1 min-h-0 rounded-2xl border-2 border-white bg-black/60 backdrop-blur-xs overflow-hidden mb-2 animate-pulse select-none">
+          <div className="grid grid-cols-[60px_repeat(5,1fr)] border-b-2 border-white bg-black/80 shrink-0">
+            <div className="p-3 border-r-2 border-white" />
             {[0, 1, 2, 3, 4].map((i) => (
-              <div key={i} className={`p-3 text-center ${i < 4 ? "border-r-2 border-black/15" : ""}`}>
-                <div className="h-4 w-16 bg-zinc-300 rounded mx-auto mb-1" />
-                <div className="h-3 w-10 bg-zinc-200 rounded mx-auto" />
+              <div key={i} className={`p-3 text-center ${i < 4 ? "border-r-2 border-white/20" : ""}`}>
+                <div className="h-4 w-16 bg-zinc-700 rounded mx-auto mb-1" />
+                <div className="h-3 w-10 bg-zinc-800 rounded mx-auto" />
               </div>
             ))}
           </div>
           <div className="h-[560px] grid grid-cols-[60px_repeat(5,1fr)]">
-            <div className="border-r-2 border-black bg-white/40 flex flex-col justify-between py-4 px-2">
+            <div className="border-r-2 border-white bg-black/60 flex flex-col justify-between py-4 px-2">
               {[9, 11, 13, 15, 17].map((h) => (
-                <div key={h} className="h-3 w-8 bg-zinc-300/60 rounded" />
+                <div key={h} className="h-3 w-8 bg-zinc-700/60 rounded" />
               ))}
             </div>
             {[0, 1, 2, 3, 4].map((col) => (
-              <div key={col} className={`p-2 space-y-3 relative ${col < 4 ? "border-r-2 border-black/15" : ""}`}>
+              <div key={col} className={`p-2 space-y-3 relative ${col < 4 ? "border-r-2 border-white/20" : ""}`}>
                 {col % 2 === 0 ? (
-                  <div className="h-28 rounded-xl border-2 border-black/30 bg-white/60 p-2" />
+                  <div className="h-28 rounded-xl border-2 border-white/30 bg-zinc-900 p-2" />
                 ) : (
-                  <div className="h-36 rounded-xl border-2 border-black/30 bg-white/60 p-2 mt-12" />
+                  <div className="h-36 rounded-xl border-2 border-white/30 bg-zinc-900 p-2 mt-12" />
                 )}
               </div>
             ))}
@@ -248,26 +248,26 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
       {/* Fallback Empty State if no days data available at all */}
       {!isLoading && !error && displayedDays.length === 0 && (
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-4 select-none">
-          <div className="max-w-md w-full p-6 rounded-2xl border-2 border-black bg-white/85 backdrop-blur-md shadow-sm text-center">
-            <div className="w-12 h-12 rounded-xl bg-zinc-100 border-2 border-black flex items-center justify-center mx-auto mb-3">
-              <Coffee className="w-6 h-6 text-black" />
+          <div className="max-w-md w-full p-6 rounded-2xl border-2 border-white bg-black/90 backdrop-blur-md shadow-sm text-center text-white">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border-2 border-white flex items-center justify-center mx-auto mb-3">
+              <Coffee className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-black text-black mb-1">
+            <h3 className="text-lg font-black text-white mb-1">
               No Classes Scheduled This Week
             </h3>
-            <p className="text-xs font-bold text-zinc-600 mb-4">
+            <p className="text-xs font-bold text-zinc-400 mb-4">
               Enjoy your free time, or check the previous or upcoming weeks for class timetables.
             </p>
             <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => onSelectDate(activeDate.clone().subtract(1, "week"))}
-                className="px-3 py-1.5 rounded-xl border-2 border-black text-xs font-bold hover:bg-zinc-100 transition-colors"
+                className="px-3 py-1.5 rounded-xl border-2 border-white text-xs font-bold hover:bg-zinc-900 transition-colors text-white"
               >
                 ‹ Previous Week
               </button>
               <button
                 onClick={() => onSelectDate(activeDate.clone().add(1, "week"))}
-                className="px-3 py-1.5 rounded-xl border-2 border-black bg-black text-white text-xs font-bold hover:bg-zinc-800 transition-colors"
+                className="px-3 py-1.5 rounded-xl border-2 border-white bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors"
               >
                 Next Week ›
               </button>
@@ -278,11 +278,11 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
 
       {/* 2D Week Grid Timetable View */}
       {!error && displayedDays.length > 0 && (
-        <div className="w-full flex-1 min-h-0 flex flex-col rounded-2xl border-2 border-black bg-transparent overflow-hidden shadow-sm relative">
+        <div className="w-full flex-1 min-h-0 flex flex-col rounded-2xl border-2 border-white bg-transparent overflow-hidden shadow-sm relative">
           {/* Subtle loading shimmer during background week fetches */}
           {isLoading && (
-            <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-black/10 overflow-hidden z-40 pointer-events-none">
-              <div className="h-full bg-black w-1/3 animate-indeterminate-bar" />
+            <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-white/20 overflow-hidden z-40 pointer-events-none">
+              <div className="h-full bg-white w-1/3 animate-indeterminate-bar" />
             </div>
           )}
 
@@ -299,15 +299,15 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
               >
             {/* Pinned Sticky Top Header Row: Day Columns Header */}
             <div
-              className={`sticky top-0 z-30 grid border-b-2 border-black bg-white/85 backdrop-blur-md select-none ${
+              className={`sticky top-0 z-30 grid border-b-2 border-white bg-black/85 backdrop-blur-md select-none ${
                 displaySevenDays
                   ? "grid-cols-[60px_repeat(7,minmax(0,1fr))]"
                   : "grid-cols-[60px_repeat(5,minmax(0,1fr))]"
               }`}
             >
               {/* Top-left corner time label */}
-              <div className="p-2.5 border-r-2 border-black flex items-center justify-center bg-white/70 backdrop-blur-xs select-none">
-                <Clock className="w-4 h-4 text-black/70" />
+              <div className="p-2.5 border-r-2 border-white flex items-center justify-center bg-black/70 backdrop-blur-xs select-none">
+                <Clock className="w-4 h-4 text-white/70" />
               </div>
 
               {/* Day Header Cells */}
@@ -321,26 +321,26 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                     key={dayData.dateKey}
                     onClick={() => onSelectDate(dayData.day)}
                     className={`p-2 sm:p-2.5 text-center cursor-pointer transition-colors select-none ${
-                      !isLast ? "border-r-2 border-black/20" : ""
+                      !isLast ? "border-r-2 border-white/20" : ""
                     } ${
                       isCurrentDay
-                        ? "bg-black text-white"
+                        ? "bg-white text-black"
                         : isSelectedDay
-                        ? "bg-white/90 text-black shadow-xs font-black"
-                        : "bg-transparent text-black hover:bg-white/50"
+                        ? "bg-zinc-900 text-white shadow-xs font-black border-b-2 border-white"
+                        : "bg-transparent text-white hover:bg-white/10"
                     }`}
                   >
                     <div className="flex items-center justify-center gap-1">
                       <span
                         className={`text-xs sm:text-sm font-black uppercase tracking-tight ${
-                          isCurrentDay ? "text-white" : "text-black"
+                          isCurrentDay ? "text-black" : "text-white"
                         }`}
                       >
                         {dayData.day.format("ddd")}
                       </span>
                       <span
                         className={`text-xs font-bold ${
-                          isCurrentDay ? "text-white/80" : "text-zinc-600"
+                          isCurrentDay ? "text-black/80" : "text-zinc-400"
                         }`}
                       >
                         {dayData.day.format("D MMM")}
@@ -349,11 +349,11 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
 
                     <div className="flex items-center justify-center gap-1 mt-0.5">
                       {isCurrentDay ? (
-                        <span className="text-[10px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-white text-black">
+                        <span className="text-[10px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-black text-white">
                           TODAY
                         </span>
                       ) : dayData.lessons.length > 0 ? (
-                        <span className="text-[11px] font-bold text-zinc-600">
+                        <span className="text-[11px] font-bold text-zinc-400">
                           {dayData.lessons.length} {dayData.lessons.length === 1 ? "class" : "classes"}
                         </span>
                       ) : (
@@ -384,7 +384,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                 paddingTop: `${GRID_PADDING_Y}px`,
                 paddingBottom: `${GRID_PADDING_Y}px`,
               }}
-              className="border-r-2 border-black bg-white/75 backdrop-blur-xs relative select-none"
+              className="border-r-2 border-white bg-black/75 backdrop-blur-xs relative select-none"
             >
               {hoursList.map((hour) => {
                 const isLast = hour === endHour;
@@ -394,7 +394,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                     style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
                     className="relative"
                   >
-                    <span className="absolute top-0 -translate-y-1/2 right-2 text-[11px] font-black text-black tracking-tight">
+                    <span className="absolute top-0 -translate-y-1/2 right-2 text-[11px] font-black text-white tracking-tight">
                       {formatHourLabel(hour)}
                     </span>
                   </div>
@@ -417,8 +417,8 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                     paddingBottom: `${GRID_PADDING_Y}px`,
                   }}
                   className={`relative min-h-full ${
-                    !isLast ? "border-r-2 border-black/15" : ""
-                  } ${isCurrentDay ? "bg-black/[0.03] backdrop-blur-[1px]" : "bg-transparent"}`}
+                    !isLast ? "border-r-2 border-white/15" : ""
+                  } ${isCurrentDay ? "bg-white/[0.04] backdrop-blur-[1px]" : "bg-transparent"}`}
                 >
                   {/* Horizontal Hour Dividing Lines */}
                   {hoursList.map((hour) => {
@@ -427,16 +427,16 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                       <div
                         key={hour}
                         style={{ height: isLastHour ? "0px" : `${HOUR_HEIGHT}px` }}
-                        className="border-t border-black/15 w-full pointer-events-none"
+                        className="border-t border-white/15 w-full pointer-events-none"
                       />
                     );
                   })}
 
                   {/* Empty Day Indicator (Only when other days have classes to avoid visual clutter) */}
                   {totalClassesCount > 0 && dayData.lessons.length === 0 && (
-                    <div className="absolute inset-x-2 top-28 flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-black/25 bg-white/50 backdrop-blur-xs text-center pointer-events-none select-none">
-                      <Coffee className="w-4 h-4 text-black/50 mb-1" />
-                      <span className="text-[11px] font-bold text-black/60">
+                    <div className="absolute inset-x-2 top-28 flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-white/25 bg-black/50 backdrop-blur-xs text-center pointer-events-none select-none">
+                      <Coffee className="w-4 h-4 text-white/50 mb-1" />
+                      <span className="text-[11px] font-bold text-white/60">
                         No classes
                       </span>
                     </div>
@@ -465,15 +465,15 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: "4px",
                           right: "4px",
                         }}
-                        className="absolute rounded-lg border border-black/30 bg-white/70 backdrop-blur-xs bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-black/70 pointer-events-none z-0"
+                        className="absolute rounded-lg border border-white/30 bg-black/70 backdrop-blur-xs bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-white/70 pointer-events-none z-0"
                       >
                         <div className="flex items-center gap-1 truncate">
-                          <Coffee className="w-3 h-3 text-black/60 shrink-0" />
+                          <Coffee className="w-3 h-3 text-white/60 shrink-0" />
                           <span className="truncate">
                             Break ({breakItem.durationMinutes}m)
                           </span>
                         </div>
-                        <span className="text-[9px] text-black/50 shrink-0">
+                        <span className="text-[9px] text-white/50 shrink-0">
                           {breakItem.start.format("HH:mm")}
                         </span>
                       </div>
@@ -524,9 +524,9 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: `calc(${leftPercent}% + 3px)`,
                           width: `calc(${colWidth}% - 6px)`,
                         }}
-                        className={`absolute rounded-xl border-2 border-black bg-white cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group hover:bg-zinc-50 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] shadow-xs ${
+                        className={`absolute rounded-xl border-2 border-white bg-black cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group hover:bg-zinc-900 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] shadow-xs ${
                           active
-                            ? "ring-2 ring-black border-black z-10 shadow-sm"
+                            ? "ring-2 ring-white border-white z-10 shadow-sm"
                             : past
                             ? "opacity-65 z-0"
                             : "z-0"
@@ -535,20 +535,20 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           "HH:mm"
                         )} – ${lesson.EndDateTime.format("HH:mm")})`}
                       >
-                        {/* Left accent black bar */}
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black" />
+                        {/* Left accent bar */}
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white" />
 
                         {/* Top: Time + Type Badge */}
                         <div className="flex items-center justify-between gap-1 leading-none pl-1">
-                          <span className="text-[10px] font-bold text-black flex items-center gap-1 truncate">
-                            <Clock className="w-2.5 h-2.5 text-black shrink-0" />
+                          <span className="text-[10px] font-bold text-white flex items-center gap-1 truncate">
+                            <Clock className="w-2.5 h-2.5 text-white shrink-0" />
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
                           <span
                             className={`text-[8px] font-extrabold uppercase tracking-wider px-1 py-0.5 rounded shrink-0 ${
                               isLecture
                                 ? "bg-[#228B22] text-white"
-                                : "bg-black text-white"
+                                : "bg-white text-black"
                             }`}
                           >
                             {lesson.EventType}
@@ -558,7 +558,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         {/* Middle: Title */}
                         <div className="pl-1 my-auto">
                           <h4
-                            className={`font-bold text-black leading-tight line-clamp-2 ${
+                            className={`font-bold text-white leading-tight line-clamp-2 ${
                               isShort ? "text-[11px]" : "text-xs"
                             }`}
                           >
@@ -567,26 +567,26 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         </div>
 
                         {/* Bottom: Location & Staff (if room available) */}
-                        <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-black/80">
+                        <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-white/80">
                           {!isLab && lesson.Location ? (
                             <span className="flex items-center gap-0.5 truncate" title={lesson.Location}>
-                              <MapPin className="w-2.5 h-2.5 text-black shrink-0" />
+                              <MapPin className="w-2.5 h-2.5 text-white shrink-0" />
                               <span className="truncate">{lesson.Location}</span>
                             </span>
                           ) : isLab && lesson.collapsedLocations ? (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-black bg-zinc-100 px-1.5 py-0.5 rounded border border-black/20 shrink-0" title="Click to view lab groups and rooms">
-                              <Users className="w-2.5 h-2.5 text-black shrink-0" />
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-white bg-zinc-900 px-1.5 py-0.5 rounded border border-white/20 shrink-0" title="Click to view lab groups and rooms">
+                              <Users className="w-2.5 h-2.5 text-white shrink-0" />
                               <span>{lesson.Locations?.length ? `${lesson.Locations.length} Groups` : "Lab Info"}</span>
                             </span>
                           ) : (
-                            <span className="text-[9px] text-zinc-500 font-mono truncate">
+                            <span className="text-[9px] text-zinc-400 font-mono truncate">
                               {lesson.Name}
                             </span>
                           )}
 
                           {lesson.staffName && heightPx >= 80 && (
-                            <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-500" title={lesson.staffName}>
-                              <User className="w-2.5 h-2.5 text-black shrink-0" />
+                            <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-400" title={lesson.staffName}>
+                              <User className="w-2.5 h-2.5 text-white shrink-0" />
                               <span className="truncate max-w-[80px]">{lesson.staffName}</span>
                             </span>
                           )}
@@ -601,9 +601,9 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                       style={{ top: `${currentLiveY}px` }}
                       className="absolute left-0 right-0 z-20 flex items-center pointer-events-none -translate-y-1/2"
                     >
-                      <div className="w-2.5 h-2.5 rounded-full bg-black border-2 border-white ring-2 ring-black shrink-0 -ml-1.5 relative z-10" />
-                      <div className="flex-1 h-[2px] bg-black" />
-                      <span className="text-[9px] font-black bg-black text-white px-1 py-0.2 rounded shadow-xs ml-1 mr-1 shrink-0">
+                      <div className="w-2.5 h-2.5 rounded-full bg-white border-2 border-black ring-2 ring-white shrink-0 -ml-1.5 relative z-10" />
+                      <div className="flex-1 h-[2px] bg-white" />
+                      <span className="text-[9px] font-black bg-white text-black px-1 py-0.2 rounded shadow-xs ml-1 mr-1 shrink-0">
                         {currentLiveTime.format("h:mm A")}
                       </span>
                     </div>
@@ -615,26 +615,26 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
             {/* Centered Empty Week Overlay Message */}
             {totalClassesCount === 0 && (
               <div className="absolute inset-0 left-[60px] flex items-center justify-center p-4 z-20 pointer-events-none select-none">
-                <div className="max-w-md w-full p-6 sm:p-7 rounded-2xl border-2 border-black bg-white/90 backdrop-blur-md shadow-lg text-center pointer-events-auto">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-100 border-2 border-black flex items-center justify-center mx-auto mb-3 shadow-xs">
-                    <Coffee className="w-6 h-6 text-black" />
+                <div className="max-w-md w-full p-6 sm:p-7 rounded-2xl border-2 border-white bg-black/90 backdrop-blur-md shadow-lg text-center pointer-events-auto">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border-2 border-white flex items-center justify-center mx-auto mb-3 shadow-xs">
+                    <Coffee className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-black text-black mb-1">
+                  <h3 className="text-lg font-black text-white mb-1">
                     No Classes Scheduled This Week
                   </h3>
-                  <p className="text-xs font-bold text-zinc-600 mb-4">
+                  <p className="text-xs font-bold text-zinc-400 mb-4">
                     Enjoy your free time, or check the previous or upcoming weeks for class timetables.
                   </p>
                   <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={() => onSelectDate(activeDate.clone().subtract(1, "week"))}
-                      className="px-3.5 py-1.5 rounded-xl border-2 border-black text-xs font-bold hover:bg-zinc-100 transition-colors bg-white shadow-xs active:scale-95 cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-xl border-2 border-white text-xs font-bold hover:bg-zinc-900 transition-colors bg-black text-white shadow-xs active:scale-95 cursor-pointer"
                     >
                       ‹ Previous Week
                     </button>
                     <button
                       onClick={() => onSelectDate(activeDate.clone().add(1, "week"))}
-                      className="px-3.5 py-1.5 rounded-xl border-2 border-black bg-black text-white text-xs font-bold hover:bg-zinc-800 transition-colors shadow-xs active:scale-95 cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-xl border-2 border-white bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors shadow-xs active:scale-95 cursor-pointer"
                     >
                       Next Week ›
                     </button>

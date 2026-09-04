@@ -220,11 +220,11 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/60"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm"
       onClick={isMandatory ? undefined : onClose}
     >
       <div
-        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-white sm:rounded-2xl border-2 border-black flex flex-col overflow-hidden relative transition-colors"
+        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-black text-white sm:rounded-2xl border-2 border-white flex flex-col overflow-hidden relative transition-colors"
         onClick={(e) => e.stopPropagation()}
         style={{
           minHeight: "100dvh sm:620px",
@@ -232,12 +232,12 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       >
         {/* Top Minimal Bar */}
         <div
-          className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b-2 border-black bg-white"
+          className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b-2 border-white bg-black"
           style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black border border-black text-white">
-            <span className="w-2 h-2 rounded-full bg-white" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-white text-black">
+            <span className="w-2 h-2 rounded-full bg-black" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-black">
               {phase === "input" ? "Step 1 • Enter Course ID" : "Step 2 • Select Course Year"}
             </span>
           </div>
@@ -245,35 +245,35 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {!isMandatory && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-black border border-black hover:bg-zinc-100 transition-colors"
+              className="p-1.5 rounded-lg text-white border border-white hover:bg-zinc-800 transition-colors"
             >
-              <X className="w-5 h-5 text-black" />
+              <X className="w-5 h-5 text-white" />
             </button>
           )}
         </div>
 
         {/* Dynamic Body Content */}
-        <div className="flex-1 flex flex-col relative overflow-hidden px-4 sm:px-8 pb-6 bg-white">
+        <div className="flex-1 flex flex-col relative overflow-hidden px-4 sm:px-8 pb-6 bg-black text-white">
           {/* ========================================================= */}
           {/* PHASE 1: ENTER COURSE ID                                  */}
           {/* ========================================================= */}
           {phase === "input" && (
             <div className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full py-2 relative z-10">
               <div className="text-center mb-5">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white border border-black mb-3">
-                  <GraduationCap className="w-6 h-6 text-white" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white text-black border border-white mb-3">
+                  <GraduationCap className="w-6 h-6 text-black" />
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-black tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                   Enter Your Course ID
                 </h2>
-                <p className="text-xs sm:text-sm text-black mt-1 max-w-sm mx-auto font-medium">
-                  Type your degree code (e.g. <span className="font-bold text-black">TU856</span>) or keyword to find your timetable.
+                <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-sm mx-auto font-medium">
+                  Type your degree code (e.g. <span className="font-bold text-white">TU856</span>) or keyword to find your timetable.
                 </p>
               </div>
 
               {/* Main Course ID Input Bar - Plain 2D */}
-              <div className="relative flex items-center w-full rounded-xl bg-white border-2 border-black mb-3.5 transition-colors">
-                <Search className="w-5 h-5 ml-3.5 text-black shrink-0" />
+              <div className="relative flex items-center w-full rounded-xl bg-black border-2 border-white mb-3.5 transition-colors">
+                <Search className="w-5 h-5 ml-3.5 text-white shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -285,17 +285,17 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                     }
                   }}
                   placeholder="e.g. TU856, TU857, TU756..."
-                  className="w-full pl-3 pr-3 py-3 bg-transparent text-black placeholder-zinc-400 font-bold text-base focus:outline-none"
+                  className="w-full pl-3 pr-3 py-3 bg-transparent text-white placeholder-zinc-500 font-bold text-base focus:outline-none"
                 />
                 {courseQuery ? (
                   <button
                     onClick={() => setCourseQuery("")}
-                    className="mr-3 p-1 rounded text-black hover:bg-zinc-100 transition-colors"
+                    className="mr-3 p-1 rounded text-white hover:bg-zinc-800 transition-colors"
                   >
-                    <X className="w-4 h-4 text-black" />
+                    <X className="w-4 h-4 text-white" />
                   </button>
                 ) : (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 mr-3 rounded bg-white text-black border border-black select-none">
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 mr-3 rounded bg-zinc-900 text-white border border-white/50 select-none">
                     ↵ Enter
                   </span>
                 )}
@@ -303,15 +303,15 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 
               {/* Live Search Results or Suggestions */}
               {isSearching && (
-                <div className="flex items-center justify-center py-4 text-black gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-black" />
+                <div className="flex items-center justify-center py-4 text-white gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span className="text-xs font-bold">Checking TU Dublin timetable records...</span>
                 </div>
               )}
 
               {/* Matching Search Results Dropdown List */}
               {!isSearching && searchResults.length > 0 && (
-                <div className="max-h-56 overflow-y-auto space-y-1 pr-1 mb-4 rounded-xl bg-white p-2 border-2 border-black">
+                <div className="max-h-56 overflow-y-auto space-y-1 pr-1 mb-4 rounded-xl bg-black p-2 border-2 border-white">
                   {searchResults.slice(0, 5).map((prog) => {
                     const { code: shortCode, title: progTitle } = parseProgramCodeAndTitle(
                       prog.Name,
@@ -322,19 +322,19 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                       <button
                         key={prog.Identity}
                         onClick={() => handleSelectCourse(baseCode, progTitle, searchResults)}
-                        className="w-full text-left p-2.5 rounded-lg hover:bg-zinc-100 border border-black flex items-center justify-between transition-colors"
+                        className="w-full text-left p-2.5 rounded-lg hover:bg-zinc-900 border border-white/30 flex items-center justify-between transition-colors"
                       >
                         <div className="min-w-0 pr-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-black text-white shrink-0 border border-black">
+                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-white text-black shrink-0 border border-white">
                               {baseCode}
                             </span>
-                            <span className="text-xs font-bold text-black truncate">
+                            <span className="text-xs font-bold text-white truncate">
                               {progTitle}
                             </span>
                           </div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-black shrink-0" />
+                        <ArrowRight className="w-4 h-4 text-white shrink-0" />
                       </button>
                     );
                   })}
@@ -343,14 +343,14 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 
               {/* Search Error Notice */}
               {!isSearching && searchError && (
-                <div className="p-2.5 mb-3 rounded-xl bg-white border-2 border-black text-xs text-black text-center font-bold">
+                <div className="p-2.5 mb-3 rounded-xl bg-black border-2 border-white text-xs text-white text-center font-bold">
                   {searchError}
                 </div>
               )}
 
               {/* Quick Pick Chips / Popular Courses as Plain 2D Cards */}
               <div className="pt-2">
-                <div className="text-[11px] font-black uppercase tracking-wider text-black mb-2 px-1">
+                <div className="text-[11px] font-black uppercase tracking-wider text-white mb-2 px-1">
                   Popular Course IDs
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -358,22 +358,22 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                     <button
                       key={c.code}
                       onClick={() => handleSelectCourse(c.code, c.name)}
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-white hover:bg-zinc-100 border-2 border-black transition-colors text-left"
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-black hover:bg-zinc-900 border-2 border-white transition-colors text-left"
                     >
                       <div className="flex items-center gap-2.5 min-w-0 pr-1">
-                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-black text-white shrink-0 border border-black">
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-white text-black shrink-0 border border-white">
                           {c.code}
                         </span>
                         <div className="min-w-0">
-                          <div className="text-xs font-bold text-black truncate">
+                          <div className="text-xs font-bold text-white truncate">
                             {c.name.split(" (")[0]}
                           </div>
-                          <div className="text-[10px] text-black font-medium truncate">
+                          <div className="text-[10px] text-zinc-400 font-medium truncate">
                             TU Dublin
                           </div>
                         </div>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-black shrink-0" />
+                      <ArrowRight className="w-3.5 h-3.5 text-white shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -385,28 +385,28 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {/* PHASE 2: COURSE MINIMISED TO LEFT + ROTARY YEAR DIAL       */}
           {/* ========================================================= */}
           {phase === "year" && (
-            <div className="flex-1 flex flex-col relative w-full h-full bg-white">
+            <div className="flex-1 flex flex-col relative w-full h-full bg-black text-white">
               {/* Minimized Course Badge / Card on the Left */}
               <div className="flex items-center justify-between pb-2 z-40">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border-2 border-black transition-colors">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-black text-white border border-black">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black border-2 border-white transition-colors">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-white text-black border border-white">
                     {selectedCourseCode}
                   </span>
-                  <span className="text-xs font-bold text-black max-w-[170px] sm:max-w-xs truncate">
+                  <span className="text-xs font-bold text-white max-w-[170px] sm:max-w-xs truncate">
                     {selectedCourseTitle}
                   </span>
                   <button
                     onClick={() => setPhase("input")}
-                    className="p-1 text-black hover:bg-zinc-100 rounded border border-black transition-colors ml-1"
+                    className="p-1 text-white hover:bg-zinc-800 rounded border border-white transition-colors ml-1"
                     title="Change course ID"
                   >
-                    <RotateCcw className="w-3.5 h-3.5 text-black" />
+                    <RotateCcw className="w-3.5 h-3.5 text-white" />
                   </button>
                 </div>
               </div>
 
               {/* The Rotary Arc Wheel */}
-              <div className="flex-1 relative w-full flex items-center bg-white">
+              <div className="flex-1 relative w-full flex items-center bg-black">
                 <CourseYearDial
                   years={availableYears}
                   selectedYear={selectedYearNumber}
@@ -419,9 +419,9 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 <button
                   type="button"
                   onClick={handleConfirmSelection}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black hover:bg-zinc-800 text-white font-bold text-sm border-2 border-black transition-colors cursor-pointer shadow-sm"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-sm border-2 border-white transition-colors cursor-pointer shadow-sm"
                 >
-                  <Maximize2 className="w-4 h-4 text-white" />
+                  <Maximize2 className="w-4 h-4 text-black" />
                   <span>Confirm & Continue</span>
                 </button>
               </div>

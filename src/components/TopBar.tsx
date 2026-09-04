@@ -90,7 +90,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-white border-b-2 border-black transition-colors select-none"
+      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="max-w-[1600px] h-[58px] mx-auto px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-3">
@@ -98,13 +98,13 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-2 overflow-hidden text-left py-1 px-2.5 rounded-xl border-2 border-black bg-white hover:bg-zinc-100 active:scale-98 transition-colors group shrink-0 max-w-[260px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm min-w-0"
+          className="flex items-center gap-2 overflow-hidden text-left py-1 px-2.5 rounded-xl border-2 border-white bg-black hover:bg-zinc-900 active:scale-98 transition-colors group shrink-0 max-w-[260px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm min-w-0"
           title="Open course details and menu"
         >
-          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-black text-white border border-black">
+          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-white text-black border border-white">
             {shortCode}
           </span>
-          <span className="text-xs font-bold text-black truncate">
+          <span className="text-xs font-bold text-white truncate">
             {programTitle}
           </span>
         </button>
@@ -113,20 +113,20 @@ export const TopBar: React.FC<TopBarProps> = ({
         {activeDate && (
           <div className="hidden md:flex items-center gap-2.5">
             {/* Week Nav Buttons */}
-            <div className="flex items-center gap-0.5 bg-zinc-100 p-0.5 rounded-xl border border-black/20">
+            <div className="flex items-center gap-0.5 bg-zinc-900 p-0.5 rounded-xl border border-white/20">
               <button
                 onClick={handlePrevWeek}
-                className="p-1 rounded-lg hover:bg-white text-black border border-transparent hover:border-black transition-colors"
+                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white transition-colors"
                 title="Previous week"
               >
-                <ChevronLeft className="w-4 h-4 text-black" />
+                <ChevronLeft className="w-4 h-4 text-white" />
               </button>
               <button
                 onClick={handleNextWeek}
-                className="p-1 rounded-lg hover:bg-white text-black border border-transparent hover:border-black transition-colors"
+                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white transition-colors"
                 title="Next week"
               >
-                <ChevronRight className="w-4 h-4 text-black" />
+                <ChevronRight className="w-4 h-4 text-white" />
               </button>
             </div>
 
@@ -134,7 +134,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             {!isTodayActive && (
               <button
                 onClick={onGoToToday}
-                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-xl bg-white hover:bg-black hover:text-white text-black border-2 border-black transition-colors shadow-xs"
+                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-xl bg-black hover:bg-white hover:text-black text-white border-2 border-white transition-colors shadow-xs"
                 title="Jump to current week"
               >
                 <Sparkles className="w-3 h-3" />
@@ -143,8 +143,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             )}
 
             {/* Week Date Range Title */}
-            <div className="flex items-center gap-1.5 text-xs lg:text-sm font-black text-black h-5 overflow-hidden">
-              <Calendar className="w-3.5 h-3.5 text-black shrink-0 hidden lg:inline-block" />
+            <div className="flex items-center gap-1.5 text-xs lg:text-sm font-black text-white h-5 overflow-hidden">
+              <Calendar className="w-3.5 h-3.5 text-white shrink-0 hidden lg:inline-block" />
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={weekStartMoment.format("YYYY-MM-DD")}
@@ -157,7 +157,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                   {weekStartMoment.format("D MMM")} – {weekEndMoment.format("D MMM YYYY")}
                 </motion.span>
               </AnimatePresence>
-              <span className="text-xs font-bold text-zinc-500">
+              <span className="text-xs font-bold text-zinc-400">
                 (Week {activeDate.isoWeek()})
               </span>
             </div>
@@ -168,20 +168,20 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-2 shrink-0">
           {/* Desktop Class Count Badge */}
           {weekSchedule && weekSchedule.length > 0 && (
-            <span className="hidden md:inline-flex text-xs font-bold px-2.5 py-1 rounded-lg bg-zinc-100 text-black border border-black/20">
+            <span className="hidden md:inline-flex text-xs font-bold px-2.5 py-1 rounded-lg bg-zinc-900 text-white border border-white/20">
               {totalClassesCount} {totalClassesCount === 1 ? "class" : "classes"} scheduled
             </span>
           )}
 
           {/* Desktop 5 Days / 7 Days Toggle */}
           {onToggleSevenDays && (
-            <div className="hidden md:flex items-center rounded-xl border-2 border-black bg-white p-0.5 text-xs font-bold">
+            <div className="hidden md:flex items-center rounded-xl border-2 border-white bg-black p-0.5 text-xs font-bold">
               <button
                 onClick={() => onToggleSevenDays(false)}
                 className={`px-2 py-0.5 rounded-lg transition-colors ${
                   !displaySevenDays
-                    ? "bg-black text-white"
-                    : "text-black hover:bg-zinc-100"
+                    ? "bg-white text-black"
+                    : "text-white hover:bg-zinc-900"
                 }`}
               >
                 5 Days
@@ -190,13 +190,13 @@ export const TopBar: React.FC<TopBarProps> = ({
                 onClick={() => onToggleSevenDays(true)}
                 className={`px-2 py-0.5 rounded-lg transition-colors flex items-center gap-1 ${
                   displaySevenDays
-                    ? "bg-black text-white"
-                    : "text-black hover:bg-zinc-100"
+                    ? "bg-white text-black"
+                    : "text-white hover:bg-zinc-900"
                 }`}
               >
                 <span>7 Days</span>
                 {hasWeekendClasses && !displaySevenDays && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                 )}
               </button>
             </div>
@@ -204,8 +204,8 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Offline indicator */}
           {isOffline && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border-2 border-black bg-white text-black">
-              <WifiOff className="w-3 h-3 text-black" />
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border-2 border-white bg-black text-white">
+              <WifiOff className="w-3 h-3 text-white" />
               Offline
             </span>
           )}
@@ -217,8 +217,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="flat"
               onPress={onGoToToday}
               data-tour="today-button"
-              startContent={<Sparkles className="w-3.5 h-3.5 text-black" />}
-              className="md:hidden h-8 px-2.5 text-xs font-bold rounded-xl min-w-0 bg-white text-black border-2 border-black hover:bg-black hover:text-white transition-colors"
+              startContent={<Sparkles className="w-3.5 h-3.5 text-white" />}
+              className="md:hidden h-8 px-2.5 text-xs font-bold rounded-xl min-w-0 bg-black text-white border-2 border-white hover:bg-white hover:text-black transition-colors"
               title="Jump to today"
             >
               Today
@@ -233,10 +233,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             onPress={onOpenMenu}
             data-tour="menu-button"
             isLoading={isLoading}
-            className="w-8 h-8 rounded-xl text-black border-2 border-black bg-white hover:bg-zinc-100"
+            className="w-8 h-8 rounded-xl text-white border-2 border-white bg-black hover:bg-zinc-900"
             title="Menu & Settings"
           >
-            <SlidersHorizontal className="w-4 h-4 text-black" />
+            <SlidersHorizontal className="w-4 h-4 text-white" />
           </Button>
         </div>
       </div>

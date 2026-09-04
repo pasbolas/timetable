@@ -128,7 +128,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 onClose();
               }
             }}
-            className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-white rounded-t-3xl sm:rounded-2xl border-2 border-black overflow-hidden flex flex-col touch-pan-y"
+            className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border-2 border-white overflow-hidden flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Fixed Central Ambient Glow matching reference design */}
@@ -166,35 +166,35 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
               title="Tap or drag down to minimise"
             >
-              <div className="w-20 h-2 bg-black group-hover:bg-zinc-700 rounded-full transition-colors shadow-xs" />
+              <div className="w-20 h-2 bg-white group-hover:bg-zinc-300 rounded-full transition-colors shadow-xs" />
             </motion.div>
 
             {/* Drawer Header */}
-            <div className="px-4 py-3 border-b-2 border-black flex items-center justify-between shrink-0 bg-white/85 backdrop-blur-md relative z-10">
+            <div className="px-4 py-3 border-b-2 border-white flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center">
-                  <GraduationCap className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center">
+                  <GraduationCap className="w-4 h-4 text-black" />
                 </div>
                 <div>
-                  <span className="font-black text-sm text-black block leading-none">
+                  <span className="font-black text-sm text-white block leading-none">
                     Preferences & Menu
                   </span>
-                  <span className="text-[10px] font-bold text-black">Timetable options</span>
+                  <span className="text-[10px] font-bold text-zinc-400">Timetable options</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5">
                 {isOffline && (
-                  <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-black bg-white text-black font-bold">
-                    <WifiOff className="w-2.5 h-2.5 text-black" />
+                  <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-white bg-black text-white font-bold">
+                    <WifiOff className="w-2.5 h-2.5 text-white" />
                     Offline
                   </span>
                 )}
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-xl text-black border border-black hover:bg-zinc-100 active:scale-95 transition-all"
+                  className="p-1.5 rounded-xl text-white border border-white hover:bg-zinc-900 active:scale-95 transition-all"
                 >
-                  <X className="w-5 h-5 text-black" />
+                  <X className="w-5 h-5 text-white" />
                 </button>
               </div>
             </div>
@@ -207,16 +207,16 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   isOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
                 }`}
               >
-                <div className="text-[11px] font-black text-black uppercase tracking-wider mb-1.5">
+                <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
                   Current Course
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border-2 border-black space-y-2">
+                <div className="p-3.5 rounded-xl bg-black border-2 border-white space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-black text-white border border-black">
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-white text-black border border-white">
                       {shortCode}
                     </span>
                   </div>
-                  <div className="text-xs font-bold text-black line-clamp-2">
+                  <div className="text-xs font-bold text-white line-clamp-2">
                     {programTitle}
                   </div>
                   <button
@@ -224,9 +224,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                       onClose();
                       onOpenSearch();
                     }}
-                    className="w-full mt-1.5 py-2 px-3 rounded-xl bg-black hover:bg-zinc-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 border-2 border-black shadow-sm active:scale-98 transition-all"
+                    className="w-full mt-1.5 py-2 px-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold flex items-center justify-center gap-1.5 border-2 border-white shadow-sm active:scale-98 transition-all"
                   >
-                    <Search className="w-3.5 h-3.5 text-white" />
+                    <Search className="w-3.5 h-3.5 text-black" />
                     Change Degree / Course
                   </button>
                 </div>
@@ -234,7 +234,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
               {/* Quick Actions */}
               <div className="transition-all duration-300">
-                <div className="text-[11px] font-black text-black uppercase tracking-wider mb-1.5">
+                <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
                   Actions
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -243,14 +243,14 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                       onGoToToday();
                       onClose();
                     }}
-                    className="p-3 rounded-xl bg-white hover:bg-zinc-100 border-2 border-black text-left transition-all active:scale-95 flex flex-col justify-between h-20 group shadow-xs"
+                    className="p-3 rounded-xl bg-black hover:bg-zinc-900 border-2 border-white text-left transition-all active:scale-95 flex flex-col justify-between h-20 group shadow-xs"
                   >
-                    <Sparkles className="w-4 h-4 text-black group-hover:scale-110 transition-transform" />
+                    <Sparkles className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
                     <div>
-                      <div className="text-xs font-black text-black">
+                      <div className="text-xs font-black text-white">
                         Jump to Today
                       </div>
-                      <div className="text-[10px] font-medium text-black">Current day view</div>
+                      <div className="text-[10px] font-medium text-zinc-400">Current day view</div>
                     </div>
                   </button>
 
@@ -260,18 +260,18 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                       onClose();
                     }}
                     disabled={isLoading}
-                    className="p-3 rounded-xl bg-white hover:bg-zinc-100 border-2 border-black text-left transition-all active:scale-95 flex flex-col justify-between h-20 disabled:opacity-50 group shadow-xs"
+                    className="p-3 rounded-xl bg-black hover:bg-zinc-900 border-2 border-white text-left transition-all active:scale-95 flex flex-col justify-between h-20 disabled:opacity-50 group shadow-xs"
                   >
                     <RotateCw
-                      className={`w-4 h-4 text-black group-hover:rotate-180 transition-transform duration-500 ${
+                      className={`w-4 h-4 text-white group-hover:rotate-180 transition-transform duration-500 ${
                         isLoading ? "animate-spin" : ""
                       }`}
                     />
                     <div>
-                      <div className="text-xs font-black text-black">
+                      <div className="text-xs font-black text-white">
                         Reload Timetable
                       </div>
-                      <div className="text-[10px] font-medium text-black">Fetch latest data</div>
+                      <div className="text-[10px] font-medium text-zinc-400">Fetch latest data</div>
                     </div>
                   </button>
                 </div>
@@ -279,7 +279,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
               {/* Interactive Feature Tour */}
               <div className="transition-all duration-300">
-                <div className="text-[11px] font-black text-black uppercase tracking-wider mb-1.5">
+                <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
                   Guide
                 </div>
                 <button
@@ -287,53 +287,53 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     onClose();
                     onStartTour();
                   }}
-                  className="w-full p-3 rounded-xl bg-white hover:bg-zinc-100 border-2 border-black flex items-center justify-between text-left transition-colors"
+                  className="w-full p-3 rounded-xl bg-black hover:bg-zinc-900 border-2 border-white flex items-center justify-between text-left transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center shrink-0">
-                      <Compass className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shrink-0">
+                      <Compass className="w-4 h-4 text-black" />
                     </div>
                     <div>
-                      <div className="text-xs font-black text-black">
+                      <div className="text-xs font-black text-white">
                         Feature Tour & Guide
                       </div>
-                      <div className="text-[10px] font-medium text-black">
+                      <div className="text-[10px] font-medium text-zinc-400">
                         Interactive walkthrough of features
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </div>
 
               {/* Export to Calendar */}
               <div className="transition-all duration-300">
-                <div className="text-[11px] font-black text-black uppercase tracking-wider mb-1.5">
+                <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
                   Sync
                 </div>
                 <button
                   onClick={handleExportWeekIcs}
-                  className="w-full p-3 rounded-xl bg-white hover:bg-zinc-100 border-2 border-black flex items-center justify-between text-left transition-all active:scale-98 group shadow-xs"
+                  className="w-full p-3 rounded-xl bg-black hover:bg-zinc-900 border-2 border-white flex items-center justify-between text-left transition-all active:scale-98 group shadow-xs"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <Calendar className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <Calendar className="w-4 h-4 text-black" />
                     </div>
                     <div>
-                      <div className="text-xs font-black text-black">
+                      <div className="text-xs font-black text-white">
                         Export Week to Calendar
                       </div>
-                      <div className="text-[10px] font-medium text-black">Download .ics for Apple / Google Cal</div>
+                      <div className="text-[10px] font-medium text-zinc-400">Download .ics for Apple / Google Cal</div>
                     </div>
                   </div>
-                  <Download className="w-4 h-4 text-black transition-colors" />
+                  <Download className="w-4 h-4 text-white transition-colors" />
                 </button>
               </div>
 
               {/* Recent Programs */}
               {recentPrograms.length > 1 && (
                 <div className="transition-all duration-300">
-                  <div className="text-[11px] font-black text-black uppercase tracking-wider mb-1.5">
+                  <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
                     Switch Recent Courses
                   </div>
                   <div className="space-y-1.5">
@@ -349,22 +349,22 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                           }}
                           className={`w-full text-left p-2.5 rounded-xl border-2 transition-all active:scale-98 flex items-center justify-between ${
                             isCurrent
-                              ? "bg-zinc-100 border-black"
-                              : "bg-white hover:bg-zinc-100 border-black"
+                              ? "bg-zinc-900 border-white"
+                              : "bg-black hover:bg-zinc-900 border-white"
                           }`}
                         >
                           <div className="flex items-center gap-2 min-w-0 pr-2">
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black text-white shrink-0 border border-black">
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white text-black shrink-0 border border-white">
                               {code}
                             </span>
-                            <span className="text-xs font-bold text-black truncate">
+                            <span className="text-xs font-bold text-white truncate">
                               {title}
                             </span>
                           </div>
                           {isCurrent ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-black shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />
                           ) : (
-                            <ChevronRight className="w-3.5 h-3.5 text-black shrink-0" />
+                            <ChevronRight className="w-3.5 h-3.5 text-white shrink-0" />
                           )}
                         </button>
                       );
@@ -376,7 +376,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
             {/* Drawer Footer */}
             <div
-              className="p-3 bg-white border-t-2 border-black text-center text-[10px] font-bold text-black shrink-0"
+              className="p-3 bg-black border-t-2 border-white text-center text-[10px] font-bold text-zinc-400 shrink-0"
               style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
             >
               Scientia Timetabler EU • Dublin (Europe/Dublin)

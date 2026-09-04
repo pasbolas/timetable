@@ -65,19 +65,19 @@ export const PWAInstallPrompt: React.FC = () => {
       className="fixed left-4 right-4 max-w-md mx-auto z-40 animate-in slide-in-from-bottom-6 duration-300"
       style={{ bottom: "calc(max(env(safe-area-inset-bottom, 0px), 8px) + 5.5rem)" }}
     >
-      <div className="p-3.5 rounded-xl bg-white border-2 border-black flex items-center justify-between gap-3 shadow-lg">
+      <div className="p-3.5 rounded-xl bg-black border-2 border-white flex items-center justify-between gap-3 shadow-2xl">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-lg bg-black text-white flex items-center justify-center shrink-0 border border-black">
-            <Smartphone className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg bg-white text-black flex items-center justify-center shrink-0 border border-white">
+            <Smartphone className="w-5 h-5 text-black" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs font-black text-black truncate">
+            <div className="text-xs font-black text-white truncate">
               Install MyTimetable
             </div>
-            <div className="text-[11px] text-black font-medium leading-tight">
+            <div className="text-[11px] text-zinc-300 font-medium leading-tight">
               {isIOS ? (
                 <span className="flex items-center gap-1">
-                  Tap <Share className="w-3 h-3 inline text-black" /> then &quot;Add to Home Screen&quot;
+                  Tap <Share className="w-3 h-3 inline text-white" /> then &quot;Add to Home Screen&quot;
                 </span>
               ) : (
                 "Add to your phone for instant offline access"
@@ -90,17 +90,17 @@ export const PWAInstallPrompt: React.FC = () => {
           {!isIOS && deferredPrompt && (
             <button
               onClick={handleInstallClick}
-              className="px-3 py-1.5 rounded-xl bg-black hover:bg-zinc-800 text-white text-xs font-bold border border-black active:scale-95 transition-all flex items-center gap-1"
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold border border-white active:scale-95 transition-all flex items-center gap-1"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5 text-black" />
               Install
             </button>
           )}
           <button
             onClick={handleDismiss}
-            className="p-1.5 rounded-lg text-black hover:bg-zinc-100 transition-colors"
+            className="p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>

@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html {
-  background-color: #ffffff;
+  background-color: #000000;
 }
 
 body {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* Viewport expansion and overscroll prevention for PWAs */
@@ -44,7 +44,7 @@ body {
   scrollbar-width: none;
 }
 
-/* Custom scrollbar for modern browsers - sleek black */
+/* Custom scrollbar for modern browsers - sleek white */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -55,16 +55,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: #ffffff;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #27272a;
+  background: #e4e4e7;
 }
 
 * {
-  scrollbar-color: #000000 transparent;
+  scrollbar-color: #ffffff transparent;
   scrollbar-width: thin;
 }
 
@@ -80,19 +80,19 @@ body {
 
 /* Dot grid background pattern */
 .bg-dot-grid {
-  background-image: radial-gradient(rgba(0, 0, 0, 0.20) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
 }
 
 /* Diagonal striped hatching pattern for break pills */
 .bg-break-stripes {
-  background-color: #ffffff;
+  background-color: #000000;
   background-image: repeating-linear-gradient(
     -45deg,
-    #ffffff,
-    #ffffff 7px,
-    rgba(0, 0, 0, 0.07) 7px,
-    rgba(0, 0, 0, 0.07) 14px
+    #000000,
+    #000000 7px,
+    rgba(255, 255, 255, 0.12) 7px,
+    rgba(255, 255, 255, 0.12) 14px
   );
 }
 

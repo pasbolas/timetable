@@ -58,7 +58,7 @@ const TOUR_STEPS: TourStep[] = [
     id: "welcome",
     title: "Welcome to MyTimetable! 👋",
     badge: "Quick Overview",
-    icon: <Sparkles className="w-5 h-5 text-black" />,
+    icon: <Sparkles className="w-5 h-5 text-white" />,
     description:
       "Your fast, modern student timetable designed for university life. Packed with live schedule updates, offline support, smart break detection, and calendar sync.",
     highlights: [
@@ -74,7 +74,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="course-chip"]',
     title: "Course Selector & Search 🔍",
     badge: "Step 1 of 5 • Courses",
-    icon: <GraduationCap className="w-5 h-5 text-black" />,
+    icon: <GraduationCap className="w-5 h-5 text-white" />,
     description:
       "Tap your course name or code anytime to search degrees, switch between recent programs, or explore modules with instant autocomplete.",
     tip: "You can search by course code (e.g. TU856) or title (e.g. Computer Science).",
@@ -84,7 +84,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="date-strip"]',
     title: "5-Week Calendar Strip 📅",
     badge: "Step 2 of 5 • Date Strip",
-    icon: <Calendar className="w-5 h-5 text-black" />,
+    icon: <Calendar className="w-5 h-5 text-white" />,
     description:
       "Easily swipe or scroll through 35 continuous days. Days with scheduled lectures or labs feature a clean indicator dot.",
     tip: "Use the ‹ and › buttons or tap any date to navigate smoothly.",
@@ -94,7 +94,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="timeline-stream"], main',
     title: "Smart Timeline & Breaks ☕",
     badge: "Step 3 of 5 • Timeline",
-    icon: <Layers className="w-5 h-5 text-black" />,
+    icon: <Layers className="w-5 h-5 text-white" />,
     description:
       "Classes display clear badges for category (Lectures, Labs, Tutorials, Studios). Free gaps (>6 mins) between classes are automatically calculated and displayed as break cards.",
     tip: "Your ongoing class is highlighted with a live 'NOW' badge.",
@@ -104,7 +104,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="lesson-card"], [data-tour="timeline-stream"], main',
     title: "Class Details & Calendar Export 📥",
     badge: "Step 4 of 5 • Lesson Details",
-    icon: <CalendarPlus className="w-5 h-5 text-black" />,
+    icon: <CalendarPlus className="w-5 h-5 text-white" />,
     description:
       "Tap on any lecture or lab card to open rich details: room numbers, assigned lecturers, group breakdowns, and one-tap export to Apple Calendar, Google Calendar, or Outlook.",
     tip: "You can also export an entire week's schedule into your calendar from the menu!",
@@ -114,7 +114,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="menu-button"]',
     title: "Course Switcher & Offline ⚙️",
     badge: "Step 5 of 5 • Menu & Settings",
-    icon: <SlidersHorizontal className="w-5 h-5 text-black" />,
+    icon: <SlidersHorizontal className="w-5 h-5 text-white" />,
     description:
       "Open the menu to switch degree courses, jump straight back to Today, reload live timetable data, or re-run this interactive tour whenever you like.",
     tip: "Cached schedules allow the app to work seamlessly without an internet connection.",
@@ -274,7 +274,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
       {/* Full screen backdrop for modal steps without a specific target (e.g. welcome) */}
       {!targetRect && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 pointer-events-auto cursor-pointer"
+          className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm pointer-events-auto cursor-pointer"
           onClick={handleCompleteTour}
         />
       )}
@@ -289,7 +289,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         >
           <path
             d={getCutoutPath(targetRect, windowSize.width, windowSize.height)}
-            fill="rgba(2, 6, 23, 0.78)"
+            fill="rgba(0, 0, 0, 0.85)"
             fillRule="evenodd"
             className="transition-all duration-200 pointer-events-auto cursor-pointer"
             onClick={handleCompleteTour}
@@ -306,10 +306,10 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
             width: `${targetRect.width + 12}px`,
             height: `${targetRect.height + 12}px`,
           }}
-          className="fixed z-40 pointer-events-none rounded-xl border-2 border-black transition-all duration-200 ease-out"
+          className="fixed z-40 pointer-events-none rounded-xl border-2 border-white transition-all duration-200 ease-out"
         >
           {/* Solid 2D indicator dot */}
-          <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3 rounded-full bg-black border border-white" />
+          <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3 rounded-full bg-white border border-black" />
         </div>
       )}
 
@@ -324,20 +324,20 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         }`}
       >
         <div
-          className="pointer-events-auto w-full max-w-md bg-white rounded-2xl border-2 border-black overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95 shadow-2xl"
+          className="pointer-events-auto w-full max-w-md bg-black text-white rounded-2xl border-2 border-white overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Bar */}
-          <div className="p-4 sm:p-5 pb-3 border-b-2 border-black flex items-center justify-between">
+          <div className="p-4 sm:p-5 pb-3 border-b-2 border-white flex items-center justify-between bg-black">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-white border border-black text-black flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white text-white flex items-center justify-center shrink-0">
                 {currentStep.icon}
               </div>
               <div>
-                <span className="text-[11px] font-black uppercase tracking-wider text-black block leading-none">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400 block leading-none">
                   {currentStep.badge}
                 </span>
-                <h3 className="text-sm sm:text-base font-black text-black mt-0.5">
+                <h3 className="text-sm sm:text-base font-black text-white mt-0.5">
                   {currentStep.title}
                 </h3>
               </div>
@@ -345,16 +345,16 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
 
             <button
               onClick={handleCompleteTour}
-              className="p-1.5 rounded-xl text-black hover:bg-zinc-100 transition-colors"
+              className="p-1.5 rounded-xl text-white hover:bg-zinc-800 transition-colors"
               title="Skip Tour"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 text-white" />
             </button>
           </div>
 
           {/* Body Content */}
-          <div className="p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
-            <p className="text-black font-medium leading-relaxed">
+          <div className="p-4 sm:p-5 space-y-3 text-xs sm:text-sm bg-black text-white">
+            <p className="text-white font-medium leading-relaxed">
               {currentStep.description}
             </p>
 
@@ -362,8 +362,8 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
             {currentStep.highlights && (
               <div className="space-y-1.5 py-1">
                 {currentStep.highlights.map((highlight, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs text-black font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-black shrink-0" />
+                  <div key={i} className="flex items-center gap-2 text-xs text-white font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />
                     <span>{highlight}</span>
                   </div>
                 ))}
@@ -372,15 +372,15 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
 
             {/* Helpful Tip box */}
             {currentStep.tip && (
-              <div className="p-3 rounded-xl bg-white border-2 border-black flex items-start gap-2.5 text-xs text-black">
-                <HelpCircle className="w-4 h-4 text-black shrink-0 mt-0.5" />
-                <span className="leading-snug font-medium">{currentStep.tip}</span>
+              <div className="p-3 rounded-xl bg-black border-2 border-white flex items-start gap-2.5 text-xs text-white">
+                <HelpCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                <span className="leading-snug font-medium text-zinc-200">{currentStep.tip}</span>
               </div>
             )}
           </div>
 
           {/* Footer Controls & Progress */}
-          <div className="p-4 sm:p-5 pt-3 bg-white border-t-2 border-black flex items-center justify-between gap-3">
+          <div className="p-4 sm:p-5 pt-3 bg-black border-t-2 border-white flex items-center justify-between gap-3">
             {/* Step Dots indicator */}
             <div className="flex items-center gap-1.5">
               {TOUR_STEPS.map((step, idx) => (
@@ -389,8 +389,8 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
                   onClick={() => setCurrentStepIndex(idx)}
                   className={`h-1.5 rounded-full transition-all ${
                     idx === currentStepIndex
-                      ? "w-5 bg-black"
-                      : "w-1.5 bg-zinc-300 hover:bg-zinc-500"
+                      ? "w-5 bg-white"
+                      : "w-1.5 bg-zinc-700 hover:bg-zinc-500"
                   }`}
                   title={`Go to ${step.title}`}
                 />
@@ -402,9 +402,9 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
               {!isFirstStep && (
                 <button
                   onClick={handleBack}
-                  className="px-3 py-2 rounded-xl bg-white hover:bg-zinc-100 text-black text-xs font-bold border-2 border-black flex items-center gap-1 active:scale-95 transition-all shadow-sm"
+                  className="px-3 py-2 rounded-xl bg-black hover:bg-zinc-900 text-white text-xs font-bold border-2 border-white flex items-center gap-1 active:scale-95 transition-all shadow-sm"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <ChevronLeft className="w-3.5 h-3.5 text-white" />
                   Back
                 </button>
               )}
@@ -412,26 +412,26 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
               {isFirstStep ? (
                 <button
                   onClick={handleNext}
-                  className="px-4 py-2 rounded-xl bg-black hover:bg-zinc-800 text-white text-xs font-bold border-2 border-black flex items-center gap-1.5 active:scale-95 transition-all"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold border-2 border-white flex items-center gap-1.5 active:scale-95 transition-all"
                 >
                   <span>{currentStep.actionLabel || "Start Tour"}</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5 text-black" />
                 </button>
               ) : isLastStep ? (
                 <button
                   onClick={handleCompleteTour}
-                  className="px-4 py-2 rounded-xl bg-black hover:bg-zinc-800 text-white text-xs font-bold border-2 border-black flex items-center gap-1.5 active:scale-95 transition-all"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold border-2 border-white flex items-center gap-1.5 active:scale-95 transition-all"
                 >
                   <span>Select My Course</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5 text-black" />
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  className="px-4 py-2 rounded-xl bg-black hover:bg-zinc-800 text-white text-xs font-bold border-2 border-black flex items-center gap-1 active:scale-95 transition-all"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold border-2 border-white flex items-center gap-1 active:scale-95 transition-all"
                 >
                   <span>Next</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5 text-black" />
                 </button>
               )}
             </div>

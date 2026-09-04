@@ -18,8 +18,10 @@ import { StorageService } from "./services/storage";
 import { ProgramSearchResult } from "./types/timetable";
 import { Analytics } from "@vercel/analytics/react";
 import { trackEvent } from "./services/analytics";
+import { useTheme } from "./hooks/useTheme";
 
 export function App() {
+  useTheme();
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
   const { currentTime, isToday, isLessonActive, isLessonPast } = useLiveTime();
 
@@ -139,7 +141,7 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative overflow-x-clip ${
+      className={`w-full bg-black text-white flex flex-col selection:bg-white selection:text-black relative overflow-x-clip ${
         isNoClassesDay || !isMobile
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"
