@@ -72,3 +72,69 @@ body {
 .animate-pulse-subtle {
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Dot grid background pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.14) 1.25px, transparent 1.25px);
+  background-size: 24px 24px;
+}
+
+/* Floating animation for dispersed subtle balls */
+@keyframes float-ball-1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(45px, -35px) scale(1.08);
+  }
+  66% {
+    transform: translate(-30px, 40px) scale(0.95);
+  }
+}
+
+@keyframes float-ball-2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-40px, 45px) scale(0.92);
+  }
+  66% {
+    transform: translate(35px, -30px) scale(1.06);
+  }
+}
+
+@keyframes float-ball-3 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(35px, 35px) scale(1.05);
+  }
+}
+
+@keyframes float-ball-4 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-35px, -40px) scale(0.95);
+  }
+}
+
+.animate-float-1 {
+  animation: float-ball-1 18s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-ball-2 22s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: float-ball-3 20s ease-in-out infinite;
+}
+
+.animate-float-4 {
+  animation: float-ball-4 25s ease-in-out infinite;
+}
+

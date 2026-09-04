@@ -11,6 +11,7 @@ import { SearchModal } from "./components/SearchModal";
 import { CourseYearSetupModal } from "./components/CourseYearSetupModal";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { InteractiveTour } from "./components/InteractiveTour";
+import { AmbientBackground } from "./components/AmbientBackground";
 import { TIMETABLE_CONFIG } from "./config/timetableConfig";
 import { StorageService } from "./services/storage";
 import { ProgramSearchResult } from "./types/timetable";
@@ -105,7 +106,7 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-white text-black flex flex-col selection:bg-black selection:text-white ${
+      className={`w-full bg-white text-black flex flex-col selection:bg-black selection:text-white relative ${
         isNoClassesDay
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"
@@ -115,6 +116,9 @@ export function App() {
         height: isNoClassesDay ? "100dvh" : undefined,
       }}
     >
+      {/* Ambient background with dot grid and floating pink and blue balls */}
+      <AmbientBackground />
+
       {/* Pinned Minimal Top Header */}
       <TopBar
         selectedProgram={selectedProgram}

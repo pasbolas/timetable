@@ -28,7 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-white border-b-2 border-black transition-colors"
+      className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b-2 border-black transition-colors"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="max-w-2xl h-[54px] mx-auto px-3 flex items-center justify-between gap-2">

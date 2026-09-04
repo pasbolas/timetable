@@ -86,7 +86,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
     >
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
-        className="sticky z-20 bg-white border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
+        className="sticky z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
         style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
       >
         <div className="flex items-baseline gap-2">
@@ -151,7 +151,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex-1 flex w-full bg-white min-h-[calc(100vh-100px)]"
+          className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)]"
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
@@ -159,7 +159,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               paddingTop: `${GRID_PADDING_Y}px`,
               paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
             }}
-            className="w-16 sm:w-20 shrink-0 border-r-2 border-black relative select-none bg-white min-h-full"
+            className="w-16 sm:w-20 shrink-0 border-r-2 border-black relative select-none bg-white/75 backdrop-blur-[2px] min-h-full"
           >
             {hoursList.map((hour) => {
               const isLast = hour === endHour;
@@ -215,7 +215,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               paddingTop: `${GRID_PADDING_Y}px`,
               paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
             }}
-            className="relative flex-1 min-h-full bg-white"
+            className="relative flex-1 min-h-full bg-transparent"
           >
             {/* Grid Divider Lines */}
             {hoursList.map((hour) => {
