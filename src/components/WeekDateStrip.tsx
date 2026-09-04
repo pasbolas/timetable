@@ -473,14 +473,9 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
-                      {activeDate.format("MMMM YYYY")}
-                    </span>
-                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-stone-200/80 dark:bg-neutral-700 text-slate-500 dark:text-neutral-400">
-                      Pull up
-                    </span>
-                  </div>
+                  <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
+                    {activeDate.format("MMMM YYYY")}
+                  </span>
                   <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={handlePrevDay}
