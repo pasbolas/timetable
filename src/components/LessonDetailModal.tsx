@@ -191,7 +191,14 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             {/* Modal Header */}
             <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b-2 border-black flex items-start justify-between gap-3 shrink-0">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 bg-black text-white border border-black">
+                <div
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 text-white border border-black ${
+                    lesson.EventType?.toLowerCase().includes("lecture") ||
+                    lesson.EventType?.toLowerCase() === "lec"
+                      ? "bg-[#228B22]"
+                      : "bg-black"
+                  }`}
+                >
                   <span className="w-2 h-2 rounded-full bg-white" />
                   {lesson.EventType}
                 </div>

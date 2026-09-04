@@ -510,6 +510,9 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                     const isLab =
                       lesson.EventType?.toLowerCase().includes("lab") ||
                       Boolean(lesson.collapsedLocations);
+                    const isLecture =
+                      lesson.EventType?.toLowerCase().includes("lecture") ||
+                      lesson.EventType?.toLowerCase() === "lec";
 
                     return (
                       <div
@@ -541,7 +544,13 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                             <Clock className="w-2.5 h-2.5 text-black shrink-0" />
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
-                          <span className="text-[8px] font-extrabold uppercase tracking-wider px-1 py-0.5 rounded bg-black text-white shrink-0">
+                          <span
+                            className={`text-[8px] font-extrabold uppercase tracking-wider px-1 py-0.5 rounded shrink-0 ${
+                              isLecture
+                                ? "bg-[#228B22] text-white"
+                                : "bg-black text-white"
+                            }`}
+                          >
                             {lesson.EventType}
                           </span>
                         </div>

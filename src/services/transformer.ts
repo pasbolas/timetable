@@ -512,6 +512,7 @@ export const EVENT_TYPE_PALETTES: Record<"laboratory" | "lecture" | "tutorial", 
   lecture: {
     ...MONO_PALETTE,
     name: "lecture",
+    pill: "bg-[#228B22] text-white border border-black",
   },
   tutorial: {
     ...MONO_PALETTE,

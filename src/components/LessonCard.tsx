@@ -18,6 +18,9 @@ export const LessonCard: React.FC<LessonCardProps> = ({
   onClick,
   dataTour,
 }) => {
+  const isLecture =
+    lesson.EventType?.toLowerCase().includes("lecture") ||
+    lesson.EventType?.toLowerCase() === "lec";
 
   return (
     <div
@@ -48,7 +51,11 @@ export const LessonCard: React.FC<LessonCardProps> = ({
           )}
         </div>
 
-        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-black text-white border border-black">
+        <span
+          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md text-white border border-black ${
+            isLecture ? "bg-[#228B22]" : "bg-black"
+          }`}
+        >
           {lesson.EventType}
         </span>
       </div>
