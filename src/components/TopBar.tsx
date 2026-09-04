@@ -36,13 +36,17 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-2 overflow-hidden text-left py-1 px-1.5 -ml-1 rounded-xl hover:bg-stone-200/70 dark:hover:bg-neutral-800 active:scale-98 transition-colors group max-w-[calc(100%-140px)] sm:max-w-md"
+          className="flex items-center gap-2 overflow-hidden text-left py-1 px-1.5 -ml-1 rounded-xl hover:bg-stone-200/70 dark:hover:bg-neutral-800 active:scale-98 transition-colors group flex-1 min-w-0"
           title="Open course details and menu"
         >
           <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2.5 rounded-full bg-blue-600 text-white dark:bg-[#834655] dark:text-[#F6CAC9] border border-blue-700 dark:border-[#9F5069]">
             {shortCode}
           </span>
-          <span className="text-xs font-medium text-slate-700 dark:text-[#F6CAC9] truncate group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
+          <span
+            className={`text-xs font-medium text-slate-700 dark:text-[#F6CAC9] group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors ${
+              !isTodayActive ? "truncate" : "whitespace-nowrap overflow-visible"
+            }`}
+          >
             {programTitle}
           </span>
         </button>
