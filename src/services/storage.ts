@@ -145,4 +145,45 @@ export class StorageService {
       console.warn("Error saving course onboarding state:", e);
     }
   }
+
+  static getFavoriteGroups(): Record<string, string> {
+    try {
+      const stored = localStorage.getItem(KEYS.SAVED_GROUPS);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.warn("Error reading favorite groups:", e);
+    }
+    return {};
+  }
+
+  static getFavoriteGroupForModule(moduleKey: string): string | null {
+    if (!moduleKey) return null;
+    const all = this.getFavoriteGroups();
+    return all[moduleKey.trim()] || null;
+  }
+
+  static setFavoriteGroupForModule(moduleKey: string, groupLabel: string | null): void {
+    try {
+      if (!moduleKey) return;
+      const all = this.getFavoriteGroups();
+      const key = moduleKey.trim();
+      if (groupLabel) {
+        all[key] = groupLabel.trim();
+      } else {
+        delete all[key];
+      }
+      localStorage.setItem(KEYS.SAVED_GROUPS, JSON.stringify(all));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("timetabler_favorite_groups_changed", {
+            detail: { moduleKey: key, groupLabel: groupLabel ? groupLabel.trim() : null },
+          })
+        );
+      }
+    } catch (e) {
+      console.warn("Error saving favorite group:", e);
+    }
+  }
 }

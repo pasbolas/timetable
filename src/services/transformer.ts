@@ -1,5 +1,6 @@
 import moment from "moment-timezone";
 import { TIMETABLE_CONFIG } from "../config/timetableConfig";
+import { StorageService } from "./storage";
 import {
   RawTimetableEvent,
   RawTimetableProperty,
@@ -123,11 +124,40 @@ export function extractGroupInfo(
 }
 
 /**
+ * Extract a stable module identifier (code or name) to associate module-level user preferences (e.g. lab group)
+ */
+export function getLessonModuleKey(lesson: {
+  moduleCode?: string | null;
+  Name?: string;
+  Description?: string;
+}): string {
+  if (lesson.moduleCode && lesson.moduleCode.trim()) {
+    return lesson.moduleCode.trim();
+  }
+  if (lesson.Name) {
+    const split = lesson.Name.split("/")[0].trim();
+    if (split) return split;
+  }
+  return lesson.Description?.trim() || "module";
+}
+
+/**
  * Format group - room information for widget cards
  */
 export function getLessonGroupRoomStrings(lesson: NormalizedLesson): string[] {
   if (lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0) {
-    return lesson.Locations.map((loc) => {
+    const modKey = getLessonModuleKey(lesson);
+    const fav = StorageService.getFavoriteGroupForModule(modKey);
+    let locs = lesson.Locations;
+    if (fav) {
+      const match = locs.find(
+        (l) => (l.nameSpecification || "").toLowerCase() === fav.toLowerCase()
+      );
+      if (match) {
+        locs = [match, ...locs.filter((l) => l !== match)];
+      }
+    }
+    return locs.map((loc) => {
       const g = loc.nameSpecification || "Group";
       const r = loc.location || "Room TBD";
       return `${g} - ${r}`;

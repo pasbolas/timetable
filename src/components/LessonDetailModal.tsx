@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -16,7 +16,8 @@ import {
 import { Button } from "@heroui/react";
 import { NormalizedLesson } from "../types/timetable";
 import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
-import { getLessonColorTheme } from "../services/transformer";
+import { getLessonColorTheme, getLessonModuleKey } from "../services/transformer";
+import { StorageService } from "../services/storage";
 import { triggerHapticFeedback } from "../services/haptics";
 
 interface LessonDetailModalProps {
@@ -57,6 +58,58 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   }, [lesson, initialSnap]);
 
   const colorTheme = lesson ? getLessonColorTheme(lesson) : null;
+  const moduleKey = lesson ? getLessonModuleKey(lesson) : "";
+  const [favGroup, setFavGroup] = useState<string | null>(() =>
+    moduleKey ? StorageService.getFavoriteGroupForModule(moduleKey) : null
+  );
+
+  useEffect(() => {
+    if (lesson) {
+      const key = getLessonModuleKey(lesson);
+      setFavGroup(StorageService.getFavoriteGroupForModule(key));
+    }
+  }, [lesson]);
+
+  useEffect(() => {
+    const handleSync = (e: any) => {
+      if (!moduleKey) return;
+      if (!e.detail || e.detail.moduleKey === moduleKey) {
+        setFavGroup(StorageService.getFavoriteGroupForModule(moduleKey));
+      }
+    };
+    window.addEventListener("timetabler_favorite_groups_changed", handleSync);
+    return () => window.removeEventListener("timetabler_favorite_groups_changed", handleSync);
+  }, [moduleKey]);
+
+  const handleToggleFavoriteGroup = (groupLabel: string) => {
+    if (!moduleKey) return;
+    const isAlreadyFav = Boolean(
+      favGroup && favGroup.trim().toLowerCase() === groupLabel.trim().toLowerCase()
+    );
+    const nextVal = isAlreadyFav ? null : groupLabel;
+    StorageService.setFavoriteGroupForModule(moduleKey, nextVal);
+    setFavGroup(nextVal);
+    triggerHapticFeedback();
+  };
+
+  const sortedLocations = useMemo(() => {
+    if (!lesson?.Locations) return [];
+    const list = lesson.Locations.map((loc, idx) => ({
+      ...loc,
+      calculatedLabel: loc.nameSpecification || `Group ${String.fromCharCode(65 + idx)}`,
+      originalIdx: idx,
+    }));
+
+    if (!favGroup) return list;
+
+    return [...list].sort((a, b) => {
+      const aMatch = a.calculatedLabel.trim().toLowerCase() === favGroup.trim().toLowerCase();
+      const bMatch = b.calculatedLabel.trim().toLowerCase() === favGroup.trim().toLowerCase();
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return a.originalIdx - b.originalIdx;
+    });
+  }, [lesson?.Locations, favGroup]);
 
   const handleExportIcs = () => {
     if (!lesson) return;
@@ -305,13 +358,18 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       <Users className="w-4 h-4 text-black" />
                       <span>Sub-Groups & Rooms</span>
                     </div>
-                    <span className="text-[11px] font-bold text-black bg-white px-2.5 py-0.5 rounded-full border border-black">
-                      {lesson.Locations.length} Groups
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold text-zinc-400 hidden sm:inline">
+                        Tap group pill to favourite
+                      </span>
+                      <span className="text-[11px] font-bold text-black bg-white px-2.5 py-0.5 rounded-full border border-black">
+                        {lesson.Locations.length} Groups
+                      </span>
+                    </div>
                   </div>
 
                   <div className="space-y-3">
-                    {lesson.Locations.map((loc, idx) => {
+                    {sortedLocations.map((loc) => {
                       // Separate room code from venue description
                       const rawLoc = loc.location || "Room TBD";
                       const locMatch = rawLoc.match(/^([A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z]+[0-9]+|[A-Za-z0-9]{2,6})\s+(.*)$/);
@@ -324,19 +382,45 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                         ? `${rawStaff.split(",")[1].trim()} ${rawStaff.split(",")[0].trim()}`
                         : rawStaff;
 
-                      const groupLabel = loc.nameSpecification || `Group ${String.fromCharCode(65 + idx)}`;
+                      const groupLabel = loc.calculatedLabel;
+                      const isFav = Boolean(
+                        favGroup && favGroup.trim().toLowerCase() === groupLabel.trim().toLowerCase()
+                      );
 
                       return (
                         <div
-                          key={idx}
-                          className="p-3.5 sm:p-4 rounded-xl bg-white border-2 border-black shadow-xs space-y-2.5"
+                          key={`${loc.originalIdx}-${groupLabel}`}
+                          className={`p-3.5 sm:p-4 rounded-xl bg-white border-2 border-black shadow-xs space-y-2.5 transition-all ${
+                            isFav ? "ring-2 ring-black bg-zinc-50/80 shadow-sm" : ""
+                          }`}
                         >
                           {/* Header: Group Badge + Room Tag */}
                           <div className="flex items-center justify-between gap-2">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black text-white font-bold text-xs tracking-tight border border-black">
-                              <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                              {groupLabel}
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleFavoriteGroup(groupLabel)}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl font-bold text-xs tracking-tight border transition-all cursor-pointer select-none active:scale-95 group/pill ${
+                                isFav
+                                  ? "bg-black text-white border-black ring-1 ring-black shadow-xs"
+                                  : "bg-black text-white border-black hover:bg-zinc-800"
+                              }`}
+                              title={
+                                isFav
+                                  ? `${groupLabel} is your favourite group for this module (tap to remove)`
+                                  : `Tap to set ${groupLabel} as your group for this module`
+                              }
+                            >
+                              <img
+                                src="/bookmark-star.png"
+                                alt="Bookmark"
+                                className={`w-3.5 h-3.5 object-contain shrink-0 transition-all ${
+                                  isFav
+                                    ? "filter-none scale-110 drop-shadow-sm"
+                                    : "filter grayscale opacity-60 group-hover/pill:opacity-100 group-hover/pill:scale-105"
+                                }`}
+                              />
+                              <span>{groupLabel}</span>
+                            </button>
 
                             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-black">
                               <MapPin className="w-3.5 h-3.5 text-black shrink-0" />
