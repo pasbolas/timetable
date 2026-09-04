@@ -68,26 +68,6 @@ body {
   scrollbar-width: thin;
 }
 
-/* Custom black scrollbar class */
-.scrollbar-black::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-.scrollbar-black::-webkit-scrollbar-track {
-  background: transparent;
-}
-.scrollbar-black::-webkit-scrollbar-thumb {
-  background: #000000;
-  border-radius: 9999px;
-}
-.scrollbar-black::-webkit-scrollbar-thumb:hover {
-  background: #27272a;
-}
-.scrollbar-black {
-  scrollbar-color: #000000 transparent;
-  scrollbar-width: thin;
-}
-
 /* Subtle animation utility */
 @keyframes pulse-subtle {
   0%, 100% { opacity: 1; }
