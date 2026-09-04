@@ -473,7 +473,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               <div className="relative py-0.5 overflow-hidden select-none">
                 {/* Stationary Skeleton Box for the Highlight Slot */}
                 <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-black bg-transparent pointer-events-none z-0"
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-black bg-transparent pointer-events-none z-20"
                   aria-hidden="true"
                 />
 
