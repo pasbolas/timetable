@@ -27,6 +27,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const animFrameRef = useRef<number | null>(null);
   const lastSelectedDateRef = useRef<string>(activeDate.format("YYYY-MM-DD"));
   const lastHapticDateRef = useRef<string | null>(activeDate.format("YYYY-MM-DD"));
   const tz = TIMETABLE_CONFIG.timezone;
@@ -104,7 +105,16 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     return days;
   }, [viewMonth]);
 
-  // Smoothly center a specific date pill in the scroll container
+  // Cancel any active animation on unmount
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+    };
+  }, []);
+
+  // Smoothly center a specific date pill in the scroll container with a fluid ease-out curve
   const centerDate = useCallback((dateStr: string, smooth = true) => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -115,27 +125,69 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     }
 
     const targetEl = container.querySelector(`[data-date="${dateStr}"]`) as HTMLElement;
-    if (targetEl) {
+    if (!targetEl) return;
+
+    const containerWidth = container.clientWidth;
+    const elOffset = targetEl.offsetLeft;
+    const elWidth = targetEl.clientWidth;
+    const targetScroll = Math.max(0, elOffset - containerWidth / 2 + elWidth / 2);
+
+    // Cancel any previous in-flight animation
+    if (animFrameRef.current !== null) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (scrollEndTimeoutRef.current) {
+      clearTimeout(scrollEndTimeoutRef.current);
+    }
+
+    if (!smooth) {
       isProgrammaticScrollRef.current = true;
-      const containerWidth = container.clientWidth;
-      const elOffset = targetEl.offsetLeft;
-      const elWidth = targetEl.clientWidth;
-      const targetScroll = elOffset - containerWidth / 2 + elWidth / 2;
-
-      container.scrollTo({
-        left: targetScroll,
-        top: 0,
-        behavior: smooth ? "smooth" : "auto",
-      });
-
-      if (scrollEndTimeoutRef.current) {
-        clearTimeout(scrollEndTimeoutRef.current);
-      }
-
+      container.scrollLeft = targetScroll;
       setTimeout(() => {
         isProgrammaticScrollRef.current = false;
-      }, smooth ? 280 : 30);
+      }, 50);
+      return;
     }
+
+    const startLeft = container.scrollLeft;
+    const distance = targetScroll - startLeft;
+
+    // If already at or within 1px of target, skip animation
+    if (Math.abs(distance) < 1.5) {
+      container.scrollLeft = targetScroll;
+      return;
+    }
+
+    isProgrammaticScrollRef.current = true;
+    // Temporarily disable CSS scroll-snap so the browser engine doesn't snap-zap
+    container.style.scrollSnapType = "none";
+
+    // Dynamic duration based on distance: ~260ms for 1 day, up to ~380ms for longer leaps
+    const duration = Math.min(380, Math.max(260, Math.abs(distance) * 0.9));
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // easeOutCubic curve for smooth natural deceleration into the center slot
+      const ease = 1 - Math.pow(1 - progress, 3);
+      container.scrollLeft = startLeft + distance * ease;
+
+      if (progress < 1) {
+        animFrameRef.current = requestAnimationFrame(animate);
+      } else {
+        container.scrollLeft = targetScroll;
+        container.style.scrollSnapType = "x mandatory";
+        animFrameRef.current = null;
+        setTimeout(() => {
+          isProgrammaticScrollRef.current = false;
+        }, 60);
+      }
+    };
+
+    animFrameRef.current = requestAnimationFrame(animate);
   }, []);
 
   // When activeDate changes externally (e.g. from top bar 'Today', or expanded calendar)
@@ -481,6 +533,26 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 <div
                   ref={scrollContainerRef}
                   onScroll={handleScroll}
+                  onTouchStart={() => {
+                    if (animFrameRef.current !== null) {
+                      cancelAnimationFrame(animFrameRef.current);
+                      animFrameRef.current = null;
+                      if (scrollContainerRef.current) {
+                        scrollContainerRef.current.style.scrollSnapType = "x mandatory";
+                      }
+                      isProgrammaticScrollRef.current = false;
+                    }
+                  }}
+                  onMouseDown={() => {
+                    if (animFrameRef.current !== null) {
+                      cancelAnimationFrame(animFrameRef.current);
+                      animFrameRef.current = null;
+                      if (scrollContainerRef.current) {
+                        scrollContainerRef.current.style.scrollSnapType = "x mandatory";
+                      }
+                      isProgrammaticScrollRef.current = false;
+                    }
+                  }}
                   className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain no-scrollbar h-[56px] relative z-10"
                   style={{
                     scrollbarWidth: "none",
