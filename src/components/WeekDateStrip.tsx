@@ -30,15 +30,16 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const lastHapticDateRef = useRef<string | null>(activeDate.format("YYYY-MM-DD"));
   const tz = TIMETABLE_CONFIG.timezone;
 
-  // Generate 5 continuous weeks (35 days) centered around the current week
+  // Generate 5 continuous weeks (35 days) centered around the active date's week
+  const activeWeekStartStr = activeDate.clone().tz(tz).startOf("isoWeek").format("YYYY-MM-DD");
   const datePills = useMemo(() => {
     const days: moment.Moment[] = [];
-    const baseWeekStart = currentLiveTime.clone().tz(tz).startOf("isoWeek").subtract(1, "weeks");
+    const baseWeekStart = moment.tz(activeWeekStartStr, tz).subtract(2, "weeks");
     for (let i = 0; i < 35; i++) {
       days.push(baseWeekStart.clone().add(i, "days"));
     }
     return days;
-  }, [currentLiveTime, tz]);
+  }, [activeWeekStartStr, tz]);
 
   // Days with lessons lookup set
   const daysWithLessons = useMemo(() => {
@@ -55,23 +56,30 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMonth, setViewMonth] = useState(() => activeDate.clone().startOf("month"));
 
-  // Keep viewMonth synced to activeDate whenever calendar is opened
+  // Keep viewMonth synced to activeDate whenever calendar opens or activeDate changes
   useEffect(() => {
-    if (isExpanded) {
-      setViewMonth(activeDate.clone().startOf("month"));
-    }
+    setViewMonth(activeDate.clone().startOf("month"));
   }, [isExpanded, activeDate]);
+
+  const handleCloseCalendar = useCallback(() => {
+    setViewMonth(activeDate.clone().startOf("month"));
+    isProgrammaticScrollRef.current = true;
+    if (scrollEndTimeoutRef.current) {
+      clearTimeout(scrollEndTimeoutRef.current);
+    }
+    setIsExpanded(false);
+  }, [activeDate]);
 
   // Handle escape key to dismiss expanded calendar
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isExpanded) {
-        setIsExpanded(false);
+        handleCloseCalendar();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isExpanded]);
+  }, [isExpanded, handleCloseCalendar]);
 
   // Generate 6-week (42 days) month grid for the expanded calendar
   const calendarDays = useMemo(() => {
@@ -135,6 +143,11 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     const container = scrollContainerRef.current;
     if (!container) return;
 
+    if (container.clientWidth === 0) {
+      requestAnimationFrame(() => centerActiveDate(smooth));
+      return;
+    }
+
     const activeEl = container.querySelector('[data-active="true"]') as HTMLElement;
     if (activeEl) {
       isProgrammaticScrollRef.current = true;
@@ -158,10 +171,34 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     }
   }, [updatePillScales]);
 
-  // Center on activeDate changes or mount
+  // Center on activeDate changes or when returning from expanded view
   useEffect(() => {
-    centerActiveDate(true);
-  }, [activeDate, centerActiveDate]);
+    if (!isExpanded) {
+      isProgrammaticScrollRef.current = true;
+      if (scrollEndTimeoutRef.current) {
+        clearTimeout(scrollEndTimeoutRef.current);
+      }
+
+      // Initial alignment
+      centerActiveDate(false);
+
+      // Follow up as container layout transition progresses
+      const t1 = setTimeout(() => {
+        centerActiveDate(false);
+      }, 80);
+
+      const t2 = setTimeout(() => {
+        centerActiveDate(false);
+        updatePillScales();
+        isProgrammaticScrollRef.current = false;
+      }, 320);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [isExpanded, activeDate, centerActiveDate, updatePillScales]);
 
   // Recalculate scales on window resize
   useEffect(() => {
@@ -236,7 +273,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-black/60 pointer-events-auto"
-            onClick={() => setIsExpanded(false)}
+            onClick={handleCloseCalendar}
           />
         )}
       </AnimatePresence>
@@ -272,7 +309,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 onDragEnd={(_, info) => {
                   if (info.offset.y > 35 || info.velocity.y > 160) {
                     triggerHapticFeedback();
-                    setIsExpanded(false);
+                    handleCloseCalendar();
                   }
                 }}
                 className="w-full flex justify-center pt-0.5 pb-1 cursor-grab active:cursor-grabbing"
@@ -322,7 +359,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   </button>
                   <button
                     type="button"
-                    onClick={() => setIsExpanded(false)}
+                    onClick={handleCloseCalendar}
                     className="px-2.5 py-1 rounded-lg text-xs font-bold bg-stone-200 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 hover:bg-stone-300 dark:hover:bg-neutral-700 transition-colors"
                   >
                     Cancel
