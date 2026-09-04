@@ -79,6 +79,18 @@ body {
   background-size: 24px 24px;
 }
 
+/* Diagonal striped hatching pattern for break pills */
+.bg-break-stripes {
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #ffffff,
+    #ffffff 7px,
+    rgba(0, 0, 0, 0.07) 7px,
+    rgba(0, 0, 0, 0.07) 14px
+  );
+}
+
 /* Floating animation for dispersed subtle balls */
 @keyframes float-ball-1 {
   0%, 100% {

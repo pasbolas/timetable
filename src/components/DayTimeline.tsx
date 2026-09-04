@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import moment from "moment-timezone";
-import { Clock, Info, ChevronRight, MapPin, User } from "lucide-react";
+import { Clock, Info, ChevronRight, MapPin, User, Coffee } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
@@ -40,6 +40,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
   const isWeekend = activeDate.isoWeekday() >= 6;
   const lessons = dayData?.lessons || [];
+  const breaks = dayData?.breaks || [];
 
   // Determine grid hour bounds (dynamically expanded if lessons or current time exist outside)
   const { startHour, endHour, hoursList } = useMemo(() => {
@@ -243,6 +244,88 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div className="flex-1 h-[2px] bg-black" />
               </div>
             )}
+
+            {/* Positioned Break Pills in gaps strictly between lessons */}
+            {breaks.map((breakItem) => {
+              const startMinutes =
+                (breakItem.start.hour() - startHour) * 60 +
+                breakItem.start.minute();
+              const durationMinutes = breakItem.durationMinutes;
+
+              const topPx = GRID_PADDING_Y + (startMinutes / 60) * HOUR_HEIGHT;
+              const actualGapHeight = (durationMinutes / 60) * HOUR_HEIGHT;
+              const heightPx = Math.max(34, actualGapHeight - 6);
+
+              const hours = Math.floor(durationMinutes / 60);
+              const minutes = durationMinutes % 60;
+              let durationStr = "";
+              if (hours > 0 && minutes > 0) {
+                durationStr = `${hours}h ${minutes}m`;
+              } else if (hours > 0) {
+                durationStr = `${hours}h`;
+              } else {
+                durationStr = `${minutes}m`;
+              }
+
+              const isCompactBreak = heightPx < 54;
+
+              return (
+                <div
+                  key={breakItem.id}
+                  style={{
+                    top: `${topPx + 3}px`,
+                    height: `${heightPx}px`,
+                    left: "8px",
+                    right: "8px",
+                  }}
+                  className="absolute rounded-xl border-2 border-black bg-break-stripes overflow-hidden select-none flex flex-col justify-center px-3 transition-all z-0 pointer-events-none"
+                >
+                  {isCompactBreak ? (
+                    /* Compact 1-line Break Pill */
+                    <div className="flex items-center justify-between gap-2 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Coffee className="w-3.5 h-3.5 text-black shrink-0" />
+                        <span className="text-xs font-black text-black tracking-wide truncate">
+                          Break Time
+                        </span>
+                        <span className="text-xs text-black font-bold">•</span>
+                        <span className="text-[11px] font-bold text-black truncate">
+                          {durationStr}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[10px] font-bold text-black">
+                          {breakItem.start.format("HH:mm")} – {breakItem.end.format("HH:mm")}
+                        </span>
+                        <span className="w-2 h-2 rounded-full bg-black shrink-0" />
+                      </div>
+                    </div>
+                  ) : (
+                    /* Multi-hour / Standard Break Pill */
+                    <div className="flex flex-col justify-between py-1 h-full">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Coffee className="w-4 h-4 text-black shrink-0" />
+                          <span className="text-xs sm:text-sm font-black text-black tracking-wide">
+                            Break Time
+                          </span>
+                        </div>
+                        {/* Top right indicator dot matching user's reference image */}
+                        <span className="w-2 h-2 rounded-full bg-black shrink-0" />
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-black">
+                        <span>{durationStr} free</span>
+                        <span>•</span>
+                        <span>
+                          {breakItem.start.format("HH:mm")} – {breakItem.end.format("HH:mm")}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             {/* Positioned Lesson Cards on the Grid */}
             {lessons.map((lesson, idx) => {
