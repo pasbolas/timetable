@@ -107,14 +107,9 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative ${
-        isNoClassesDay
-          ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
-          : "min-h-screen"
-      }`}
+      className="w-full h-screen h-[100dvh] max-h-[100dvh] overflow-hidden bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative"
       style={{
-        minHeight: isNoClassesDay ? undefined : "calc(100dvh + env(safe-area-inset-bottom, 0px))",
-        height: isNoClassesDay ? "100dvh" : undefined,
+        height: "100dvh",
       }}
     >
       {/* Ambient background with dot grid and floating pink and blue balls */}
@@ -131,7 +126,7 @@ export function App() {
       />
 
       {/* Main Timeline Stream */}
-      <main className="flex-1 flex flex-col relative z-10">
+      <main className="flex-1 flex flex-col relative z-10 min-h-0 overflow-hidden">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}

@@ -44,7 +44,7 @@ body {
   scrollbar-width: none;
 }
 
-/* Custom scrollbar for modern browsers */
+/* Custom scrollbar for modern browsers - sleek black */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -55,12 +55,59 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+  background: #000000;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.7);
+  background: #27272a;
+}
+
+* {
+  scrollbar-color: #000000 transparent;
+  scrollbar-width: thin;
+}
+
+/* Custom black scrollbar class */
+.scrollbar-black::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-black::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-black::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 9999px;
+}
+.scrollbar-black::-webkit-scrollbar-thumb:hover {
+  background: #27272a;
+}
+.scrollbar-black {
+  scrollbar-color: #000000 transparent;
+  scrollbar-width: thin;
+}
+
+/* Designed horizontal black scrollbar for date strip */
+.date-scrollbar::-webkit-scrollbar {
+  height: 3px;
+}
+.date-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 9999px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.date-scrollbar::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 9999px;
+}
+.date-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #27272a;
+}
+.date-scrollbar {
+  scrollbar-color: #000000 rgba(0, 0, 0, 0.08);
+  scrollbar-width: thin;
 }
 
 /* Subtle animation utility */

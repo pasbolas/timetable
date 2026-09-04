@@ -78,15 +78,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full flex-1 flex flex-col">
-      {/* Subheader: Date & class counter - Sticky below TopBar when scrolling lessons */}
-      <div
-        className="z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
-        style={{
-          position: lessons.length > 0 ? "sticky" : "relative",
-          top: lessons.length > 0 ? "calc(54px + env(safe-area-inset-top, 0px))" : undefined,
-        }}
-      >
+    <div className="w-full flex-1 flex flex-col min-h-0">
+      {/* Subheader: Date & class counter - Pinned below TopBar */}
+      <div className="z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors shrink-0">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-black text-black">
             {activeDate.format("dddd, D MMMM")}
@@ -114,7 +108,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
       {/* Loading Timetable Grid Skeleton */}
       {isLoading && (
-        <div className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)] animate-pulse select-none">
+        <div className="relative flex-1 flex w-full bg-transparent overflow-y-auto overflow-x-hidden min-h-0 scrollbar-black touch-pan-y animate-pulse select-none">
           {/* Left Time Column (Hours Gutter Skeleton) */}
           <div
             style={{
@@ -285,7 +279,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)]"
+          className="relative flex-1 flex w-full bg-transparent overflow-y-auto overflow-x-hidden min-h-0 scrollbar-black touch-pan-y"
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
