@@ -133,7 +133,7 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative overflow-x-hidden ${
+      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative overflow-x-clip ${
         isNoClassesDay || !isMobile
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"
@@ -163,7 +163,7 @@ export function App() {
       />
 
       {/* Main Schedule Container */}
-      <main className="flex-1 min-h-0 flex flex-col relative z-10 overflow-hidden">
+      <main className="flex-1 flex flex-col relative z-10 md:min-h-0 md:overflow-hidden">
         {/* Desktop: Full Week 2D Grid Stream (No bottom scrollbar/dock) */}
         <div className="hidden md:flex flex-1 min-h-0 flex-col w-full overflow-hidden">
           <DesktopWeekGrid

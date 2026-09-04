@@ -79,12 +79,12 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
   return (
     <div className="w-full flex-1 flex flex-col">
-      {/* Subheader: Date & class counter - Sticky below TopBar when scrolling lessons */}
+      {/* Subheader: Date & class counter - Sticky flush below TopBar when scrolling lessons */}
       <div
-        className="z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
+        className="z-20 bg-white border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors shadow-xs"
         style={{
           position: lessons.length > 0 ? "sticky" : "relative",
-          top: lessons.length > 0 ? "calc(54px + env(safe-area-inset-top, 0px))" : undefined,
+          top: lessons.length > 0 ? "calc(60px + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
         <div className="flex items-baseline gap-2">
