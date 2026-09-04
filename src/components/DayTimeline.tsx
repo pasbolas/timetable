@@ -98,6 +98,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           )}
         </div>
 
+        {isLoading && (
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-black">
+            <span className="w-2 h-2 rounded-full bg-black animate-ping" />
+            Loading schedule...
+          </span>
+        )}
+
         {!isLoading && !error && lessons.length > 0 && (
           <span className="text-[11px] font-bold text-black">
             {lessons.length} {lessons.length === 1 ? "class" : "classes"}
@@ -105,21 +112,150 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
         )}
       </div>
 
-      {/* Loading Skeleton */}
+      {/* Loading Timetable Grid Skeleton */}
       {isLoading && (
-        <div className="max-w-2xl mx-auto px-4 space-y-3 py-4">
-          {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="p-4 rounded-2xl bg-white border-2 border-black animate-pulse space-y-2.5"
-            >
-              <div className="flex justify-between">
-                <div className="h-3.5 bg-zinc-200 rounded w-1/4" />
-                <div className="h-3.5 bg-zinc-200 rounded w-12" />
+        <div className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)] animate-pulse select-none">
+          {/* Left Time Column (Hours Gutter Skeleton) */}
+          <div
+            style={{
+              paddingTop: `${GRID_PADDING_Y}px`,
+              paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
+            }}
+            className="w-16 sm:w-20 shrink-0 border-r-2 border-black relative bg-white/75 backdrop-blur-[2px] min-h-full"
+          >
+            {[9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((h, i, arr) => (
+              <div
+                key={h}
+                style={{ height: i === arr.length - 1 ? "0px" : `${HOUR_HEIGHT}px` }}
+                className="relative"
+              >
+                <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-black text-black/40 tracking-tight">
+                  {formatHourLabel(h)}
+                </span>
               </div>
-              <div className="h-4.5 bg-zinc-200 rounded w-2/3" />
+            ))}
+          </div>
+
+          {/* Right Main Grid Slot Area Skeleton */}
+          <div
+            style={{
+              paddingTop: `${GRID_PADDING_Y}px`,
+              paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
+            }}
+            className="relative flex-1 min-h-full bg-transparent"
+          >
+            {/* Grid Divider Lines */}
+            {[9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((h, i, arr) => (
+              <div
+                key={h}
+                style={{ height: i === arr.length - 1 ? "0px" : `${HOUR_HEIGHT}px` }}
+                className="border-t border-black/20 w-full"
+              />
+            ))}
+
+            {/* Skeleton Lesson Card 1: 9:00 - 11:00 (height 136px) */}
+            <div
+              style={{
+                top: `${GRID_PADDING_Y + 4}px`,
+                height: "136px",
+                left: "8px",
+                right: "12px",
+              }}
+              className="absolute rounded-xl border-2 border-black bg-white p-3.5 overflow-hidden shadow-sm flex flex-col justify-between"
+            >
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black" />
+              <div>
+                <div className="flex items-center justify-between pl-1 mb-2">
+                  <div className="h-4 w-28 bg-zinc-200 rounded border border-black/20" />
+                  <div className="h-4 w-16 bg-black rounded-md" />
+                </div>
+                <div className="pl-1 space-y-1.5">
+                  <div className="h-4 w-3/4 bg-zinc-300 rounded" />
+                  <div className="h-3 w-1/2 bg-zinc-200 rounded" />
+                </div>
+              </div>
+              <div className="pl-1 flex items-center gap-2">
+                <div className="w-3.5 h-3.5 rounded-full bg-zinc-300" />
+                <div className="h-3 w-36 bg-zinc-200 rounded" />
+              </div>
             </div>
-          ))}
+
+            {/* Skeleton Break Pill: 11:00 - 12:00 (height 60px) */}
+            <div
+              style={{
+                top: `${GRID_PADDING_Y + 148}px`,
+                height: "60px",
+                left: "8px",
+                right: "12px",
+              }}
+              className="absolute rounded-xl border-2 border-black bg-break-stripes px-3.5 py-2 overflow-hidden flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-white border-2 border-black flex items-center justify-center">
+                  <Coffee className="w-3.5 h-3.5 text-black" />
+                </div>
+                <div className="space-y-1">
+                  <div className="h-3 w-20 bg-zinc-300 rounded" />
+                  <div className="h-2.5 w-16 bg-zinc-200 rounded" />
+                </div>
+              </div>
+              <div className="w-2.5 h-2.5 rounded-full bg-black/40 mr-1" />
+            </div>
+
+            {/* Skeleton Lesson Card 2: 12:00 - 14:00 (height 136px) */}
+            <div
+              style={{
+                top: `${GRID_PADDING_Y + 220}px`,
+                height: "136px",
+                left: "8px",
+                right: "12px",
+              }}
+              className="absolute rounded-xl border-2 border-black bg-white p-3.5 overflow-hidden shadow-sm flex flex-col justify-between"
+            >
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black" />
+              <div>
+                <div className="flex items-center justify-between pl-1 mb-2">
+                  <div className="h-4 w-28 bg-zinc-200 rounded border border-black/20" />
+                  <div className="h-4 w-16 bg-black rounded-md" />
+                </div>
+                <div className="pl-1 space-y-1.5">
+                  <div className="h-4 w-4/5 bg-zinc-300 rounded" />
+                  <div className="h-3 w-2/5 bg-zinc-200 rounded" />
+                </div>
+              </div>
+              <div className="pl-1 flex items-center gap-2">
+                <div className="w-3.5 h-3.5 rounded-full bg-zinc-300" />
+                <div className="h-3 w-32 bg-zinc-200 rounded" />
+              </div>
+            </div>
+
+            {/* Skeleton Lesson Card 3: 15:00 - 17:00 (height 136px) */}
+            <div
+              style={{
+                top: `${GRID_PADDING_Y + 436}px`,
+                height: "136px",
+                left: "8px",
+                right: "12px",
+              }}
+              className="absolute rounded-xl border-2 border-black bg-white p-3.5 overflow-hidden shadow-sm flex flex-col justify-between"
+            >
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black" />
+              <div>
+                <div className="flex items-center justify-between pl-1 mb-2">
+                  <div className="h-4 w-28 bg-zinc-200 rounded border border-black/20" />
+                  <div className="h-4 w-16 bg-black rounded-md" />
+                </div>
+                <div className="pl-1 space-y-1.5">
+                  <div className="h-4 w-2/3 bg-zinc-300 rounded" />
+                  <div className="h-3 w-1/3 bg-zinc-200 rounded" />
+                </div>
+              </div>
+              <div className="pl-1 flex items-center gap-2">
+                <div className="w-3.5 h-3.5 rounded-full bg-zinc-300" />
+                <div className="h-3 w-40 bg-zinc-200 rounded" />
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
