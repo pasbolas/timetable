@@ -13,6 +13,11 @@ interface WeekDateStripProps {
   currentLiveTime: moment.Moment;
 }
 
+const smoothTransition = {
+  duration: 0.28,
+  ease: [0.16, 1, 0.3, 1],
+};
+
 export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   activeDate,
   onSelectDate,
@@ -59,9 +64,8 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
   // Handle escape key to dismiss expanded calendar
   useEffect(() => {
-    if (!isExpanded) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && isExpanded) {
         setIsExpanded(false);
       }
     };
@@ -69,23 +73,18 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isExpanded]);
 
-  // Compute all days needed to populate a complete month grid (starting on Monday)
+  // Generate 6-week (42 days) month grid for the expanded calendar
   const calendarDays = useMemo(() => {
     const startOfMonth = viewMonth.clone().startOf("month");
-    const endOfMonth = viewMonth.clone().endOf("month");
-    const startOfGrid = startOfMonth.clone().startOf("isoWeek");
-    const endOfGrid = endOfMonth.clone().endOf("isoWeek");
-
+    const gridStart = startOfMonth.clone().startOf("isoWeek");
     const days: moment.Moment[] = [];
-    const current = startOfGrid.clone();
-    while (current.isBefore(endOfGrid) || current.isSame(endOfGrid, "day")) {
-      days.push(current.clone());
-      current.add(1, "day");
+    for (let i = 0; i < 42; i++) {
+      days.push(gridStart.clone().add(i, "days"));
     }
     return days;
   }, [viewMonth]);
 
-  // Compute and apply scale/opacity to each date pill based on distance from the center
+  // Dynamically scale pills based on distance from center for a magnifying effect
   const updatePillScales = useCallback(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -251,7 +250,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
       >
         <motion.div
           layout
-          transition={{ type: "spring", stiffness: 340, damping: 28 }}
+          transition={smoothTransition}
           data-tour="date-strip"
           className={`pointer-events-auto mx-auto rounded-2xl bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 transition-colors select-none ${
             isExpanded
@@ -269,7 +268,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               <motion.div
                 drag="y"
                 dragConstraints={{ top: 0, bottom: 0 }}
-                dragElastic={{ top: 0, bottom: 0.5 }}
+                dragElastic={{ top: 0, bottom: 0.12 }}
                 onDragEnd={(_, info) => {
                   if (info.offset.y > 35 || info.velocity.y > 160) {
                     triggerHapticFeedback();
@@ -374,14 +373,14 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       {isActive && (
                         <motion.div
                           layoutId="active-date-highlight"
-                          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                          transition={smoothTransition}
                           className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
                         />
                       )}
 
                       <motion.span
                         layoutId={`date-num-${dateStr}`}
-                        transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                        transition={smoothTransition}
                         className="text-xs sm:text-sm font-bold leading-none relative z-10"
                       >
                         {dayMoment.format("D")}
@@ -417,7 +416,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               <motion.div
                 drag="y"
                 dragConstraints={{ top: 0, bottom: 0 }}
-                dragElastic={{ top: 0.4, bottom: 0 }}
+                dragElastic={{ top: 0.12, bottom: 0 }}
                 onDragEnd={(_, info) => {
                   if (info.offset.y < -15 || info.velocity.y < -120) {
                     triggerHapticFeedback();
@@ -527,7 +526,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                         {isActive && (
                           <motion.div
                             layoutId="active-date-highlight"
-                            transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                            transition={smoothTransition}
                             className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
                           />
                         )}
@@ -540,7 +539,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                         {/* Day Number */}
                         <motion.span
                           layoutId={`date-num-${dateStr}`}
-                          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                          transition={smoothTransition}
                           className="text-sm font-extrabold my-0.5 leading-none relative z-10"
                         >
                           {dayMoment.format("D")}
