@@ -88,28 +88,6 @@ body {
   scrollbar-width: thin;
 }
 
-/* Designed horizontal black scrollbar for date strip */
-.date-scrollbar::-webkit-scrollbar {
-  height: 3px;
-}
-.date-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 9999px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.date-scrollbar::-webkit-scrollbar-thumb {
-  background: #000000;
-  border-radius: 9999px;
-}
-.date-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #27272a;
-}
-.date-scrollbar {
-  scrollbar-color: #000000 rgba(0, 0, 0, 0.08);
-  scrollbar-width: thin;
-}
-
 /* Subtle animation utility */
 @keyframes pulse-subtle {
   0%, 100% { opacity: 1; }

@@ -481,8 +481,10 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 <div
                   ref={scrollContainerRef}
                   onScroll={handleScroll}
-                  className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain date-scrollbar h-[58px] pb-1 relative z-10"
+                  className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain no-scrollbar h-[56px] relative z-10"
                   style={{
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
                     paddingLeft: "calc(50% - 22px)",
                     paddingRight: "calc(50% - 22px)",
                     scrollSnapType: "x mandatory",
