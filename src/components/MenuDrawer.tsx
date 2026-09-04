@@ -131,6 +131,30 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-white rounded-t-3xl sm:rounded-2xl border-2 border-black overflow-hidden flex flex-col touch-pan-y"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Fixed Central Ambient Glow matching reference design */}
+            <div
+              className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none flex items-center justify-center"
+              aria-hidden="true"
+            >
+              {/* Primary Radial Glow Core */}
+              <div
+                className="w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] rounded-full blur-3xl opacity-85"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(99, 102, 241, 0.32) 0%, rgba(147, 130, 255, 0.22) 35%, rgba(196, 181, 253, 0.12) 55%, transparent 72%)",
+                }}
+              />
+              {/* Secondary Soft Blue Accent Glow */}
+              <div
+                className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full blur-2xl opacity-75"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(96, 165, 250, 0.26) 0%, rgba(147, 197, 253, 0.15) 45%, transparent 70%)",
+                  transform: "translate(10px, 20px)",
+                }}
+              />
+            </div>
+
             {/* Big Minimise Handle at the Top */}
             <motion.div
               onClick={() => {
@@ -139,14 +163,14 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               }}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.92 }}
-              className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0"
+              className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
               title="Tap or drag down to minimise"
             >
               <div className="w-20 h-2 bg-black group-hover:bg-zinc-700 rounded-full transition-colors shadow-xs" />
             </motion.div>
 
             {/* Drawer Header */}
-            <div className="px-4 py-3 border-b-2 border-black flex items-center justify-between shrink-0 bg-white">
+            <div className="px-4 py-3 border-b-2 border-black flex items-center justify-between shrink-0 bg-white/85 backdrop-blur-md relative z-10">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center">
                   <GraduationCap className="w-4 h-4 text-white" />
@@ -176,7 +200,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             </div>
 
             {/* Drawer Scrollable Body */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-white">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-transparent relative z-10">
               {/* Active Course Card */}
               <div
                 className={`transition-all duration-300 transform ${
