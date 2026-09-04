@@ -206,8 +206,8 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
           d={arcPathData}
           fill="none"
           stroke="currentColor"
-          className="text-slate-300/80 dark:text-slate-700/80"
-          strokeWidth="1.5"
+          className="text-black"
+          strokeWidth="2"
           strokeLinecap="round"
         />
 
@@ -241,11 +241,11 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
               <circle
                 cx={coords.x}
                 cy={coords.y}
-                r={isSelected ? 4.5 : 2.5}
+                r={isSelected ? 5 : 2.5}
                 className={
                   isSelected
-                    ? "fill-slate-900 dark:fill-white shadow-sm"
-                    : "fill-slate-300 dark:fill-slate-700"
+                    ? "fill-black"
+                    : "fill-zinc-300"
                 }
               />
 
@@ -263,8 +263,8 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
                 }}
                 className={
                   isSelected
-                    ? "font-black fill-slate-900 dark:fill-white cursor-pointer select-none"
-                    : "font-bold fill-slate-400/80 hover:fill-slate-600 dark:fill-slate-600 dark:hover:fill-slate-400 cursor-pointer select-none transition-colors duration-150"
+                    ? "font-black fill-black cursor-pointer select-none"
+                    : "font-bold fill-zinc-400 hover:fill-black cursor-pointer select-none transition-colors duration-150"
                 }
                 style={{
                   fontSize: isSelected ? "4.25rem" : "2.5rem",
@@ -292,11 +292,11 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
         }}
       >
         <div className="space-y-1 animate-in fade-in slide-in-from-left-2 duration-150" key={activeYear.yearNumber}>
-          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+          <h3 className="text-xl sm:text-2xl font-black text-black tracking-tight leading-none">
             {activeYear.title}
           </h3>
           {activeYear.subtitle && (
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm text-black leading-relaxed font-bold">
               {activeYear.subtitle}
             </p>
           )}

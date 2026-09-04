@@ -20,14 +20,15 @@ export const BreakCard: React.FC<BreakCardProps> = ({ dayBreak }) => {
 
   return (
     <div className="flex items-center justify-center my-2">
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/80 dark:bg-[#834655]/30 text-slate-500 dark:text-[#F6CAC9] text-[11px] font-medium border border-slate-200/50 dark:border-[#9F5069]/40">
-        <Coffee className="w-3 h-3 text-amber-500 dark:text-[#C8B273]" />
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold border-2 border-black">
+        <Coffee className="w-3 h-3 text-black" />
         <span>{durationStr} free</span>
-        <span className="text-slate-300 dark:text-[#9F5069]">•</span>
-        <span className="text-slate-400 dark:text-[#F6CAC9]/80">
+        <span className="text-black">•</span>
+        <span className="text-black font-semibold">
           {dayBreak.start.format("HH:mm")} – {dayBreak.end.format("HH:mm")}
         </span>
       </div>
     </div>
   );
 };
+

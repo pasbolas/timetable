@@ -1,6 +1,6 @@
 import React from "react";
 import { SlidersHorizontal, Sparkles, WifiOff } from "lucide-react";
-import { Button, Chip } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { ProgramSearchResult } from "../types/timetable";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 
@@ -28,7 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-[#f4f1e0] dark:bg-[#1e1e1e] border-b border-stone-300 dark:border-neutral-800 transition-colors"
+      className="sticky top-0 z-30 bg-white border-b-2 border-black transition-colors"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="max-w-2xl h-[54px] mx-auto px-3 flex items-center justify-between gap-2">
@@ -36,14 +36,14 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-2 overflow-hidden text-left py-1 px-1.5 -ml-1 rounded-xl hover:bg-stone-200/70 dark:hover:bg-neutral-800 active:scale-98 transition-colors group flex-1 min-w-0"
+          className="flex items-center gap-2 overflow-hidden text-left py-1 px-2.5 rounded-xl border-2 border-black bg-white hover:bg-zinc-100 active:scale-98 transition-colors group flex-1 min-w-0"
           title="Open course details and menu"
         >
-          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2.5 rounded-full bg-blue-600 text-white dark:bg-[#834655] dark:text-[#F6CAC9] border border-blue-700 dark:border-[#9F5069]">
+          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-black text-white border border-black">
             {shortCode}
           </span>
           <span
-            className={`text-xs font-medium text-slate-700 dark:text-[#F6CAC9] group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors ${
+            className={`text-xs font-bold text-black ${
               !isTodayActive ? "truncate" : "whitespace-nowrap overflow-visible"
             }`}
           >
@@ -55,15 +55,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           {/* Offline indicator */}
           {isOffline && (
-            <Chip
-              size="sm"
-              color="warning"
-              variant="flat"
-              startContent={<WifiOff className="w-3 h-3" />}
-              className="text-[11px] font-medium"
-            >
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border-2 border-black bg-white text-black">
+              <WifiOff className="w-3 h-3 text-black" />
               Offline
-            </Chip>
+            </span>
           )}
 
           {/* Jump to Today (shown only when not currently on today) */}
@@ -73,8 +68,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="flat"
               onPress={onGoToToday}
               data-tour="today-button"
-              startContent={<Sparkles className="w-3.5 h-3.5 text-blue-500 dark:text-[#C8B273]" />}
-              className="h-8 px-2.5 text-xs font-semibold rounded-xl min-w-0 shadow-sm bg-blue-50 text-blue-600 dark:bg-[#834655]/40 dark:text-[#C8B273] dark:border dark:border-[#C8B273]/40"
+              startContent={<Sparkles className="w-3.5 h-3.5 text-black" />}
+              className="h-8 px-2.5 text-xs font-bold rounded-xl min-w-0 bg-white text-black border-2 border-black hover:bg-black hover:text-white transition-colors"
               title="Jump to today"
             >
               Today
@@ -89,10 +84,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             onPress={onOpenMenu}
             data-tour="menu-button"
             isLoading={isLoading}
-            className="w-8 h-8 rounded-xl text-slate-600 dark:text-[#F6CAC9] hover:text-slate-900 dark:hover:text-[#C8B273]"
+            className="w-8 h-8 rounded-xl text-black border-2 border-black bg-white hover:bg-zinc-100"
             title="Menu & Settings"
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            <SlidersHorizontal className="w-4 h-4 text-black" />
           </Button>
         </div>
       </div>

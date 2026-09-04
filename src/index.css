@@ -3,20 +3,16 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 html {
-  background-color: #f4f1e0;
+  background-color: #ffffff;
 }
 
 body {
-  background-color: #f4f1e0;
-}
-
-html.dark,
-html.dark body {
-  background-color: #1e1e1e;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 /* Viewport expansion and overscroll prevention for PWAs */

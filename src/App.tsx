@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import { useSelectedProgram } from "./hooks/useSelectedProgram";
 import { useGetLessons } from "./hooks/useGetLessons";
-import { useTheme } from "./hooks/useTheme";
 import { useLiveTime } from "./hooks/useLiveTime";
 import { TopBar } from "./components/TopBar";
 import { WeekDateStrip } from "./components/WeekDateStrip";
@@ -18,7 +17,6 @@ import { ProgramSearchResult } from "./types/timetable";
 
 export function App() {
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
-  const { theme, setTheme } = useTheme();
   const { currentTime, isToday, isLessonActive, isLessonPast } = useLiveTime();
 
   // Active selected day (default: today in Europe/Dublin)
@@ -83,7 +81,7 @@ export function App() {
 
   return (
     <div
-      className="min-h-screen w-full bg-[#f4f1e0] dark:bg-[#1e1e1e] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white"
+      className="min-h-screen w-full bg-white text-black flex flex-col selection:bg-black selection:text-white"
       style={{
         minHeight: "calc(100dvh + env(safe-area-inset-bottom, 0px))",
       }}
@@ -130,8 +128,6 @@ export function App() {
         recentPrograms={recents}
         onSelectProgram={selectProgram}
         onGoToToday={handleGoToToday}
-        theme={theme}
-        onSetTheme={setTheme}
         onRefresh={reload}
         isLoading={isLoading}
         isOffline={isOfflineData}

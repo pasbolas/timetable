@@ -4,7 +4,6 @@ import { Clock, Info, ChevronRight, MapPin, User } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
-import { getLessonColorTheme } from "../services/transformer";
 
 interface DayTimelineProps {
   activeDate: moment.Moment;
@@ -81,22 +80,22 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
     <div className="w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
-        className="sticky z-20 bg-[#f4f1e0] dark:bg-[#1e1e1e] border-b border-stone-300 dark:border-neutral-800 flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
+        className="sticky z-20 bg-white border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
         style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
       >
         <div className="flex items-baseline gap-2">
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          <h2 className="text-base font-black text-black">
             {activeDate.format("dddd, D MMMM")}
           </h2>
           {isToday && (
-            <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">
+            <span className="text-[11px] font-bold text-black">
               • {currentLiveTime.format("h:mm A")}
             </span>
           )}
         </div>
 
         {!isLoading && !error && lessons.length > 0 && (
-          <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+          <span className="text-[11px] font-bold text-black">
             {lessons.length} {lessons.length === 1 ? "class" : "classes"}
           </span>
         )}
@@ -108,13 +107,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           {[1, 2, 3].map((n) => (
             <div
               key={n}
-              className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-pulse space-y-2.5"
+              className="p-4 rounded-2xl bg-white border-2 border-black animate-pulse space-y-2.5"
             >
               <div className="flex justify-between">
-                <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-1/4" />
-                <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-12" />
+                <div className="h-3.5 bg-zinc-200 rounded w-1/4" />
+                <div className="h-3.5 bg-zinc-200 rounded w-12" />
               </div>
-              <div className="h-4.5 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+              <div className="h-4.5 bg-zinc-200 rounded w-2/3" />
             </div>
           ))}
         </div>
@@ -141,7 +140,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {!isLoading && !error && lessons.length > 0 && (
         <div
           data-tour="timeline-stream"
-          className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)]"
+          className="relative flex-1 flex w-full bg-white min-h-[calc(100vh-100px)]"
         >
           {/* Left Time Column (Hours Gutter) */}
           <div
@@ -149,7 +148,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               paddingTop: `${GRID_PADDING_Y}px`,
               paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
             }}
-            className="w-16 sm:w-20 shrink-0 border-r border-stone-300 dark:border-neutral-800 relative select-none bg-stone-200/30 dark:bg-neutral-800/30 min-h-full"
+            className="w-16 sm:w-20 shrink-0 border-r-2 border-black relative select-none bg-white min-h-full"
           >
             {hoursList.map((hour) => {
               const isLast = hour === endHour;
@@ -159,7 +158,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
                   className="relative"
                 >
-                  <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-semibold text-slate-400 dark:text-slate-500 tracking-tight">
+                  <span className="absolute top-0 -translate-y-1/2 right-2 sm:right-3 text-[11px] font-black text-black tracking-tight">
                     {formatHourLabel(hour)}
                   </span>
                 </div>
@@ -175,13 +174,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     top: `${GRID_PADDING_Y}px`,
                     height: `${(endHour - startHour) * HOUR_HEIGHT}px`,
                   }}
-                  className="absolute right-0 w-[3px] bg-stone-300 dark:bg-neutral-700 pointer-events-none"
+                  className="absolute right-0 w-[3px] bg-black pointer-events-none"
                   aria-hidden="true"
                 >
                   {/* Elapsed day progress fill */}
                   <div
                     style={{ height: `${Math.max(0, currentLiveY - GRID_PADDING_Y)}px` }}
-                    className="w-full bg-blue-600 dark:bg-[#C8B273]"
+                    className="w-full bg-black"
                   />
                 </div>
 
@@ -190,8 +189,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                   style={{ top: `${currentLiveY}px` }}
                   className="absolute right-2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-end"
                 >
-                  <span className="text-[10px] sm:text-[11px] font-bold text-blue-600 dark:text-[#C8B273] bg-white dark:bg-neutral-800 px-1.5 py-0.5 rounded border border-stone-300 dark:border-neutral-700 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#C8B273]" />
+                  <span className="text-[10px] sm:text-[11px] font-bold text-black bg-white px-1.5 py-0.5 rounded border-2 border-black flex items-center gap-1 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-black" />
                     {currentLiveTime.format("h:mm A")}
                   </span>
                 </div>
@@ -205,7 +204,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               paddingTop: `${GRID_PADDING_Y}px`,
               paddingBottom: "calc(130px + env(safe-area-inset-bottom, 0px))",
             }}
-            className="relative flex-1 min-h-full"
+            className="relative flex-1 min-h-full bg-white"
           >
             {/* Grid Divider Lines */}
             {hoursList.map((hour) => {
@@ -214,7 +213,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                 <div
                   key={hour}
                   style={{ height: isLast ? "0px" : `${HOUR_HEIGHT}px` }}
-                  className="border-t border-stone-200 dark:border-neutral-800 w-full"
+                  className="border-t border-black w-full"
                 />
               );
             })}
@@ -227,16 +226,15 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               >
                 {/* 2D Knob on the rail boundary */}
                 <div className="relative -ml-[6px] flex items-center justify-center shrink-0">
-                  <div className="w-3 h-3 rounded-full bg-blue-600 dark:bg-[#C8B273] border-2 border-white dark:border-neutral-900 relative z-10" />
+                  <div className="w-3 h-3 rounded-full bg-black border-2 border-white ring-2 ring-black relative z-10" />
                 </div>
                 {/* Horizontal slider beam (solid 2D line) */}
-                <div className="flex-1 h-[2px] bg-blue-600 dark:bg-[#C8B273]" />
+                <div className="flex-1 h-[2px] bg-black" />
               </div>
             )}
 
             {/* Positioned Lesson Cards on the Grid */}
             {lessons.map((lesson, idx) => {
-              const theme = getLessonColorTheme(lesson);
               const startMinutes =
                 (lesson.StartDateTime.hour() - startHour) * 60 +
                 lesson.StartDateTime.minute();
@@ -274,7 +272,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${theme.bg} ${
+                  className={`absolute rounded-xl border-2 border-black cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group bg-white hover:bg-zinc-50 ${
                     isCompact
                       ? "p-2 sm:px-2.5 sm:py-2"
                       : isExtended
@@ -282,16 +280,14 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         : "p-2.5 sm:p-3"
                   } ${
                     active
-                      ? "border-2 border-blue-600 dark:border-[#C8B273] z-10"
+                      ? "ring-2 ring-black border-black z-10"
                       : past
-                        ? "opacity-60 saturate-50 border-stone-200 dark:border-neutral-800 z-0"
-                        : "border-stone-200 dark:border-neutral-800 z-0"
+                        ? "opacity-60 border-black z-0"
+                        : "border-black z-0"
                   }`}
                 >
-                  {/* Left accent color strip */}
-                  <div
-                    className={`absolute left-0 top-0 bottom-0 w-1.5 ${theme.accent}`}
-                  />
+                  {/* Left accent black strip */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black" />
 
                   {/* --- TIER 1: COMPACT LAYOUT (1 HOUR / <= 60 MINS) --- */}
                   {isCompact && (
@@ -299,13 +295,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                       {/* Top Row: Time + Badge + Tucked Mini Info Button */}
                       <div className="flex items-center justify-between gap-1 leading-none">
                         <div className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1 shrink-0">
-                            <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className="text-[11px] font-bold text-black flex items-center gap-1 shrink-0">
+                            <Clock className="w-3 h-3 text-black shrink-0" />
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
-                          <span
-                            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate ${theme.pill}`}
-                          >
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate bg-black text-white border border-black">
                             {lesson.EventType}
                           </span>
                         </div>
@@ -316,22 +310,22 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                             e.stopPropagation();
                             setSelectedLesson(lesson);
                           }}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs active:scale-95 transition-all group/btn shrink-0"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white hover:bg-zinc-100 text-black border border-black shadow-xs active:scale-95 transition-all group/btn shrink-0"
                           title="View class details"
                         >
                           <span>Info</span>
-                          <ChevronRight className="w-2.5 h-2.5 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                          <ChevronRight className="w-2.5 h-2.5 text-black group-hover/btn:translate-x-0.5 transition-transform" />
                         </button>
                       </div>
 
                       {/* Bottom Row: Title + Location inline (No overlap, hidden for labs) */}
                       <div className="flex items-center justify-between gap-2">
-                        <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate flex-1 leading-snug">
+                        <h4 className="font-bold text-xs text-black truncate flex-1 leading-snug">
                           {lesson.Description}
                         </h4>
                         {!isLab && lesson.Location && (
-                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-0.5 shrink-0">
-                            <MapPin className="w-2.5 h-2.5 text-slate-400 shrink-0" />
+                          <span className="text-[10px] font-bold text-black flex items-center gap-0.5 shrink-0">
+                            <MapPin className="w-2.5 h-2.5 text-black shrink-0" />
                             <span className="truncate max-w-[110px] sm:max-w-[160px]">
                               {lesson.Location}
                             </span>
@@ -347,30 +341,28 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                       {/* Top Row: Time + Duration + Badge */}
                       <div className="flex items-center justify-between gap-2 leading-none">
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span className="text-[11px] font-bold text-black flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
-                          <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                          <span className="text-[10px] font-bold text-black">
                             ({Math.round((durationMinutes / 60) * 10) / 10}h)
                           </span>
                         </div>
 
-                        <span
-                          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${theme.pill}`}
-                        >
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-black text-white border border-black">
                           {lesson.EventType}
                         </span>
                       </div>
 
                       {/* Middle: Title & Room (Room hidden for labs) */}
                       <div className="my-auto py-1">
-                        <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-snug">
+                        <h4 className="font-bold text-xs sm:text-sm text-black line-clamp-2 leading-snug">
                           {lesson.Description}
                         </h4>
                         {!isLab && lesson.Location && (
-                          <div className="flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-1">
-                            <MapPin className={`w-3 h-3 ${theme.icon} shrink-0`} />
+                          <div className="flex items-center gap-1 text-[11px] font-bold text-black mt-1">
+                            <MapPin className="w-3 h-3 text-black shrink-0" />
                             <span className="truncate">{lesson.Location}</span>
                           </div>
                         )}
@@ -384,16 +376,16 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                             e.stopPropagation();
                             setSelectedLesson(lesson);
                           }}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-white/75 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-sm active:scale-95 transition-all group/btn"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold bg-white hover:bg-zinc-100 text-black border border-black shadow-xs active:scale-95 transition-all group/btn"
                           title="View class details, groups, and rooms"
                         >
-                          <Info className="w-3 h-3 text-blue-500 shrink-0" />
+                          <Info className="w-3 h-3 text-black shrink-0" />
                           <span>More Info</span>
-                          <ChevronRight className="w-3 h-3 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                          <ChevronRight className="w-3 h-3 text-black group-hover/btn:translate-x-0.5 transition-transform" />
                         </button>
 
                         {lesson.staffName && (
-                          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate max-w-[160px] hidden sm:inline-block">
+                          <span className="text-[11px] font-bold text-black truncate max-w-[160px] hidden sm:inline-block">
                             {lesson.staffName}
                           </span>
                         )}
@@ -405,20 +397,18 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                   {isExtended && (
                     <div className="flex flex-col justify-between h-full pl-2 space-y-2">
                       {/* Top Row: Time, Extended Duration Tag, Event Badge */}
-                      <div className="flex items-center justify-between gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+                      <div className="flex items-center justify-between gap-2 border-b border-black pb-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                          <span className="text-xs font-bold text-black flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-black border border-black">
                             {Math.round((durationMinutes / 60) * 10) / 10} hrs session
                           </span>
                         </div>
 
-                        <span
-                          className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg ${theme.pill}`}
-                        >
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-black text-white border border-black">
                           {lesson.EventType}
                         </span>
                       </div>
@@ -426,45 +416,45 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                       {/* Main Body: Title, Module Code & Metadata Cards */}
                       <div className="space-y-2 flex-1 my-auto">
                         <div>
-                          <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">
+                          <h4 className="font-extrabold text-sm sm:text-base text-black leading-snug">
                             {lesson.Description}
                           </h4>
-                          <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+                          <div className="text-[11px] font-mono text-black mt-0.5">
                             {lesson.Name}
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
                           {!isLab && lesson.Location && (
-                            <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/50 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
-                              <MapPin className={`w-3.5 h-3.5 ${theme.icon} shrink-0`} />
-                              <span className="truncate font-medium">{lesson.Location}</span>
+                            <div className="flex items-center gap-1.5 text-xs text-black bg-white px-2.5 py-1.5 rounded-lg border border-black">
+                              <MapPin className="w-3.5 h-3.5 text-black shrink-0" />
+                              <span className="truncate font-bold">{lesson.Location}</span>
                             </div>
                           )}
 
                           {lesson.staffName && (
-                            <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/50 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
-                              <User className="w-3.5 h-3.5 text-purple-500 shrink-0" />
-                              <span className="truncate font-medium">{lesson.staffName}</span>
+                            <div className="flex items-center gap-1.5 text-xs text-black bg-white px-2.5 py-1.5 rounded-lg border border-black">
+                              <User className="w-3.5 h-3.5 text-black shrink-0" />
+                              <span className="truncate font-bold">{lesson.staffName}</span>
                             </div>
                           )}
                         </div>
                       </div>
 
                       {/* Bottom Action Footer */}
-                      <div className="pt-2 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between gap-2 mt-auto">
+                      <div className="pt-2 border-t border-black flex items-center justify-between gap-2 mt-auto">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedLesson(lesson);
                           }}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 hover:bg-white/90 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 shadow-sm active:scale-95 transition-all group/btn"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-zinc-100 text-black border border-black shadow-sm active:scale-95 transition-all group/btn"
                           title="View full session details, groups, and rooms"
                         >
-                          <Info className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                          <Info className="w-3.5 h-3.5 text-black shrink-0" />
                           <span>Session Details & Groups</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover/btn:translate-x-0.5 transition-transform" />
+                          <ChevronRight className="w-3.5 h-3.5 text-black group-hover/btn:translate-x-0.5 transition-transform" />
                         </button>
                       </div>
                     </div>

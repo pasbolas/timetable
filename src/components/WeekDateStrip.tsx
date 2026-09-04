@@ -289,7 +289,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
           layout
           transition={smoothTransition}
           data-tour="date-strip"
-          className={`pointer-events-auto mx-auto rounded-2xl bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 transition-colors select-none ${
+          className={`pointer-events-auto mx-auto rounded-2xl bg-white border-2 border-black transition-colors select-none ${
             isExpanded
               ? "w-full max-w-[360px] sm:max-w-[380px] p-3.5 sm:p-4 aspect-square sm:aspect-auto min-h-[365px] flex flex-col justify-between touch-pan-y"
               : "w-full max-w-lg px-2.5 pt-1 pb-1 flex flex-col touch-pan-x"
@@ -315,31 +315,31 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 className="w-full flex justify-center pt-0.5 pb-1 cursor-grab active:cursor-grabbing"
                 title="Pull down to cancel"
               >
-                <div className="w-10 h-1 rounded-full bg-stone-300 dark:bg-neutral-600 hover:bg-stone-400 dark:hover:bg-neutral-500 transition-colors" />
+                <div className="w-10 h-1.5 rounded-full bg-black hover:bg-zinc-700 transition-colors" />
               </motion.div>
 
               {/* Header Row: Month Navigation, Today, Cancel */}
-              <div className="flex items-center justify-between gap-2 pb-2 border-b border-stone-200 dark:border-neutral-700">
+              <div className="flex items-center justify-between gap-2 pb-2 border-b border-black">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
+                  <span className="text-sm font-black text-black uppercase tracking-tight">
                     {viewMonth.format("MMMM YYYY")}
                   </span>
                   <div className="flex items-center gap-0.5 ml-1">
                     <button
                       type="button"
                       onClick={() => setViewMonth((prev) => prev.clone().subtract(1, "month"))}
-                      className="p-1 rounded-lg hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-600 dark:text-neutral-300 transition-colors"
+                      className="p-1 rounded-lg border border-black hover:bg-zinc-100 text-black transition-colors"
                       title="Previous month"
                     >
-                      <ChevronLeft className="w-3.5 h-3.5" />
+                      <ChevronLeft className="w-3.5 h-3.5 text-black" />
                     </button>
                     <button
                       type="button"
                       onClick={() => setViewMonth((prev) => prev.clone().add(1, "month"))}
-                      className="p-1 rounded-lg hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-600 dark:text-neutral-300 transition-colors"
+                      className="p-1 rounded-lg border border-black hover:bg-zinc-100 text-black transition-colors"
                       title="Next month"
                     >
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-3.5 h-3.5 text-black" />
                     </button>
                   </div>
                 </div>
@@ -353,14 +353,14 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       onSelectDate(currentLiveTime);
                       setIsExpanded(false);
                     }}
-                    className="px-2 py-1 rounded-lg text-xs font-bold text-blue-600 dark:text-[#C8B273] hover:bg-blue-100 dark:hover:bg-neutral-700 transition-colors"
+                    className="px-2 py-1 rounded-lg text-xs font-black text-black border-2 border-black bg-white hover:bg-black hover:text-white transition-colors"
                   >
                     Today
                   </button>
                   <button
                     type="button"
                     onClick={handleCloseCalendar}
-                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-stone-200 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 hover:bg-stone-300 dark:hover:bg-neutral-700 transition-colors"
+                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-white text-black border-2 border-black hover:bg-zinc-100 transition-colors"
                   >
                     Cancel
                   </button>
@@ -370,7 +370,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               {/* 7 Days of Week Header */}
               <div className="grid grid-cols-7 gap-1 pt-2 pb-1 text-center">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d, i) => (
-                  <div key={i} className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase">
+                  <div key={i} className="text-[10px] font-black text-black uppercase">
                     {d}
                   </div>
                 ))}
@@ -384,7 +384,6 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   const isActive = dateStr === activeDate.format("YYYY-MM-DD");
                   const isToday = dateStr === currentLiveTime.format("YYYY-MM-DD");
                   const hasClasses = daysWithLessons.has(dateStr);
-                  const isWeekend = dayMoment.isoWeekday() >= 6;
 
                   return (
                     <button
@@ -397,21 +396,19 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       }}
                       className={`h-9 sm:h-10 w-full rounded-xl flex flex-col items-center justify-center relative transition-colors ${
                         isActive
-                          ? "text-white dark:text-neutral-900 font-black z-10"
+                          ? "text-white font-black z-10"
                           : isToday
-                          ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
+                          ? "bg-white text-black font-black border-2 border-black"
                           : !isCurrentMonth
-                          ? "text-slate-300 dark:text-neutral-600 hover:bg-stone-200/50 dark:hover:bg-neutral-800"
-                          : isWeekend
-                          ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-neutral-700"
-                          : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
+                          ? "text-zinc-400 hover:bg-zinc-100"
+                          : "text-black font-bold hover:bg-zinc-100"
                       }`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="active-date-highlight"
                           transition={smoothTransition}
-                          className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
+                          className="absolute inset-0 rounded-xl bg-black z-0"
                         />
                       )}
 
@@ -428,8 +425,8 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                           <span
                             className={`w-1 h-1 rounded-full ${
                               isActive
-                                ? "bg-white dark:bg-neutral-900"
-                                : "bg-blue-500 dark:bg-[#C8B273]"
+                                ? "bg-white"
+                                : "bg-black"
                             }`}
                           />
                         )}
@@ -440,7 +437,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               </div>
 
               {/* Bottom Drag-to-cancel Hint */}
-              <div className="pt-1 text-center text-[10px] font-semibold text-slate-400 dark:text-neutral-500">
+              <div className="pt-1 text-center text-[10px] font-bold text-black">
                 Pull down or tap Cancel to close
               </div>
             </div>
@@ -469,27 +466,27 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               >
                 {/* Visual Pull Bar */}
                 <div className="w-full flex items-center justify-center pt-0.5 pb-1">
-                  <div className="w-8 h-1 rounded-full bg-stone-300 dark:bg-neutral-600 group-hover:bg-stone-400 dark:group-hover:bg-neutral-500 transition-colors" />
+                  <div className="w-8 h-1 rounded-full bg-black group-hover:bg-zinc-700 transition-colors" />
                 </div>
 
-                <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
-                  <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
+                <div className="flex items-center justify-between px-2 mb-0.5 text-black">
+                  <span className="text-[11px] font-black tracking-tight text-black uppercase">
                     {activeDate.format("MMMM YYYY")}
                   </span>
-                  <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={handlePrevDay}
-                      className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                      className="p-0.5 rounded-full border border-black hover:bg-zinc-100 text-black transition-colors"
                       title="Previous day"
                     >
-                      <ChevronLeft className="w-3 h-3" />
+                      <ChevronLeft className="w-3 h-3 text-black" />
                     </button>
                     <button
                       onClick={handleNextDay}
-                      className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                      className="p-0.5 rounded-full border border-black hover:bg-zinc-100 text-black transition-colors"
                       title="Next day"
                     >
-                      <ChevronRight className="w-3 h-3" />
+                      <ChevronRight className="w-3 h-3 text-black" />
                     </button>
                   </div>
                 </div>
@@ -499,7 +496,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
                 {/* Stationary Skeleton Box for the Highlight Slot */}
                 <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-stone-400 dark:border-neutral-600 bg-stone-200/50 dark:bg-neutral-800 pointer-events-none -z-0"
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-black bg-transparent pointer-events-none -z-0"
                   aria-hidden="true"
                 />
 
@@ -526,7 +523,6 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     const isActive = dateStr === activeDate.format("YYYY-MM-DD");
                     const isToday = dateStr === currentLiveTime.format("YYYY-MM-DD");
                     const hasClasses = daysWithLessons.has(dateStr);
-                    const isWeekend = dayMoment.isoWeekday() >= 6;
 
                     return (
                       <button
@@ -547,24 +543,22 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                         }}
                         className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-colors duration-150 will-change-transform select-none touch-pan-x ${
                           isActive
-                            ? "text-white dark:text-neutral-900 font-black z-10"
+                            ? "text-white font-black z-10"
                             : isToday
-                            ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
-                            : isWeekend
-                            ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-neutral-700"
-                            : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
+                            ? "bg-white text-black font-black border-2 border-black"
+                            : "text-black font-bold hover:bg-zinc-100"
                         }`}
                       >
                         {isActive && (
                           <motion.div
                             layoutId="active-date-highlight"
                             transition={smoothTransition}
-                            className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
+                            className="absolute inset-0 rounded-xl bg-black z-0"
                           />
                         )}
 
                         {/* Day of Week */}
-                        <span className="text-[9px] font-semibold uppercase tracking-wider opacity-85 leading-none relative z-10">
+                        <span className="text-[9px] font-bold uppercase tracking-wider opacity-90 leading-none relative z-10">
                           {dayMoment.format("ddd")}
                         </span>
 
@@ -583,8 +577,8 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                             <span
                               className={`w-1 h-1 rounded-full ${
                                 isActive
-                                  ? "bg-white dark:bg-neutral-900"
-                                  : "bg-blue-500 dark:bg-[#C8B273]"
+                                  ? "bg-white"
+                                  : "bg-black"
                               }`}
                             />
                           )}
