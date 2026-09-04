@@ -27,19 +27,35 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSelectedDateRef = useRef<string>(activeDate.format("YYYY-MM-DD"));
   const lastHapticDateRef = useRef<string | null>(activeDate.format("YYYY-MM-DD"));
   const tz = TIMETABLE_CONFIG.timezone;
 
-  // Generate 5 continuous weeks (35 days) centered around the active date's week
-  const activeWeekStartStr = activeDate.clone().tz(tz).startOf("isoWeek").format("YYYY-MM-DD");
+  // Anchor week for the horizontal slider (centers around the selected or initial week)
+  const [baseAnchorWeek, setBaseAnchorWeek] = useState(() =>
+    activeDate.clone().tz(tz).startOf("isoWeek").format("YYYY-MM-DD")
+  );
+
+  // Generate 9 stable weeks (63 days): 4 weeks before anchor, anchor week, 4 weeks after.
+  // This ensures normal browsing and scrolling across adjacent weeks never shifts or re-mounts the array.
   const datePills = useMemo(() => {
     const days: moment.Moment[] = [];
-    const baseWeekStart = moment.tz(activeWeekStartStr, tz).subtract(2, "weeks");
-    for (let i = 0; i < 35; i++) {
+    const baseWeekStart = moment.tz(baseAnchorWeek, tz).subtract(4, "weeks");
+    for (let i = 0; i < 63; i++) {
       days.push(baseWeekStart.clone().add(i, "days"));
     }
     return days;
-  }, [activeWeekStartStr, tz]);
+  }, [baseAnchorWeek, tz]);
+
+  // Re-anchor only when active date moves beyond 3 weeks from current anchor
+  useEffect(() => {
+    const activeMoment = activeDate.clone().tz(tz);
+    const anchorMoment = moment.tz(baseAnchorWeek, tz);
+    const weeksDiff = Math.abs(activeMoment.diff(anchorMoment, "weeks"));
+    if (weeksDiff > 3) {
+      setBaseAnchorWeek(activeMoment.clone().startOf("isoWeek").format("YYYY-MM-DD"));
+    }
+  }, [activeDate, baseAnchorWeek, tz]);
 
   // Days with lessons lookup set
   const daysWithLessons = useMemo(() => {
@@ -63,10 +79,6 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
   const handleCloseCalendar = useCallback(() => {
     setViewMonth(activeDate.clone().startOf("month"));
-    isProgrammaticScrollRef.current = true;
-    if (scrollEndTimeoutRef.current) {
-      clearTimeout(scrollEndTimeoutRef.current);
-    }
     setIsExpanded(false);
   }, [activeDate]);
 
@@ -92,68 +104,22 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     return days;
   }, [viewMonth]);
 
-  // Dynamically scale pills based on distance from center for a magnifying effect
-  const updatePillScales = useCallback(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const containerWidth = container.clientWidth;
-    const containerCenter = container.scrollLeft + containerWidth / 2;
-    const buttons = container.querySelectorAll<HTMLElement>("[data-date]");
-
-    let closestDateStr: string | null = null;
-    let minDistance = Infinity;
-
-    buttons.forEach((btn) => {
-      const btnCenter = btn.offsetLeft + btn.clientWidth / 2;
-      const dist = Math.abs(btnCenter - containerCenter);
-
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestDateStr = btn.getAttribute("data-date");
-      }
-
-      // Distance radius across which zoom scaling takes effect
-      const radius = 130;
-      const progress = Math.max(0, 1 - dist / radius);
-      
-      // Scale smoothly from 0.86x at edges to 1.05x at the exact middle
-      const scale = 0.86 + 0.19 * Math.pow(progress, 1.3);
-      // Fade slightly as items move away from center
-      const opacity = 0.55 + 0.45 * progress;
-
-      btn.style.transform = `scale(${scale.toFixed(3)})`;
-      btn.style.opacity = `${opacity.toFixed(3)}`;
-    });
-
-    // Provide instant tactile response when a date bubble enters the center highlight box during manual user scrolling
-    if (
-      !isProgrammaticScrollRef.current &&
-      closestDateStr &&
-      minDistance < 22 &&
-      closestDateStr !== lastHapticDateRef.current
-    ) {
-      lastHapticDateRef.current = closestDateStr;
-      triggerHapticFeedback();
-    }
-  }, []);
-
-  // Smoothly center the active date in the middle of the scroll view
-  const centerActiveDate = useCallback((smooth = true) => {
+  // Smoothly center a specific date pill in the scroll container
+  const centerDate = useCallback((dateStr: string, smooth = true) => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     if (container.clientWidth === 0) {
-      requestAnimationFrame(() => centerActiveDate(smooth));
+      requestAnimationFrame(() => centerDate(dateStr, smooth));
       return;
     }
 
-    const activeEl = container.querySelector('[data-active="true"]') as HTMLElement;
-    if (activeEl) {
+    const targetEl = container.querySelector(`[data-date="${dateStr}"]`) as HTMLElement;
+    if (targetEl) {
       isProgrammaticScrollRef.current = true;
       const containerWidth = container.clientWidth;
-      const elOffset = activeEl.offsetLeft;
-      const elWidth = activeEl.clientWidth;
+      const elOffset = targetEl.offsetLeft;
+      const elWidth = targetEl.clientWidth;
       const targetScroll = elOffset - containerWidth / 2 + elWidth / 2;
 
       container.scrollTo({
@@ -162,104 +128,115 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
         behavior: smooth ? "smooth" : "auto",
       });
 
-      // Update scales during and after scroll
-      updatePillScales();
-      setTimeout(() => {
-        updatePillScales();
-        isProgrammaticScrollRef.current = false;
-      }, 350);
-    }
-  }, [updatePillScales]);
-
-  // Center on activeDate changes or when returning from expanded view
-  useEffect(() => {
-    if (!isExpanded) {
-      isProgrammaticScrollRef.current = true;
       if (scrollEndTimeoutRef.current) {
         clearTimeout(scrollEndTimeoutRef.current);
       }
 
-      // Initial alignment
-      centerActiveDate(false);
-
-      // Follow up as container layout transition progresses
-      const t1 = setTimeout(() => {
-        centerActiveDate(false);
-      }, 80);
-
-      const t2 = setTimeout(() => {
-        centerActiveDate(false);
-        updatePillScales();
+      setTimeout(() => {
         isProgrammaticScrollRef.current = false;
-      }, 320);
-
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
+      }, smooth ? 280 : 30);
     }
-  }, [isExpanded, activeDate, centerActiveDate, updatePillScales]);
+  }, []);
 
-  // Recalculate scales on window resize
+  // When activeDate changes externally (e.g. from top bar 'Today', or expanded calendar)
+  useEffect(() => {
+    if (isExpanded) return;
+
+    const activeDateKey = activeDate.format("YYYY-MM-DD");
+    // If the change came from the user's manual scroll settling, it's already centered!
+    if (lastSelectedDateRef.current === activeDateKey) {
+      return;
+    }
+
+    lastSelectedDateRef.current = activeDateKey;
+    centerDate(activeDateKey, true);
+  }, [activeDate, isExpanded, centerDate]);
+
+  // Initial alignment on mount and whenever returning from expanded view
+  useEffect(() => {
+    if (!isExpanded) {
+      centerDate(activeDate.format("YYYY-MM-DD"), false);
+      const timer = setTimeout(() => {
+        centerDate(activeDate.format("YYYY-MM-DD"), false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isExpanded, centerDate, activeDate]);
+
+  // Recalculate centering on window resize
   useEffect(() => {
     const handleResize = () => {
-      centerActiveDate(false);
-      updatePillScales();
+      centerDate(activeDate.format("YYYY-MM-DD"), false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [centerActiveDate, updatePillScales]);
+  }, [activeDate, centerDate]);
 
-  // Handle scroll events (user swiping through the strip)
+  // Handle scroll events with momentum settling
   const handleScroll = () => {
     const container = scrollContainerRef.current;
-    if (container && container.scrollTop !== 0) {
+    if (!container) return;
+
+    if (container.scrollTop !== 0) {
       container.scrollTop = 0;
     }
-    updatePillScales();
 
-    // If user is manually scrolling, snap/select the centered date when scrolling settles
+    // Ignore scroll events during programmatic scrollTo
+    if (isProgrammaticScrollRef.current) {
+      return;
+    }
+
     if (scrollEndTimeoutRef.current) {
       clearTimeout(scrollEndTimeoutRef.current);
     }
 
-    if (!isProgrammaticScrollRef.current) {
-      scrollEndTimeoutRef.current = setTimeout(() => {
-        const container = scrollContainerRef.current;
-        if (!container) return;
+    // Detect when scrolling has settled on a pill
+    scrollEndTimeoutRef.current = setTimeout(() => {
+      if (isProgrammaticScrollRef.current) return;
 
-        const containerCenter = container.scrollLeft + container.clientWidth / 2;
-        const buttons = container.querySelectorAll<HTMLElement>("[data-date]");
-        let closestDateStr: string | null = null;
-        let minDistance = Infinity;
+      const containerWidth = container.clientWidth;
+      const containerCenter = container.scrollLeft + containerWidth / 2;
+      const buttons = container.querySelectorAll<HTMLElement>("[data-date]");
+      let closestDateStr: string | null = null;
+      let minDistance = Infinity;
 
-        buttons.forEach((btn) => {
-          const btnCenter = btn.offsetLeft + btn.clientWidth / 2;
-          const dist = Math.abs(btnCenter - containerCenter);
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestDateStr = btn.getAttribute("data-date");
-          }
-        });
-
-        if (closestDateStr && closestDateStr !== activeDate.format("YYYY-MM-DD")) {
-          const foundMoment = datePills.find((d) => d.format("YYYY-MM-DD") === closestDateStr);
-          if (foundMoment) {
-            onSelectDate(foundMoment);
-          }
+      buttons.forEach((btn) => {
+        const btnCenter = btn.offsetLeft + btn.clientWidth / 2;
+        const dist = Math.abs(btnCenter - containerCenter);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestDateStr = btn.getAttribute("data-date");
         }
-      }, 120);
-    }
+      });
+
+      const currentDateKey = activeDate.format("YYYY-MM-DD");
+      if (closestDateStr && closestDateStr !== currentDateKey) {
+        const foundMoment = datePills.find((d) => d.format("YYYY-MM-DD") === closestDateStr);
+        if (foundMoment) {
+          lastSelectedDateRef.current = closestDateStr;
+          triggerHapticFeedback();
+          onSelectDate(foundMoment);
+        }
+      }
+    }, 140);
   };
 
   const handlePrevDay = () => {
     triggerHapticFeedback();
-    onSelectDate(activeDate.clone().subtract(1, "days"));
+    const newDate = activeDate.clone().subtract(1, "days");
+    const newDateStr = newDate.format("YYYY-MM-DD");
+    lastSelectedDateRef.current = newDateStr;
+    onSelectDate(newDate);
+    centerDate(newDateStr, true);
   };
 
   const handleNextDay = () => {
     triggerHapticFeedback();
-    onSelectDate(activeDate.clone().add(1, "days"));
+    const newDate = activeDate.clone().add(1, "days");
+    const newDateStr = newDate.format("YYYY-MM-DD");
+    lastSelectedDateRef.current = newDateStr;
+    onSelectDate(newDate);
+    centerDate(newDateStr, true);
   };
 
   return (
@@ -493,10 +470,10 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               </motion.div>
 
               {/* Date Selector Strip Container */}
-              <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
+              <div className="relative py-0.5 overflow-hidden select-none">
                 {/* Stationary Skeleton Box for the Highlight Slot */}
                 <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-black bg-transparent pointer-events-none -z-0"
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-black bg-transparent pointer-events-none z-0"
                   aria-hidden="true"
                 />
 
@@ -504,16 +481,15 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 <div
                   ref={scrollContainerRef}
                   onScroll={handleScroll}
-                  className="flex items-center gap-1.5 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[54px] scroll-smooth relative z-10"
+                  className="flex items-center gap-2 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain no-scrollbar h-[56px] relative z-10"
                   style={{
                     scrollbarWidth: "none",
                     msOverflowStyle: "none",
-                    paddingLeft: "calc(50% - 21px)",
-                    paddingRight: "calc(50% - 21px)",
+                    paddingLeft: "calc(50% - 22px)",
+                    paddingRight: "calc(50% - 22px)",
                     scrollSnapType: "x mandatory",
-                    overflowY: "hidden",
                     touchAction: "pan-x",
-                    overscrollBehaviorY: "none",
+                    WebkitOverflowScrolling: "touch",
                     WebkitMaskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
                     maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
                   }}
@@ -534,42 +510,39 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                             lastHapticDateRef.current = dateStr;
                             triggerHapticFeedback();
                           }
+                          lastSelectedDateRef.current = dateStr;
                           onSelectDate(dayMoment);
+                          centerDate(dateStr, true);
                         }}
                         style={{
                           scrollSnapAlign: "center",
-                          transformOrigin: "center center",
                           touchAction: "pan-x",
                         }}
-                        className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-colors duration-150 will-change-transform select-none touch-pan-x ${
+                        className={`relative shrink-0 flex flex-col items-center justify-center w-[44px] h-[50px] rounded-xl text-center select-none touch-pan-x transition-colors duration-150 ${
                           isActive
-                            ? "text-white font-black z-10"
+                            ? "bg-black text-white font-black z-10"
                             : isToday
-                            ? "bg-white text-black font-black border-2 border-black"
-                            : "text-black font-bold hover:bg-zinc-100"
+                            ? "bg-white text-black font-black border-2 border-black hover:bg-zinc-100"
+                            : "bg-white text-black font-bold hover:bg-zinc-100"
                         }`}
                       >
-                        {isActive && (
-                          <motion.div
-                            layoutId="active-date-highlight"
-                            transition={smoothTransition}
-                            className="absolute inset-0 rounded-xl bg-black z-0"
-                          />
-                        )}
-
                         {/* Day of Week */}
-                        <span className="text-[9px] font-bold uppercase tracking-wider opacity-90 leading-none relative z-10">
+                        <span
+                          className={`text-[9px] font-bold uppercase tracking-wider leading-none relative z-10 ${
+                            isActive ? "text-white" : "text-black"
+                          }`}
+                        >
                           {dayMoment.format("ddd")}
                         </span>
 
                         {/* Day Number */}
-                        <motion.span
-                          layoutId={`date-num-${dateStr}`}
-                          transition={smoothTransition}
-                          className="text-sm font-extrabold my-0.5 leading-none relative z-10"
+                        <span
+                          className={`text-sm font-extrabold my-0.5 leading-none relative z-10 ${
+                            isActive ? "text-white" : "text-black"
+                          }`}
                         >
                           {dayMoment.format("D")}
-                        </motion.span>
+                        </span>
 
                         {/* Micro Dot Badge */}
                         <div className="h-1 flex items-center justify-center relative z-10">

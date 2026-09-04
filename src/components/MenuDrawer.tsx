@@ -97,31 +97,22 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
           <motion.div
             variants={{
               hidden: {
-                y: "105%",
-                opacity: 0.85,
-                scale: 0.96,
+                y: "100%",
               },
               visible: {
                 y: 0,
-                opacity: 1,
-                scale: 1,
                 transition: {
-                  type: "spring",
-                  damping: 18,
-                  stiffness: 260,
-                  mass: 0.85,
-                  restDelta: 0.001,
+                  type: "tween",
+                  ease: [0.16, 1, 0.3, 1], // Smooth cubic ease-out without overshoot or bounce
+                  duration: 0.3,
                 },
               },
               exit: {
-                y: "105%",
-                opacity: 0,
-                scale: 0.96,
+                y: "100%",
                 transition: {
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 280,
-                  mass: 0.75,
+                  type: "tween",
+                  ease: [0.32, 0, 0.67, 0],
+                  duration: 0.2,
                 },
               },
             }}
