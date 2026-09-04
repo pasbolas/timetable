@@ -75,7 +75,7 @@ body {
 
 /* Dot grid background pattern */
 .bg-dot-grid {
-  background-image: radial-gradient(rgba(0, 0, 0, 0.14) 1.25px, transparent 1.25px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.20) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
 }
 

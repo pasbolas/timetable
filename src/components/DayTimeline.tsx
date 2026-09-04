@@ -78,17 +78,14 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div
-      className={`w-full flex-1 flex flex-col ${
-        !isLoading && !error && lessons.length === 0
-          ? "h-full overflow-hidden"
-          : ""
-      }`}
-    >
-      {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
+    <div className="w-full flex-1 flex flex-col">
+      {/* Subheader: Date & class counter - Sticky below TopBar when scrolling lessons */}
       <div
-        className="sticky z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
-        style={{ top: "calc(54px + env(safe-area-inset-top, 0px))" }}
+        className="z-20 bg-white/90 backdrop-blur-sm border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
+        style={{
+          position: lessons.length > 0 ? "sticky" : "relative",
+          top: lessons.length > 0 ? "calc(54px + env(safe-area-inset-top, 0px))" : undefined,
+        }}
       >
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-black text-black">

@@ -83,6 +83,7 @@ export function App() {
   // Prevent page scrolling on days without classes or weekend breaks
   useEffect(() => {
     if (isNoClassesDay) {
+      window.scrollTo(0, 0);
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
       document.body.style.overscrollBehavior = "none";
@@ -106,7 +107,7 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-white text-black flex flex-col selection:bg-black selection:text-white relative ${
+      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative ${
         isNoClassesDay
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"
@@ -130,7 +131,7 @@ export function App() {
       />
 
       {/* Main Timeline Stream */}
-      <main className={`flex-1 flex flex-col relative ${isNoClassesDay ? "overflow-hidden" : ""}`}>
+      <main className="flex-1 flex flex-col relative z-10">
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}
