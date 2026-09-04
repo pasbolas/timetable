@@ -15,6 +15,7 @@ import { AmbientBackground } from "./components/AmbientBackground";
 import { TIMETABLE_CONFIG } from "./config/timetableConfig";
 import { StorageService } from "./services/storage";
 import { ProgramSearchResult } from "./types/timetable";
+import { Analytics } from "@vercel/analytics/react";
 
 export function App() {
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
@@ -201,6 +202,9 @@ export function App() {
 
       {/* PWA Install Banner */}
       <PWAInstallPrompt />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
