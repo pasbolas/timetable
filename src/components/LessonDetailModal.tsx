@@ -20,6 +20,7 @@ import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
 import { getLessonColorTheme, getLessonModuleKey } from "../services/transformer";
 import { StorageService } from "../services/storage";
 import { triggerHapticFeedback } from "../services/haptics";
+import { trackEvent } from "../services/analytics";
 
 interface LessonDetailModalProps {
   lesson: NormalizedLesson | null;
@@ -91,6 +92,11 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
     StorageService.setFavoriteGroupForModule(moduleKey, nextVal);
     setFavGroup(nextVal);
     triggerHapticFeedback();
+    trackEvent("Toggle Favorite Group", {
+      module: moduleKey,
+      group: groupLabel,
+      action: isAlreadyFav ? "unfavorite" : "favorite",
+    });
   };
 
   const sortedLocations = useMemo(() => {
@@ -120,6 +126,10 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
       "_"
     )}_${lesson.StartDateTime.format("YYYYMMDD")}.ics`;
     downloadIcsFile(filename, icsContent);
+    trackEvent("Export Calendar Event", {
+      module: lesson.Description,
+      eventType: lesson.EventType,
+    });
   };
 
   const handleCopyInfo = () => {
@@ -135,6 +145,9 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
     navigator.clipboard.writeText(text);
     setCopied(true);
     triggerHapticFeedback();
+    trackEvent("Copy Lesson Info", {
+      module: lesson.Description,
+    });
     setTimeout(() => setCopied(false), 2000);
   };
 

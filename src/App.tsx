@@ -17,6 +17,7 @@ import { TIMETABLE_CONFIG } from "./config/timetableConfig";
 import { StorageService } from "./services/storage";
 import { ProgramSearchResult } from "./types/timetable";
 import { Analytics } from "@vercel/analytics/react";
+import { trackEvent } from "./services/analytics";
 
 export function App() {
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
@@ -60,6 +61,7 @@ export function App() {
 
   const handleTourClose = () => {
     setIsTourOpen(false);
+    trackEvent("Finish Tour");
     // Mandatory unskippable task immediately after the intro tour
     if (!StorageService.hasCompletedCourseOnboarding()) {
       setTimeout(() => {
@@ -70,6 +72,10 @@ export function App() {
 
   const handleSelectProgram = (program: ProgramSearchResult) => {
     selectProgram(program);
+    trackEvent("Select Program", {
+      program: program.Name,
+      code: program.Identity,
+    });
     StorageService.setCompletedCourseOnboarding(true);
     setIsSearchOpen(false);
     setIsCourseSetupOpen(false);
