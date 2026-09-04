@@ -228,165 +228,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
 
   return (
     <>
-      {/* ========================================================= */}
-      {/* COMPACT FLOATING DATE DOCK PILL (BOTTOM OF SCREEN)        */}
-      {/* ========================================================= */}
-      <footer
-        className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none w-full px-3 sm:px-4 transition-all"
-        style={{
-          paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
-          paddingTop: "4px",
-        }}
-      >
-        <div
-          data-tour="date-strip"
-          className="pointer-events-auto max-w-lg mx-auto rounded-2xl bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 px-2.5 pt-1 pb-1 transition-colors"
-        >
-          {/* Top Pull Handle and Month Header (Pull up or tap to expand full calendar) */}
-          <motion.div
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0.35, bottom: 0 }}
-            onDragEnd={(_, info) => {
-              if (info.offset.y < -20 || info.velocity.y < -150) {
-                triggerHapticFeedback();
-                setIsExpanded(true);
-              }
-            }}
-            onClick={() => {
-              triggerHapticFeedback();
-              setIsExpanded(true);
-            }}
-            className="cursor-pointer select-none group touch-pan-x"
-            title="Pull up or tap to open calendar"
-          >
-            {/* Visual Pull Bar */}
-            <div className="w-full flex items-center justify-center pt-0.5 pb-1">
-              <div className="w-8 h-1 rounded-full bg-stone-300 dark:bg-neutral-600 group-hover:bg-stone-400 dark:group-hover:bg-neutral-500 transition-colors" />
-            </div>
-
-            <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
-                  {activeDate.format("MMMM YYYY")}
-                </span>
-                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-stone-200/80 dark:bg-neutral-700 text-slate-500 dark:text-neutral-400">
-                  Pull up
-                </span>
-              </div>
-              <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={handlePrevDay}
-                  className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
-                  title="Previous day"
-                >
-                  <ChevronLeft className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={handleNextDay}
-                  className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
-                  title="Next day"
-                >
-                  <ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Date Selector Strip Container */}
-          <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
-            {/* Stationary Skeleton Box for the Highlight Slot */}
-            <div
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-stone-400 dark:border-neutral-600 bg-stone-200/50 dark:bg-neutral-800 pointer-events-none -z-0"
-              aria-hidden="true"
-            />
-
-            {/* Scrollable Date Track */}
-            <div
-              ref={scrollContainerRef}
-              onScroll={handleScroll}
-              className="flex items-center gap-1.5 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[54px] scroll-smooth relative z-10"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                paddingLeft: "calc(50% - 21px)",
-                paddingRight: "calc(50% - 21px)",
-                scrollSnapType: "x mandatory",
-                overflowY: "hidden",
-                touchAction: "pan-x",
-                overscrollBehaviorY: "none",
-                WebkitMaskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
-                maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
-              }}
-            >
-              {datePills.map((dayMoment) => {
-                const dateStr = dayMoment.format("YYYY-MM-DD");
-                const isActive = dateStr === activeDate.format("YYYY-MM-DD");
-                const isToday = dateStr === currentLiveTime.format("YYYY-MM-DD");
-                const hasClasses = daysWithLessons.has(dateStr);
-                const isWeekend = dayMoment.isoWeekday() >= 6;
-
-                return (
-                  <button
-                    key={dateStr}
-                    data-date={dateStr}
-                    data-active={isActive ? "true" : "false"}
-                    onClick={() => {
-                      if (lastHapticDateRef.current !== dateStr) {
-                        lastHapticDateRef.current = dateStr;
-                        triggerHapticFeedback();
-                      }
-                      onSelectDate(dayMoment);
-                    }}
-                    style={{
-                      scrollSnapAlign: "center",
-                      transformOrigin: "center center",
-                      touchAction: "pan-x",
-                    }}
-                    className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-colors duration-150 will-change-transform select-none touch-pan-x ${
-                      isActive
-                        ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-neutral-900 font-black z-10"
-                        : isToday
-                        ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
-                        : isWeekend
-                        ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-neutral-700"
-                        : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
-                    }`}
-                  >
-                    {/* Day of Week */}
-                    <span className="text-[9px] font-semibold uppercase tracking-wider opacity-85 leading-none">
-                      {dayMoment.format("ddd")}
-                    </span>
-
-                    {/* Day Number */}
-                    <span className="text-sm font-extrabold my-0.5 leading-none">
-                      {dayMoment.format("D")}
-                    </span>
-
-                    {/* Micro Dot Badge */}
-                    <div className="h-1 flex items-center justify-center">
-                      {hasClasses && (
-                        <span
-                          className={`w-1 h-1 rounded-full ${
-                            isActive
-                              ? "bg-white dark:bg-[#424242]"
-                              : "bg-blue-500 dark:bg-[#C8B273]"
-                          }`}
-                        />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* ========================================================= */}
-      {/* EXPANDED PROPER CALENDAR IN SQUARE FORM                   */}
-      {/* Pull down or click Cancel to close                        */}
-      {/* ========================================================= */}
+      {/* Dim backdrop when expanded */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -394,32 +236,53 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-3 sm:p-4 pointer-events-auto"
+            className="fixed inset-0 z-40 bg-black/60 pointer-events-auto"
             onClick={() => setIsExpanded(false)}
-          >
-            <motion.div
-              drag="y"
-              dragConstraints={{ top: 0 }}
-              dragElastic={{ top: 0, bottom: 0.5 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 50 || info.velocity.y > 250) {
-                  triggerHapticFeedback();
-                  setIsExpanded(false);
-                }
-              }}
-              initial={{ y: 80, opacity: 0, scale: 0.95 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 80, opacity: 0, scale: 0.95 }}
-              transition={{ type: "spring", damping: 26, stiffness: 320 }}
-              className="w-full max-w-[360px] sm:max-w-[380px] aspect-square sm:aspect-auto min-h-[360px] bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between select-none touch-pan-y"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Top Pull Down Handle */}
-              <div className="w-full flex justify-center pb-1 cursor-grab active:cursor-grabbing">
-                <div className="w-10 h-1 rounded-full bg-stone-300 dark:bg-neutral-600" />
-              </div>
+          />
+        )}
+      </AnimatePresence>
 
-              {/* Header Row: Month Name, Nav Chevrons, Today, Cancel Button */}
+      <footer
+        className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none w-full px-3 sm:px-4 transition-all flex flex-col items-center justify-end"
+        style={{
+          paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
+          paddingTop: "4px",
+        }}
+      >
+        <motion.div
+          layout
+          transition={{ type: "spring", stiffness: 340, damping: 28 }}
+          data-tour="date-strip"
+          className={`pointer-events-auto mx-auto rounded-2xl bg-[#f4f1e0] dark:bg-[#252525] border-2 border-stone-300 dark:border-neutral-700 transition-colors select-none ${
+            isExpanded
+              ? "w-full max-w-[360px] sm:max-w-[380px] p-3.5 sm:p-4 aspect-square sm:aspect-auto min-h-[365px] flex flex-col justify-between touch-pan-y"
+              : "w-full max-w-lg px-2.5 pt-1 pb-1 flex flex-col touch-pan-x"
+          }`}
+          onClick={isExpanded ? (e) => e.stopPropagation() : undefined}
+        >
+          {isExpanded ? (
+            /* ========================================================= */
+            /* EXPANDED PROPER CALENDAR IN SQUARE FORM                   */
+            /* ========================================================= */
+            <div className="flex-1 flex flex-col justify-between">
+              {/* Top Drag-Down Handle (Pull down to cancel) */}
+              <motion.div
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={{ top: 0, bottom: 0.5 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y > 35 || info.velocity.y > 160) {
+                    triggerHapticFeedback();
+                    setIsExpanded(false);
+                  }
+                }}
+                className="w-full flex justify-center pt-0.5 pb-1 cursor-grab active:cursor-grabbing"
+                title="Pull down to cancel"
+              >
+                <div className="w-10 h-1 rounded-full bg-stone-300 dark:bg-neutral-600 hover:bg-stone-400 dark:hover:bg-neutral-500 transition-colors" />
+              </motion.div>
+
+              {/* Header Row: Month Navigation, Today, Cancel */}
               <div className="flex items-center justify-between gap-2 pb-2 border-b border-stone-200 dark:border-neutral-700">
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
@@ -477,7 +340,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                 ))}
               </div>
 
-              {/* Month Grid Cells in Square Layout */}
+              {/* Month Grid Cells: Shared Numbers Rearrange Here */}
               <div className="grid grid-cols-7 gap-1 flex-1 my-1">
                 {calendarDays.map((dayMoment) => {
                   const dateStr = dayMoment.format("YYYY-MM-DD");
@@ -498,7 +361,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       }}
                       className={`h-9 sm:h-10 w-full rounded-xl flex flex-col items-center justify-center relative transition-colors ${
                         isActive
-                          ? "bg-blue-600 text-white dark:bg-[#C8B273] dark:text-neutral-900 font-black"
+                          ? "text-white dark:text-neutral-900 font-black z-10"
                           : isToday
                           ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
                           : !isCurrentMonth
@@ -508,8 +371,23 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                           : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
                       }`}
                     >
-                      <span className="text-xs font-bold leading-none">{dayMoment.format("D")}</span>
-                      <div className="h-1 flex items-center justify-center mt-0.5">
+                      {isActive && (
+                        <motion.div
+                          layoutId="active-date-highlight"
+                          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                          className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
+                        />
+                      )}
+
+                      <motion.span
+                        layoutId={`date-num-${dateStr}`}
+                        transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                        className="text-xs sm:text-sm font-bold leading-none relative z-10"
+                      >
+                        {dayMoment.format("D")}
+                      </motion.span>
+
+                      <div className="h-1 flex items-center justify-center mt-0.5 relative z-10">
                         {hasClasses && (
                           <span
                             className={`w-1 h-1 rounded-full ${
@@ -529,10 +407,166 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               <div className="pt-1 text-center text-[10px] font-semibold text-slate-400 dark:text-neutral-500">
                 Pull down or tap Cancel to close
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          ) : (
+            /* ========================================================= */
+            /* COMPACT FLOATING DATE DOCK VIEW                           */
+            /* ========================================================= */
+            <>
+              {/* Top Pull Handle and Month Header (Pull up or tap to expand full calendar) */}
+              <motion.div
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={{ top: 0.4, bottom: 0 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y < -15 || info.velocity.y < -120) {
+                    triggerHapticFeedback();
+                    setIsExpanded(true);
+                  }
+                }}
+                onClick={() => {
+                  triggerHapticFeedback();
+                  setIsExpanded(true);
+                }}
+                className="cursor-pointer select-none group touch-pan-x"
+                title="Pull up or tap to expand full calendar"
+              >
+                {/* Visual Pull Bar */}
+                <div className="w-full flex items-center justify-center pt-0.5 pb-1">
+                  <div className="w-8 h-1 rounded-full bg-stone-300 dark:bg-neutral-600 group-hover:bg-stone-400 dark:group-hover:bg-neutral-500 transition-colors" />
+                </div>
+
+                <div className="flex items-center justify-between px-2 mb-0.5 text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[11px] font-bold tracking-tight text-slate-800 dark:text-slate-200 uppercase group-hover:text-blue-600 dark:group-hover:text-[#C8B273] transition-colors">
+                      {activeDate.format("MMMM YYYY")}
+                    </span>
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-stone-200/80 dark:bg-neutral-700 text-slate-500 dark:text-neutral-400">
+                      Pull up
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={handlePrevDay}
+                      className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                      title="Previous day"
+                    >
+                      <ChevronLeft className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={handleNextDay}
+                      className="p-0.5 rounded-full hover:bg-stone-200 dark:hover:bg-neutral-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                      title="Next day"
+                    >
+                      <ChevronRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Date Selector Strip Container */}
+              <div className="relative py-0.5 overflow-hidden touch-pan-x select-none">
+                {/* Stationary Skeleton Box for the Highlight Slot */}
+                <div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[50px] rounded-xl border-2 border-stone-400 dark:border-neutral-600 bg-stone-200/50 dark:bg-neutral-800 pointer-events-none -z-0"
+                  aria-hidden="true"
+                />
+
+                {/* Scrollable Date Track */}
+                <div
+                  ref={scrollContainerRef}
+                  onScroll={handleScroll}
+                  className="flex items-center gap-1.5 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain overscroll-y-none no-scrollbar h-[54px] scroll-smooth relative z-10"
+                  style={{
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    paddingLeft: "calc(50% - 21px)",
+                    paddingRight: "calc(50% - 21px)",
+                    scrollSnapType: "x mandatory",
+                    overflowY: "hidden",
+                    touchAction: "pan-x",
+                    overscrollBehaviorY: "none",
+                    WebkitMaskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
+                    maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
+                  }}
+                >
+                  {datePills.map((dayMoment) => {
+                    const dateStr = dayMoment.format("YYYY-MM-DD");
+                    const isActive = dateStr === activeDate.format("YYYY-MM-DD");
+                    const isToday = dateStr === currentLiveTime.format("YYYY-MM-DD");
+                    const hasClasses = daysWithLessons.has(dateStr);
+                    const isWeekend = dayMoment.isoWeekday() >= 6;
+
+                    return (
+                      <button
+                        key={dateStr}
+                        data-date={dateStr}
+                        data-active={isActive ? "true" : "false"}
+                        onClick={() => {
+                          if (lastHapticDateRef.current !== dateStr) {
+                            lastHapticDateRef.current = dateStr;
+                            triggerHapticFeedback();
+                          }
+                          onSelectDate(dayMoment);
+                        }}
+                        style={{
+                          scrollSnapAlign: "center",
+                          transformOrigin: "center center",
+                          touchAction: "pan-x",
+                        }}
+                        className={`relative shrink-0 flex flex-col items-center justify-center w-[42px] h-[48px] rounded-xl text-center transition-colors duration-150 will-change-transform select-none touch-pan-x ${
+                          isActive
+                            ? "text-white dark:text-neutral-900 font-black z-10"
+                            : isToday
+                            ? "bg-blue-100 text-blue-800 dark:bg-[#834655] dark:text-[#F6CAC9] font-bold border border-blue-300 dark:border-[#9F5069]"
+                            : isWeekend
+                            ? "text-slate-400 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-neutral-700"
+                            : "text-slate-800 dark:text-neutral-200 hover:bg-stone-200 dark:hover:bg-neutral-700"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="active-date-highlight"
+                            transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                            className="absolute inset-0 rounded-xl bg-blue-600 dark:bg-[#C8B273] z-0"
+                          />
+                        )}
+
+                        {/* Day of Week */}
+                        <span className="text-[9px] font-semibold uppercase tracking-wider opacity-85 leading-none relative z-10">
+                          {dayMoment.format("ddd")}
+                        </span>
+
+                        {/* Day Number */}
+                        <motion.span
+                          layoutId={`date-num-${dateStr}`}
+                          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                          className="text-sm font-extrabold my-0.5 leading-none relative z-10"
+                        >
+                          {dayMoment.format("D")}
+                        </motion.span>
+
+                        {/* Micro Dot Badge */}
+                        <div className="h-1 flex items-center justify-center relative z-10">
+                          {hasClasses && (
+                            <span
+                              className={`w-1 h-1 rounded-full ${
+                                isActive
+                                  ? "bg-white dark:bg-neutral-900"
+                                  : "bg-blue-500 dark:bg-[#C8B273]"
+                              }`}
+                            />
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </motion.div>
+      </footer>
     </>
   );
 };
