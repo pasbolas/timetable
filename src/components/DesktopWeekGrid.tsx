@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
 import { Clock, MapPin, User, Coffee, Users } from "lucide-react";
@@ -173,58 +173,35 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
   const currentMinutesFromStart = (nowHour - startHour) * 60 + nowMinute;
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
-  // Active week key for seamless morph transitions
+  // Active week key for seamless blur and unblur transitions
   const weekStartMoment = activeDate.clone().startOf("isoWeek");
   const weekKey = displayedDays[0]?.dateKey || weekStartMoment.format("YYYY-MM-DD");
 
-  // Direction tracking: 1 for next week (forward), -1 for prev week (backward)
-  const [direction, setDirection] = useState(0);
-  const prevWeekKeyRef = useRef(weekKey);
-
-  useEffect(() => {
-    if (prevWeekKeyRef.current !== weekKey) {
-      const isForward = moment(weekKey).isAfter(moment(prevWeekKeyRef.current));
-      setDirection(isForward ? 1 : -1);
-      prevWeekKeyRef.current = weekKey;
-    }
-  }, [weekKey]);
-
-  // Spring morph variants for week page transitions
-  const weekMorphVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 32 : dir < 0 ? -32 : 0,
+  // Pure blur and unblur crossfade variants for week transitions (no panning/sliding)
+  const weekBlurVariants = {
+    enter: {
       opacity: 0,
-      filter: "blur(4px)",
-      scale: 0.99,
-    }),
+      filter: "blur(12px)",
+    },
     center: {
-      x: 0,
       opacity: 1,
       filter: "blur(0px)",
-      scale: 1,
       transition: {
-        x: { type: "spring", stiffness: 350, damping: 28 },
-        opacity: { duration: 0.2, ease: "easeOut" },
-        filter: { duration: 0.18, ease: "easeOut" },
-        scale: { duration: 0.22, ease: "easeOut" },
+        duration: 0.28,
+        ease: "easeOut",
       },
       transitionEnd: {
-        transform: "none",
         filter: "none",
       },
     },
-    exit: (dir: number) => ({
-      x: dir > 0 ? -32 : dir < 0 ? 32 : 0,
+    exit: {
       opacity: 0,
-      filter: "blur(4px)",
-      scale: 0.99,
+      filter: "blur(12px)",
       transition: {
-        x: { type: "spring", stiffness: 380, damping: 30 },
-        opacity: { duration: 0.14, ease: "easeIn" },
-        filter: { duration: 0.12, ease: "easeIn" },
-        scale: { duration: 0.14, ease: "easeIn" },
+        duration: 0.18,
+        ease: "easeIn",
       },
-    }),
+    },
   };
 
   return (
@@ -311,11 +288,10 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
 
           {/* Scrollable Container: Sticky header and grid share the exact same width and scrollbar */}
           <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
-            <AnimatePresence mode="wait" custom={direction} initial={false}>
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={weekKey}
-                custom={direction}
-                variants={weekMorphVariants}
+                variants={weekBlurVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"

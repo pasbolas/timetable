@@ -148,10 +148,10 @@ export const TopBar: React.FC<TopBarProps> = ({
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={weekStartMoment.format("YYYY-MM-DD")}
-                  initial={{ opacity: 0, y: 6, filter: "blur(2px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -6, filter: "blur(2px)" }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  initial={{ opacity: 0, filter: "blur(5px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(5px)" }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
                   className="inline-block"
                 >
                   {weekStartMoment.format("D MMM")} – {weekEndMoment.format("D MMM YYYY")}
