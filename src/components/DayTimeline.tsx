@@ -77,7 +77,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full flex-1 flex flex-col">
+    <div
+      className={`w-full flex-1 flex flex-col ${
+        !isLoading && !error && lessons.length === 0
+          ? "h-full overflow-hidden"
+          : ""
+      }`}
+    >
       {/* Subheader: Date & class counter - Sticky below TopBar at top of scrollport */}
       <div
         className="sticky z-20 bg-white border-b-2 border-black flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors"
@@ -128,7 +134,12 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
       {/* Empty State when no classes */}
       {!isLoading && !error && lessons.length === 0 && (
-        <div className="max-w-md mx-auto px-4 py-6 flex-1 flex items-center justify-center pb-32">
+        <div
+          className="max-w-md mx-auto px-4 flex-1 flex flex-col items-center justify-center select-none"
+          style={{
+            paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))",
+          }}
+        >
           <EmptyState
             type={isWeekend ? "weekend" : "free-day"}
             date={activeDate}

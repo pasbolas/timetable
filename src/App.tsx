@@ -73,6 +73,30 @@ export function App() {
   const activeDateKey = activeDate.format("YYYY-MM-DD");
   const activeDayData = schedule.find((d) => d.dateKey === activeDateKey);
 
+  const isNoClassesDay =
+    !isLoading &&
+    !error &&
+    activeDayData !== undefined &&
+    activeDayData.lessons.length === 0;
+
+  // Prevent page scrolling on days without classes or weekend breaks
+  useEffect(() => {
+    if (isNoClassesDay) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.overscrollBehavior = "none";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.overscrollBehavior = "";
+    }
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.overscrollBehavior = "";
+    };
+  }, [isNoClassesDay]);
+
   const handleGoToToday = () => {
     setActiveDate(moment().tz(TIMETABLE_CONFIG.timezone));
   };
@@ -81,9 +105,14 @@ export function App() {
 
   return (
     <div
-      className="min-h-screen w-full bg-white text-black flex flex-col selection:bg-black selection:text-white"
+      className={`w-full bg-white text-black flex flex-col selection:bg-black selection:text-white ${
+        isNoClassesDay
+          ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
+          : "min-h-screen"
+      }`}
       style={{
-        minHeight: "calc(100dvh + env(safe-area-inset-bottom, 0px))",
+        minHeight: isNoClassesDay ? undefined : "calc(100dvh + env(safe-area-inset-bottom, 0px))",
+        height: isNoClassesDay ? "100dvh" : undefined,
       }}
     >
       {/* Pinned Minimal Top Header */}
@@ -97,7 +126,7 @@ export function App() {
       />
 
       {/* Main Timeline Stream */}
-      <main className="flex-1 flex flex-col relative">
+      <main className={`flex-1 flex flex-col relative ${isNoClassesDay ? "overflow-hidden" : ""}`}>
         <DayTimeline
           activeDate={activeDate}
           dayData={activeDayData}

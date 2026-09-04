@@ -19,7 +19,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   if (type === "error") {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="flex flex-col items-center justify-center py-2 px-4 text-center">
         <div className="w-14 h-14 rounded-2xl bg-white border-2 border-black text-black flex items-center justify-center mb-4">
           <AlertCircle className="w-7 h-7" />
         </div>
@@ -44,7 +44,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   if (type === "weekend") {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 text-center animate-in fade-in duration-300">
+      <div className="flex flex-col items-center justify-center py-2 px-4 text-center animate-in fade-in duration-300">
         <div className="w-16 h-16 rounded-2xl bg-white border-2 border-black text-black flex items-center justify-center mb-4">
           <SunMedium className="w-8 h-8" />
         </div>
@@ -60,7 +60,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   if (type === "no-program") {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="flex flex-col items-center justify-center py-2 px-4 text-center">
         <div className="w-14 h-14 rounded-2xl bg-white border-2 border-black text-black flex items-center justify-center mb-4">
           <Calendar className="w-7 h-7" />
         </div>
@@ -84,7 +84,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   // Free day
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4 text-center animate-in fade-in duration-300">
+    <div className="flex flex-col items-center justify-center py-2 px-4 text-center animate-in fade-in duration-300">
       <div className="w-16 h-16 rounded-2xl bg-white border-2 border-black text-black flex items-center justify-center mb-4">
         <Coffee className="w-8 h-8" />
       </div>
