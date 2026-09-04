@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -21,6 +22,7 @@ import { triggerHapticFeedback } from "../services/haptics";
 interface LessonDetailModalProps {
   lesson: NormalizedLesson | null;
   onClose: () => void;
+  initialSnap?: SheetSnap;
 }
 
 type SheetSnap = "half" | "full";
@@ -28,16 +30,31 @@ type SheetSnap = "half" | "full";
 export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   lesson,
   onClose,
+  initialSnap,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [snapState, setSnapState] = useState<SheetSnap>("half");
+  const [snapState, setSnapState] = useState<SheetSnap>(() => {
+    if (initialSnap) return initialSnap;
+    if (!lesson) return "half";
+    const isDesktop =
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 768px)").matches;
+    return isDesktop ? "full" : "half";
+  });
 
   useEffect(() => {
     if (lesson) {
-      setSnapState("half");
+      if (initialSnap) {
+        setSnapState(initialSnap);
+      } else {
+        const isDesktop =
+          typeof window !== "undefined" &&
+          window.matchMedia("(min-width: 768px)").matches;
+        setSnapState(isDesktop ? "full" : "half");
+      }
       triggerHapticFeedback();
     }
-  }, [lesson]);
+  }, [lesson, initialSnap]);
 
   const colorTheme = lesson ? getLessonColorTheme(lesson) : null;
 
@@ -94,10 +111,12 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
     },
   };
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {lesson && colorTheme && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
           {/* Backdrop with fade transition */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -367,6 +386,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

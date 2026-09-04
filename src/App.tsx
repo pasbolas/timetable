@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import moment from "moment-timezone";
 import { useSelectedProgram } from "./hooks/useSelectedProgram";
 import { useGetLessons } from "./hooks/useGetLessons";
@@ -12,6 +12,7 @@ import { CourseYearSetupModal } from "./components/CourseYearSetupModal";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { InteractiveTour } from "./components/InteractiveTour";
 import { AmbientBackground } from "./components/AmbientBackground";
+import { DesktopWeekGrid } from "./components/DesktopWeekGrid";
 import { TIMETABLE_CONFIG } from "./config/timetableConfig";
 import { StorageService } from "./services/storage";
 import { ProgramSearchResult } from "./types/timetable";
@@ -31,6 +32,19 @@ export function App() {
   const [isCourseSetupOpen, setIsCourseSetupOpen] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [isMandatoryCourseSelectOpen, setIsMandatoryCourseSelectOpen] = useState(false);
+
+  // Responsive breakpoint detector for desktop vs mobile behavior
+  const [isMobile, setIsMobile] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // First-time onboarding sequence: Tour -> Mandatory Unskippable Course Selection
   useEffect(() => {
@@ -75,13 +89,14 @@ export function App() {
   const activeDateKey = activeDate.format("YYYY-MM-DD");
   const activeDayData = schedule.find((d) => d.dateKey === activeDateKey);
 
+  // Prevent page scrolling on mobile when a single day has no classes
   const isNoClassesDay =
+    isMobile &&
     !isLoading &&
     !error &&
     activeDayData !== undefined &&
     activeDayData.lessons.length === 0;
 
-  // Prevent page scrolling on days without classes or weekend breaks
   useEffect(() => {
     if (isNoClassesDay) {
       window.scrollTo(0, 0);
@@ -100,6 +115,16 @@ export function App() {
     };
   }, [isNoClassesDay]);
 
+  // State for toggling 7 days vs 5 days on desktop
+  const [showSevenDays, setShowSevenDays] = useState(false);
+
+  const hasWeekendClasses = useMemo(() => {
+    return schedule.some((d) => {
+      const isoDay = d.day.isoWeekday();
+      return (isoDay === 6 || isoDay === 7) && d.lessons.length > 0;
+    });
+  }, [schedule]);
+
   const handleGoToToday = () => {
     setActiveDate(moment().tz(TIMETABLE_CONFIG.timezone));
   };
@@ -108,20 +133,20 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative ${
-        isNoClassesDay
+      className={`w-full bg-transparent text-black flex flex-col selection:bg-black selection:text-white relative overflow-x-hidden ${
+        isNoClassesDay || !isMobile
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"
       }`}
       style={{
-        minHeight: isNoClassesDay ? undefined : "calc(100dvh + env(safe-area-inset-bottom, 0px))",
-        height: isNoClassesDay ? "100dvh" : undefined,
+        minHeight: isNoClassesDay || !isMobile ? undefined : "calc(100dvh + env(safe-area-inset-bottom, 0px))",
+        height: isNoClassesDay || !isMobile ? "100dvh" : undefined,
       }}
     >
       {/* Ambient background with dot grid and floating pink and blue balls */}
       <AmbientBackground />
 
-      {/* Pinned Minimal Top Header */}
+      {/* Pinned Combined Top Header */}
       <TopBar
         selectedProgram={selectedProgram}
         onOpenMenu={() => setIsMenuOpen(true)}
@@ -129,24 +154,50 @@ export function App() {
         isTodayActive={isTodayActive}
         isOffline={isOfflineData}
         isLoading={isLoading}
+        activeDate={activeDate}
+        onSelectDate={setActiveDate}
+        weekSchedule={schedule}
+        showSevenDays={showSevenDays}
+        onToggleSevenDays={setShowSevenDays}
+        hasWeekendClasses={hasWeekendClasses}
       />
 
-      {/* Main Timeline Stream */}
-      <main className="flex-1 flex flex-col relative z-10">
-        <DayTimeline
-          activeDate={activeDate}
-          dayData={activeDayData}
-          isLoading={isLoading}
-          error={error}
-          onRetry={reload}
-          currentLiveTime={currentTime}
-          isToday={isTodayActive}
-          isLessonActive={isLessonActive}
-          isLessonPast={isLessonPast}
-        />
+      {/* Main Schedule Container */}
+      <main className="flex-1 min-h-0 flex flex-col relative z-10 overflow-hidden">
+        {/* Desktop: Full Week 2D Grid Stream (No bottom scrollbar/dock) */}
+        <div className="hidden md:flex flex-1 min-h-0 flex-col w-full overflow-hidden">
+          <DesktopWeekGrid
+            activeDate={activeDate}
+            onSelectDate={setActiveDate}
+            weekSchedule={schedule}
+            isLoading={isLoading}
+            error={error}
+            onRetry={reload}
+            currentLiveTime={currentTime}
+            isToday={isToday}
+            isLessonActive={isLessonActive}
+            isLessonPast={isLessonPast}
+            showSevenDays={showSevenDays}
+          />
+        </div>
+
+        {/* Mobile: Focused Single-Day Stream */}
+        <div className="flex md:hidden flex-1 flex-col w-full">
+          <DayTimeline
+            activeDate={activeDate}
+            dayData={activeDayData}
+            isLoading={isLoading}
+            error={error}
+            onRetry={reload}
+            currentLiveTime={currentTime}
+            isToday={isTodayActive}
+            isLessonActive={isLessonActive}
+            isLessonPast={isLessonPast}
+          />
+        </div>
       </main>
 
-      {/* Footer Date Selector Dock Fixed to the Very Bottom */}
+      {/* Footer Date Selector Dock (Mobile Only, hidden on Desktop) */}
       <WeekDateStrip
         activeDate={activeDate}
         onSelectDate={setActiveDate}

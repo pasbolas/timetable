@@ -155,3 +155,14 @@ body {
   animation: float-ball-4 25s ease-in-out infinite;
 }
 
+/* Indeterminate subtle progress bar */
+@keyframes indeterminate-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(300%); }
+}
+
+.animate-indeterminate-bar {
+  animation: indeterminate-bar 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
