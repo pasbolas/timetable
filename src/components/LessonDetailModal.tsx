@@ -12,6 +12,7 @@ import {
   Users,
   ChevronUp,
   ChevronDown,
+  Heart,
 } from "lucide-react";
 import { Button } from "@heroui/react";
 import { NormalizedLesson } from "../types/timetable";
@@ -360,7 +361,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-semibold text-zinc-400 hidden sm:inline">
-                        Tap group pill to favourite
+                        Tap heart to favourite
                       </span>
                       <span className="text-[11px] font-bold text-black bg-white px-2.5 py-0.5 rounded-full border border-black">
                         {lesson.Locations.length} Groups
@@ -394,48 +395,58 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                             isFav ? "ring-2 ring-black bg-zinc-50/80 shadow-sm" : ""
                           }`}
                         >
-                          {/* Header: Group Badge + Room Tag */}
-                          <div className="flex items-center justify-between gap-2">
-                            <button
-                              type="button"
-                              onClick={() => handleToggleFavoriteGroup(groupLabel)}
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl font-bold text-xs tracking-tight border transition-all cursor-pointer select-none active:scale-95 group/pill ${
-                                isFav
-                                  ? "bg-black text-white border-black ring-1 ring-black shadow-xs"
-                                  : "bg-black text-white border-black hover:bg-zinc-800"
-                              }`}
-                              title={
-                                isFav
-                                  ? `${groupLabel} is your favourite group for this module (tap to remove)`
-                                  : `Tap to set ${groupLabel} as your group for this module`
-                              }
-                            >
-                              <img
-                                src="/bookmark-star.png"
-                                alt="Bookmark"
-                                className={`w-3.5 h-3.5 object-contain shrink-0 transition-all ${
-                                  isFav
-                                    ? "filter-none scale-110 drop-shadow-sm"
-                                    : "filter grayscale opacity-60 group-hover/pill:opacity-100 group-hover/pill:scale-105"
-                                }`}
-                              />
-                              <span>{groupLabel}</span>
-                            </button>
-
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-black">
-                              <MapPin className="w-3.5 h-3.5 text-black shrink-0" />
-                              <span className="text-xs font-black text-black">
-                                {roomCode}
+                          {/* Header: Group Badge + Room Tag & Favourite Heart Button */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1.5 flex-1 min-w-0">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black text-white font-bold text-xs tracking-tight border border-black">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                {groupLabel}
                               </span>
+
+                              {/* Room Specification (e.g. Specialist Computer Lab 5) */}
+                              {roomDesc && (
+                                <div className="text-xs font-bold text-black pl-0.5 leading-relaxed">
+                                  {roomDesc}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Right side: Room Tag with Heart Favourite Button under it */}
+                            <div className="flex flex-col items-end gap-1.5 shrink-0">
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-black">
+                                <MapPin className="w-3.5 h-3.5 text-black shrink-0" />
+                                <span className="text-xs font-black text-black">
+                                  {roomCode}
+                                </span>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleToggleFavoriteGroup(groupLabel)}
+                                className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer select-none active:scale-90 border ${
+                                  isFav
+                                    ? "bg-red-50 text-red-600 border-red-400 shadow-xs"
+                                    : "bg-white text-zinc-500 hover:text-red-500 border-black/20 hover:border-black/50"
+                                }`}
+                                title={
+                                  isFav
+                                    ? `Remove ${groupLabel} from favourites`
+                                    : `Favourite ${groupLabel}`
+                                }
+                              >
+                                <Heart
+                                  className={`w-3.5 h-3.5 transition-transform ${
+                                    isFav
+                                      ? "fill-red-500 text-red-500 scale-110"
+                                      : "text-zinc-400 hover:text-red-500"
+                                  }`}
+                                />
+                                <span className="text-[10px] font-bold">
+                                  {isFav ? "Favourited" : "Favourite"}
+                                </span>
+                              </button>
                             </div>
                           </div>
-
-                          {/* Room Specification (e.g. Specialist Computer Lab 5) */}
-                          {roomDesc && (
-                            <div className="text-xs font-bold text-black pl-1 leading-relaxed">
-                              {roomDesc}
-                            </div>
-                          )}
 
                           {/* Instructor Line */}
                           {staffFormatted && (
