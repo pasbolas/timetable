@@ -130,7 +130,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     const containerWidth = container.clientWidth;
     const elOffset = targetEl.offsetLeft;
     const elWidth = targetEl.clientWidth;
-    const targetScroll = Math.max(0, elOffset - containerWidth / 2 + elWidth / 2);
+    const targetScroll = Math.round(Math.max(0, elOffset - containerWidth / 2 + elWidth / 2));
 
     // Cancel any previous in-flight animation
     if (animFrameRef.current !== null) {
@@ -163,8 +163,8 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     // Temporarily disable CSS scroll-snap so the browser engine doesn't snap-zap
     container.style.scrollSnapType = "none";
 
-    // Dynamic duration based on distance: ~260ms for 1 day, up to ~380ms for longer leaps
-    const duration = Math.min(380, Math.max(260, Math.abs(distance) * 0.9));
+    // Dynamic duration based on distance: ~300ms for 1-2 days, up to ~420ms for longer leaps
+    const duration = Math.min(420, Math.max(300, Math.abs(distance) * 0.9));
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -195,7 +195,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     if (isExpanded) return;
 
     const activeDateKey = activeDate.format("YYYY-MM-DD");
-    // If the change came from the user's manual scroll settling, it's already centered!
+    // If the change came from the user's manual scroll settling or direct pill click, already handled!
     if (lastSelectedDateRef.current === activeDateKey) {
       return;
     }
@@ -204,16 +204,27 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
     centerDate(activeDateKey, true);
   }, [activeDate, isExpanded, centerDate]);
 
-  // Initial alignment on mount and whenever returning from expanded view
+  // Re-center when returning from expanded calendar view
+  const prevExpandedRef = useRef(isExpanded);
   useEffect(() => {
-    if (!isExpanded) {
+    if (prevExpandedRef.current && !isExpanded) {
+      centerDate(activeDate.format("YYYY-MM-DD"), true);
+    }
+    prevExpandedRef.current = isExpanded;
+  }, [isExpanded, activeDate, centerDate]);
+
+  // Initial alignment on mount only (instant without slide-in artifact)
+  const isMountedRef = useRef(false);
+  useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
       centerDate(activeDate.format("YYYY-MM-DD"), false);
       const timer = setTimeout(() => {
         centerDate(activeDate.format("YYYY-MM-DD"), false);
-      }, 100);
+      }, 80);
       return () => clearTimeout(timer);
     }
-  }, [isExpanded, centerDate, activeDate]);
+  }, [centerDate, activeDate]);
 
   // Recalculate centering on window resize
   useEffect(() => {
