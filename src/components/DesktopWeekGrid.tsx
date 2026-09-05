@@ -513,6 +513,9 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                     const isLecture =
                       lesson.EventType?.toLowerCase().includes("lecture") ||
                       lesson.EventType?.toLowerCase() === "lec";
+                    const isTutorial =
+                      Boolean(lesson.EventType && /\b(tut|tutorial|tutorials)\b/i.test(lesson.EventType)) ||
+                      Boolean(lesson.Description && /\b(tutorial|tutorials)\b/i.test(lesson.Description));
 
                     return (
                       <div
@@ -529,6 +532,8 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                             ? "lecture-widget"
                             : isLab
                             ? "lab-widget"
+                            : isTutorial
+                            ? "tutorial-widget"
                             : "border-white bg-black hover:bg-zinc-900"
                         } hover:shadow-md hover:-translate-y-0.5 ${
                           active
@@ -542,7 +547,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         )} – ${lesson.EndDateTime.format("HH:mm")})`}
                       >
                         {/* Left accent bar */}
-                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : isTutorial ? "tutorial-accent-bar" : "bg-white"}`} />
 
                         {/* Top: Time + Type Badge */}
                         <div className="flex items-center justify-between gap-1 leading-none pl-1">
@@ -556,6 +561,8 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                                 ? "lecture-badge text-white"
                                 : isLab
                                 ? "lab-badge text-white"
+                                : isTutorial
+                                ? "tutorial-badge"
                                 : "bg-white text-black"
                             }`}
                           >

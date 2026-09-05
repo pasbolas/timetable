@@ -61,6 +61,18 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
   const colorTheme = lesson ? getLessonColorTheme(lesson) : null;
   const moduleKey = lesson ? getLessonModuleKey(lesson) : "";
+  const isLab = Boolean(
+    lesson?.EventType?.toLowerCase().includes("lab") ||
+    lesson?.collapsedLocations
+  );
+  const isLecture = Boolean(
+    lesson?.EventType?.toLowerCase().includes("lecture") ||
+    lesson?.EventType?.toLowerCase() === "lec"
+  );
+  const isTutorial = Boolean(
+    (lesson?.EventType && /\b(tut|tutorial|tutorials)\b/i.test(lesson.EventType)) ||
+    (lesson?.Description && /\b(tutorial|tutorials)\b/i.test(lesson.Description))
+  );
   const [favGroup, setFavGroup] = useState<string | null>(() =>
     moduleKey ? StorageService.getFavoriteGroupForModule(moduleKey) : null
   );
@@ -260,20 +272,18 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               <div>
                 <div
                   className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 border ${
-                    lesson.EventType?.toLowerCase().includes("lecture") ||
-                    lesson.EventType?.toLowerCase() === "lec"
+                    isLecture
                       ? "lecture-badge text-white border-transparent"
-                      : lesson.EventType?.toLowerCase().includes("lab") || Boolean(lesson.collapsedLocations)
+                      : isLab
                       ? "lab-badge text-white border-transparent"
+                      : isTutorial
+                      ? "tutorial-badge border-transparent"
                       : "bg-white text-black border-white"
                   }`}
                 >
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      lesson.EventType?.toLowerCase().includes("lecture") ||
-                      lesson.EventType?.toLowerCase() === "lec" ||
-                      lesson.EventType?.toLowerCase().includes("lab") ||
-                      Boolean(lesson.collapsedLocations)
+                      isLecture || isLab
                         ? "bg-white"
                         : "bg-black"
                     }`}

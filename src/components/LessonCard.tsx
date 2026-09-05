@@ -24,6 +24,9 @@ export const LessonCard: React.FC<LessonCardProps> = ({
   const isLecture =
     lesson.EventType?.toLowerCase().includes("lecture") ||
     lesson.EventType?.toLowerCase() === "lec";
+  const isTutorial =
+    Boolean(lesson.EventType && /\b(tut|tutorial|tutorials)\b/i.test(lesson.EventType)) ||
+    Boolean(lesson.Description && /\b(tutorial|tutorials)\b/i.test(lesson.Description));
 
   return (
     <div
@@ -34,6 +37,8 @@ export const LessonCard: React.FC<LessonCardProps> = ({
           ? "lecture-widget"
           : isLab
           ? "lab-widget"
+          : isTutorial
+          ? "tutorial-widget"
           : "border-white bg-black hover:bg-zinc-900"
       } ${
         isActiveNow
@@ -44,7 +49,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       }`}
     >
       {/* Sleek vertical accent line */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
+      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : isTutorial ? "tutorial-accent-bar" : "bg-white"}`} />
 
       {/* Top Header: Time and Event Type Pill */}
       <div className="flex items-center justify-between gap-2 mb-1.5 pl-1">
@@ -66,6 +71,8 @@ export const LessonCard: React.FC<LessonCardProps> = ({
               ? "lecture-badge text-white border-transparent"
               : isLab
               ? "lab-badge text-white"
+              : isTutorial
+              ? "tutorial-badge"
               : "bg-white text-black border-white"
           }`}
         >

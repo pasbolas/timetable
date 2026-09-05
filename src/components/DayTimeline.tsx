@@ -485,6 +485,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               const isLecture =
                 lesson.EventType?.toLowerCase().includes("lecture") ||
                 lesson.EventType?.toLowerCase() === "lec";
+              const isTutorial =
+                Boolean(lesson.EventType && /\b(tut|tutorial|tutorials)\b/i.test(lesson.EventType)) ||
+                Boolean(lesson.Description && /\b(tutorial|tutorials)\b/i.test(lesson.Description));
 
               const active =
                 isToday &&
@@ -507,6 +510,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                       ? "lecture-widget"
                       : isLab
                       ? "lab-widget"
+                      : isTutorial
+                      ? "tutorial-widget"
                       : "border-white bg-black hover:bg-zinc-900"
                   } ${
                     isCompact
@@ -523,7 +528,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                   }`}
                 >
                   {/* Left accent vertical strip */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
+                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : isTutorial ? "tutorial-accent-bar" : "bg-white"}`} />
 
                   {/* --- TIER 1: COMPACT LAYOUT (1 HOUR / <= 60 MINS) --- */}
                   {isCompact && (
@@ -541,6 +546,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                                 ? "lecture-badge text-white border-transparent"
                                 : isLab
                                 ? "lab-badge text-white"
+                                : isTutorial
+                                ? "tutorial-badge"
                                 : "bg-white text-black border-white"
                             }`}
                           >
@@ -600,6 +607,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                               ? "lecture-badge text-white border-transparent"
                               : isLab
                               ? "lab-badge text-white"
+                              : isTutorial
+                              ? "tutorial-badge"
                               : "bg-white text-black border-white"
                           }`}
                         >
@@ -666,6 +675,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                               ? "lecture-badge text-white border-transparent"
                               : isLab
                               ? "lab-badge text-white"
+                              : isTutorial
+                              ? "tutorial-badge"
                               : "bg-white text-black border-white"
                           }`}
                         >

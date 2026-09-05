@@ -274,8 +274,8 @@ html.light .drawer-backdrop {
 }
 
 /* Typography in Light mode */
-html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge),
-html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge) {
+html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge),
+html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge) {
   color: #000000 !important;
 }
 
@@ -542,4 +542,65 @@ html.light .lecture-badge {
   color: #ffffff !important;
   border-color: #228B22 !important;
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* TUTORIAL WIDGET & BADGE STYLES (Light shade of white tint)                 */
+/* -------------------------------------------------------------------------- */
+.tutorial-widget {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.tutorial-widget:hover {
+  background-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.tutorial-accent-bar {
+  background-color: #ffffff !important;
+}
+
+.tutorial-badge,
+[class*="tutorial-badge"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+}
+
+.tutorial-badge *,
+[class*="tutorial-badge"] * {
+  color: #000000 !important;
+}
+
+/* Light Mode: Delicate, light shade of white */
+html[data-theme="light"] .tutorial-widget,
+html.light .tutorial-widget {
+  background-color: #f8fafc !important; /* Tailwind slate-50: crisp, elegant light shade of white */
+  border-color: #cbd5e1 !important; /* Tailwind slate-300: clean subtle border */
+}
+
+html[data-theme="light"] .tutorial-widget:hover,
+html.light .tutorial-widget:hover {
+  background-color: #f1f5f9 !important; /* Tailwind slate-100 */
+}
+
+html[data-theme="light"] .tutorial-accent-bar,
+html.light .tutorial-accent-bar {
+  background-color: #64748b !important; /* Slate-500 accent bar */
+}
+
+html[data-theme="light"] .tutorial-badge,
+html.light .tutorial-badge {
+  background-color: #e2e8f0 !important; /* Slate-200 badge */
+  color: #0f172a !important; /* Slate-900 text */
+  border-color: #cbd5e1 !important;
+}
+
+html[data-theme="light"] .tutorial-badge *,
+html.light .tutorial-badge * {
+  color: #0f172a !important;
+}
+
 
