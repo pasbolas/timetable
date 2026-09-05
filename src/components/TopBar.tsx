@@ -90,7 +90,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none w-full max-w-full overflow-hidden top-bar-surface"
+      className="sticky top-0 z-30 bg-black border-b border-white/20 transition-colors select-none w-full max-w-full overflow-hidden top-bar-surface"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="max-w-[1600px] h-[58px] mx-auto px-2.5 sm:px-4 lg:px-6 flex items-center justify-between gap-2 sm:gap-3 w-full max-w-full">
@@ -98,10 +98,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-1.5 sm:gap-2 text-left py-1 px-2 sm:px-2.5 rounded-xl border-2 border-white bg-black hover:bg-zinc-900 active:scale-98 transition-colors group flex-1 min-w-0 max-w-[210px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm"
+          className="flex items-center gap-1.5 sm:gap-2 text-left py-1 px-2 sm:px-2.5 rounded-xl border border-white/25 bg-zinc-950 hover:bg-zinc-900 hover:border-white/40 active:scale-98 transition-colors group flex-1 min-w-0 max-w-[210px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm"
           title="Open course details and menu"
         >
-          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-white text-black border border-white">
+          <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-zinc-800 text-zinc-100 border border-zinc-700">
             {shortCode}
           </span>
           <span className="text-xs font-bold text-white truncate min-w-0 flex-1">
@@ -116,14 +116,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             <div className="flex items-center gap-0.5 bg-zinc-900 p-0.5 rounded-xl border border-white/20">
               <button
                 onClick={handlePrevWeek}
-                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white transition-colors"
+                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white/40 transition-colors"
                 title="Previous week"
               >
                 <ChevronLeft className="w-4 h-4 text-white" />
               </button>
               <button
                 onClick={handleNextWeek}
-                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white transition-colors"
+                className="p-1 rounded-lg hover:bg-zinc-800 text-white border border-transparent hover:border-white/40 transition-colors"
                 title="Next week"
               >
                 <ChevronRight className="w-4 h-4 text-white" />
@@ -134,7 +134,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             {!isTodayActive && (
               <button
                 onClick={onGoToToday}
-                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-xl bg-black hover:bg-white hover:text-black text-white border-2 border-white transition-colors shadow-xs"
+                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white border border-white/25 transition-colors shadow-xs"
                 title="Jump to current week"
               >
                 <Sparkles className="w-3 h-3" />
@@ -175,12 +175,12 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Desktop 5 Days / 7 Days Toggle */}
           {onToggleSevenDays && (
-            <div className="hidden md:flex items-center rounded-xl border-2 border-white bg-black p-0.5 text-xs font-bold">
+            <div className="hidden md:flex items-center rounded-xl border border-white/20 bg-zinc-950 p-0.5 text-xs font-bold">
               <button
                 onClick={() => onToggleSevenDays(false)}
                 className={`px-2 py-0.5 rounded-lg transition-colors ${
                   !displaySevenDays
-                    ? "bg-white text-black"
+                    ? "bg-zinc-800 text-white border border-zinc-700"
                     : "text-white hover:bg-zinc-900"
                 }`}
               >
@@ -190,7 +190,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 onClick={() => onToggleSevenDays(true)}
                 className={`px-2 py-0.5 rounded-lg transition-colors flex items-center gap-1 ${
                   displaySevenDays
-                    ? "bg-white text-black"
+                    ? "bg-zinc-800 text-white border border-zinc-700"
                     : "text-white hover:bg-zinc-900"
                 }`}
               >
@@ -204,7 +204,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Offline indicator */}
           {isOffline && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border-2 border-white bg-black text-white">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border border-white/20 bg-zinc-950 text-white">
               <WifiOff className="w-3 h-3 text-white" />
               Offline
             </span>
@@ -218,7 +218,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               onPress={onGoToToday}
               data-tour="today-button"
               startContent={<Sparkles className="w-3.5 h-3.5 text-white shrink-0" />}
-              className="md:hidden h-8 px-2 text-xs font-bold rounded-xl shrink-0 bg-black text-white border-2 border-white hover:bg-white hover:text-black transition-colors"
+              className="md:hidden h-8 px-2 text-xs font-bold rounded-xl shrink-0 bg-zinc-950 text-white border border-white/30 hover:bg-zinc-800 transition-colors"
               title="Jump to today"
             >
               Today
@@ -233,7 +233,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onPress={onOpenMenu}
             data-tour="menu-button"
             isLoading={isLoading}
-            className="w-8 h-8 rounded-xl text-white border-2 border-white bg-black hover:bg-zinc-900 shrink-0"
+            className="w-8 h-8 rounded-xl text-white border border-white/25 bg-zinc-950 hover:bg-zinc-900 hover:border-white/40 shrink-0"
             title="Menu & Settings"
           >
             <SlidersHorizontal className="w-4 h-4 text-white shrink-0" />

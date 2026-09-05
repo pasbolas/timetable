@@ -107,17 +107,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       onClick={isMandatory ? undefined : onClose}
     >
       <div
-        className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[85vh] bg-black text-white sm:rounded-2xl border-2 border-white flex flex-col overflow-hidden"
+        className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[85vh] bg-black text-white sm:rounded-2xl border border-white/20 flex flex-col overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mandatory First-Launch Header Banner */}
         {isMandatory && (
           <div
-            className="px-5 pt-5 pb-3.5 bg-black border-b-2 border-white"
+            className="px-5 pt-5 pb-3.5 bg-black border-b border-white/15"
             style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
           >
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-white text-black border border-white mb-2">
-              <GraduationCap className="w-3.5 h-3.5 text-black" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-zinc-800 text-zinc-100 border border-zinc-700 mb-2">
+              <GraduationCap className="w-3.5 h-3.5 text-zinc-300" />
               Required Setup • Select Course
             </div>
             <h2 className="text-lg sm:text-xl font-black text-white leading-tight">
@@ -131,7 +131,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
         {/* Modal Header & Search Bar */}
         <div
-          className="p-4 border-b-2 border-white flex items-center gap-3 bg-black"
+          className="p-4 border-b border-white/15 flex items-center gap-3 bg-black"
           style={{
             paddingTop: isMandatory ? "16px" : "max(env(safe-area-inset-top, 0px), 16px)",
           }}
@@ -148,7 +148,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   ? "Type your course code or title (e.g. TU856, Computer Science)..."
                   : "Search course code or title (e.g. TU856, Computer Science)..."
               }
-              className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-black text-white border-2 border-white placeholder-zinc-400 text-sm focus:outline-none focus:ring-1 focus:ring-white transition-all"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-zinc-950 text-white border border-white/20 placeholder-zinc-400 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-500 transition-all"
             />
             {query && (
               <button
@@ -162,7 +162,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           {!isMandatory && (
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-white border border-white hover:bg-zinc-800 transition-colors"
+              className="p-2 rounded-xl text-white border border-white/20 hover:bg-zinc-800 transition-colors"
               title="Close search"
             >
               <X className="w-5 h-5 text-white" />
@@ -196,15 +196,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     <button
                       key={prog.Identity}
                       onClick={() => handleSelect(prog)}
-                      className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-center justify-between group ${
+                      className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between group ${
                         isCurrent
-                          ? "bg-zinc-800 border-white text-white"
-                          : "bg-black hover:bg-zinc-900 border-white text-white"
+                          ? "bg-zinc-800 border-white/40 text-white"
+                          : "bg-zinc-950 hover:bg-zinc-900 border-white/20 text-white"
                       }`}
                     >
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-white text-black shrink-0 border border-white">
+                          <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-100 shrink-0 border border-zinc-700">
                             {shortCode}
                           </span>
                           {isCurrent && (
@@ -256,15 +256,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     <button
                       key={prog.Identity}
                       onClick={() => handleSelect(prog)}
-                      className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-center justify-between group ${
+                      className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between group ${
                         isCurrent
-                          ? "bg-zinc-800 border-white text-white"
-                          : "bg-black hover:bg-zinc-900 border-white text-white"
+                          ? "bg-zinc-800 border-white/40 text-white"
+                          : "bg-zinc-950 hover:bg-zinc-900 border-white/20 text-white"
                       }`}
                     >
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-white text-black shrink-0 border border-white">
+                          <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-100 shrink-0 border border-zinc-700">
                             {shortCode}
                           </span>
                           {isCurrent && (
@@ -287,7 +287,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-3 bg-black border-t-2 border-white text-center text-xs font-bold text-white">
+        <div className="p-3 bg-black border-t border-white/15 text-center text-xs font-bold text-zinc-400">
           Scientia EU Timetabler • TU Dublin
         </div>
       </div>

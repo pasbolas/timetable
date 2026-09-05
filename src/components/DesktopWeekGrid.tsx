@@ -465,7 +465,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: "4px",
                           right: "4px",
                         }}
-                        className="absolute rounded-lg border border-white/30 bg-black/70 backdrop-blur-xs bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-white/70 pointer-events-none z-0"
+                        className="absolute rounded-lg border border-white/30 bg-black bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-white/70 pointer-events-none z-0"
                       >
                         <div className="flex items-center gap-1 truncate">
                           <Coffee className="w-3 h-3 text-white/60 shrink-0" />

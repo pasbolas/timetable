@@ -388,64 +388,56 @@ html.light .fill-zinc-500 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* TIMETABLE WIDGETS GLASSMORPHISM (Dark Mode Blur & Frosted Glass)           */
+/* TIMETABLE WIDGETS OPAQUE BACKGROUNDS (Solid, Non-Translucent)              */
 /* -------------------------------------------------------------------------- */
 .timetable-widget {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  opacity: 1;
 }
 
 /* Default / generic lesson widgets in Dark Mode */
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 :root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
-  background-color: rgba(10, 10, 12, 0.7) !important;
+  background-color: #111114 !important;
   border-color: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
 :root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
-  background-color: rgba(24, 24, 28, 0.82) !important;
+  background-color: #1a1a20 !important;
 }
 
-/* Break pills in Dark Mode with blurred frosted background */
+/* Break pills in Dark Mode with solid opaque background */
 html[data-theme="dark"] .bg-break-stripes,
 html.dark .bg-break-stripes,
 :root:not([data-theme="light"]) .bg-break-stripes {
-  background-color: rgba(10, 10, 12, 0.6) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: #0c0c0e !important;
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(10, 10, 12, 0.6),
-    rgba(10, 10, 12, 0.6) 7px,
-    rgba(255, 255, 255, 0.12) 7px,
-    rgba(255, 255, 255, 0.12) 14px
+    #0c0c0e,
+    #0c0c0e 7px,
+    #1f1f26 7px,
+    #1f1f26 14px
   ) !important;
 }
 
-/* Light mode resets backdrop blur for solid clean rendering */
+/* Light mode clean rendering */
 html[data-theme="light"] .timetable-widget,
 html.light .timetable-widget {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  opacity: 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* LAB WIDGET & BADGE STYLES (Light shade of orange tint)                    */
+/* LAB WIDGET & BADGE STYLES (Opaque rich terracotta/amber)                  */
 /* -------------------------------------------------------------------------- */
 .lab-widget {
-  background-color: rgba(249, 115, 22, 0.12) !important;
-  border-color: rgba(251, 146, 60, 0.5) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background-color: #23140a !important;
+  border-color: rgba(251, 146, 60, 0.55) !important;
 }
 
 .lab-widget:hover {
-  background-color: rgba(249, 115, 22, 0.2) !important;
+  background-color: #2e1a0d !important;
 }
 
 .lab-accent-bar {
@@ -488,19 +480,16 @@ html.light .lab-badge {
   border-color: #ea580c !important;
 }
 
-
 /* -------------------------------------------------------------------------- */
-/* LECTURE WIDGET & BADGE STYLES (Soft pastel sage #c2deb9)                   */
+/* LECTURE WIDGET & BADGE STYLES (Opaque deep sage/forest)                   */
 /* -------------------------------------------------------------------------- */
 .lecture-widget {
-  background-color: rgba(194, 222, 185, 0.25) !important;
+  background-color: #132216 !important;
   border-color: rgba(194, 222, 185, 0.6) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 .lecture-widget:hover {
-  background-color: rgba(194, 222, 185, 0.35) !important;
+  background-color: #192c1e !important;
 }
 
 .lecture-accent-bar {
@@ -519,13 +508,11 @@ html.light .lab-badge {
   color: #122810 !important;
 }
 
-/* Light Mode: Pastel sage green (#c2deb9) slightly opaque with clean borders */
+/* Light Mode: Pastel sage green (#c2deb9) completely opaque */
 html[data-theme="light"] .lecture-widget,
 html.light .lecture-widget {
-  background-color: rgba(194, 222, 185, 0.88) !important; /* Soft sage pastel from reference */
+  background-color: #c2deb9 !important; /* Soft sage pastel, completely opaque */
   border-color: #8bb380 !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 html[data-theme="light"] .lecture-widget:hover,
@@ -550,19 +537,16 @@ html.light .lecture-badge * {
   color: #ffffff !important;
 }
 
-
 /* -------------------------------------------------------------------------- */
-/* TUTORIAL WIDGET & BADGE STYLES (Light shade of white tint)                 */
+/* TUTORIAL WIDGET & BADGE STYLES (Opaque slate-zinc)                        */
 /* -------------------------------------------------------------------------- */
 .tutorial-widget {
-  background-color: rgba(255, 255, 255, 0.09) !important;
+  background-color: #18181b !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 .tutorial-widget:hover {
-  background-color: rgba(255, 255, 255, 0.16) !important;
+  background-color: #242429 !important;
 }
 
 .tutorial-accent-bar {
@@ -571,7 +555,7 @@ html.light .lecture-badge * {
 
 .tutorial-badge,
 [class*="tutorial-badge"] {
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
   color: #000000 !important;
   border-color: #ffffff !important;
 }
@@ -584,8 +568,8 @@ html.light .lecture-badge * {
 /* Light Mode: Delicate, light shade of white */
 html[data-theme="light"] .tutorial-widget,
 html.light .tutorial-widget {
-  background-color: #f8fafc !important; /* Tailwind slate-50: crisp, elegant light shade of white */
-  border-color: #cbd5e1 !important; /* Tailwind slate-300: clean subtle border */
+  background-color: #f8fafc !important; /* Tailwind slate-50 */
+  border-color: #cbd5e1 !important; /* Tailwind slate-300 */
 }
 
 html[data-theme="light"] .tutorial-widget:hover,
@@ -595,13 +579,13 @@ html.light .tutorial-widget:hover {
 
 html[data-theme="light"] .tutorial-accent-bar,
 html.light .tutorial-accent-bar {
-  background-color: #64748b !important; /* Slate-500 accent bar */
+  background-color: #64748b !important;
 }
 
 html[data-theme="light"] .tutorial-badge,
 html.light .tutorial-badge {
-  background-color: #e2e8f0 !important; /* Slate-200 badge */
-  color: #0f172a !important; /* Slate-900 text */
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
   border-color: #cbd5e1 !important;
 }
 

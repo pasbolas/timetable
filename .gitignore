@@ -1,4 +1,4 @@
-﻿# Logs
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -31,3 +31,6 @@ dist-ssr/
 .env.test.local
 .env.production.local
 node_modules
+
+# Security & Audit Documentation
+SECURITY_AUDIT.md
