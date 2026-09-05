@@ -235,6 +235,14 @@ html.light .bg-break-stripes {
     rgba(0, 0, 0, 0.12) 7px,
     rgba(0, 0, 0, 0.12) 14px
   ) !important;
+  color: #18181b !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+html[data-theme="light"] .bg-break-stripes *,
+html.light .bg-break-stripes * {
+  color: #18181b !important;
+  stroke: #18181b !important;
 }
 
 /* Canvas, card, header, container backgrounds */

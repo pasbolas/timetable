@@ -466,15 +466,15 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: "4px",
                           right: "4px",
                         }}
-                        className="absolute rounded-lg border border-white/30 bg-black bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-white/70 pointer-events-none z-0"
+                        className="absolute rounded-lg border border-zinc-300 dark:border-white/20 bg-break-stripes overflow-hidden select-none flex items-center justify-between px-2 text-[10px] font-bold text-zinc-800 dark:text-zinc-200 pointer-events-none z-0"
                       >
                         <div className="flex items-center gap-1 truncate">
-                          <Coffee className="w-3 h-3 text-white/60 shrink-0" />
-                          <span className="truncate">
+                          <Coffee className="w-3 h-3 text-zinc-700 dark:text-zinc-300 shrink-0" />
+                          <span className="truncate text-zinc-800 dark:text-zinc-200">
                             Break ({breakItem.durationMinutes}m)
                           </span>
                         </div>
-                        <span className="text-[9px] text-white/50 shrink-0">
+                        <span className="text-[9px] text-zinc-600 dark:text-zinc-400 shrink-0 font-medium">
                           {breakItem.start.format("HH:mm")}
                         </span>
                       </div>
