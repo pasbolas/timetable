@@ -260,9 +260,16 @@ html.light .bg-black\/90 {
   background-color: rgba(255, 255, 255, 0.88) !important;
 }
 
-/* Modal and bottom sheet backdrops stay dim */
+/* Modal and bottom sheet backdrops stay dim & blurred */
+.drawer-backdrop {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 html[data-theme="light"] .fixed.inset-0.bg-black\/80,
-html.light .fixed.inset-0.bg-black\/80 {
+html.light .fixed.inset-0.bg-black\/80,
+html[data-theme="light"] .drawer-backdrop,
+html.light .drawer-backdrop {
   background-color: rgba(0, 0, 0, 0.45) !important;
 }
 
