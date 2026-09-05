@@ -90,21 +90,21 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none"
+      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none w-full max-w-full overflow-hidden"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      <div className="max-w-[1600px] h-[58px] mx-auto px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-3">
+      <div className="max-w-[1600px] h-[58px] mx-auto px-2.5 sm:px-4 lg:px-6 flex items-center justify-between gap-2 sm:gap-3 w-full max-w-full">
         {/* Left: Course Chip (Tap opens Menu Drawer) */}
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-2 overflow-hidden text-left py-1 px-2.5 rounded-xl border-2 border-white bg-black hover:bg-zinc-900 active:scale-98 transition-colors group shrink-0 max-w-[260px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm min-w-0"
+          className="flex items-center gap-1.5 sm:gap-2 text-left py-1 px-2 sm:px-2.5 rounded-xl border-2 border-white bg-black hover:bg-zinc-900 active:scale-98 transition-colors group flex-1 min-w-0 max-w-[210px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm"
           title="Open course details and menu"
         >
           <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-white text-black border border-white">
             {shortCode}
           </span>
-          <span className="text-xs font-bold text-white truncate">
+          <span className="text-xs font-bold text-white truncate min-w-0 flex-1">
             {programTitle}
           </span>
         </button>
@@ -217,8 +217,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="flat"
               onPress={onGoToToday}
               data-tour="today-button"
-              startContent={<Sparkles className="w-3.5 h-3.5 text-white" />}
-              className="md:hidden h-8 px-2.5 text-xs font-bold rounded-xl min-w-0 bg-black text-white border-2 border-white hover:bg-white hover:text-black transition-colors"
+              startContent={<Sparkles className="w-3.5 h-3.5 text-white shrink-0" />}
+              className="md:hidden h-8 px-2 text-xs font-bold rounded-xl shrink-0 bg-black text-white border-2 border-white hover:bg-white hover:text-black transition-colors"
               title="Jump to today"
             >
               Today
@@ -233,10 +233,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             onPress={onOpenMenu}
             data-tour="menu-button"
             isLoading={isLoading}
-            className="w-8 h-8 rounded-xl text-white border-2 border-white bg-black hover:bg-zinc-900"
+            className="w-8 h-8 rounded-xl text-white border-2 border-white bg-black hover:bg-zinc-900 shrink-0"
             title="Menu & Settings"
           >
-            <SlidersHorizontal className="w-4 h-4 text-white" />
+            <SlidersHorizontal className="w-4 h-4 text-white shrink-0" />
           </Button>
         </div>
       </div>

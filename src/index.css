@@ -8,12 +8,18 @@
 
 html {
   background-color: #000000;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body {
   background-color: #000000;
   color: #ffffff;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -27,6 +33,8 @@ body,
   min-height: -webkit-fill-available;
   margin: 0;
   padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
 }

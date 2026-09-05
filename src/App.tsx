@@ -141,7 +141,7 @@ export function App() {
 
   return (
     <div
-      className={`w-full bg-black text-white flex flex-col selection:bg-white selection:text-black relative overflow-x-clip ${
+      className={`w-full max-w-full bg-black text-white flex flex-col selection:bg-white selection:text-black relative overflow-x-hidden ${
         isNoClassesDay || !isMobile
           ? "h-screen h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none"
           : "min-h-screen"

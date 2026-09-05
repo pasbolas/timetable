@@ -78,13 +78,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full flex-1 flex flex-col">
+    <div className="w-full max-w-full overflow-x-hidden flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky flush below TopBar when scrolling lessons */}
       <div
-        className="z-20 bg-black border-b-2 border-white flex items-center justify-between px-4 sm:px-6 py-2.5 transition-colors shadow-xs"
+        className="z-20 bg-black border-b-2 border-white flex items-center justify-between px-3 sm:px-6 py-2.5 transition-colors shadow-xs w-full max-w-full"
         style={{
           position: lessons.length > 0 ? "sticky" : "relative",
-          top: lessons.length > 0 ? "calc(60px + env(safe-area-inset-top, 0px))" : undefined,
+          top: lessons.length > 0 ? "calc(58px + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
         <div className="flex items-baseline gap-2">
