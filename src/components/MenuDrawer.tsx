@@ -97,46 +97,63 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
-          {/* Backdrop with fade transition & background blur */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md cursor-pointer drawer-backdrop"
-            onClick={onClose}
-          />
+    <>
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
+            {/* Backdrop with fade transition & background blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-md cursor-pointer drawer-backdrop"
+              onClick={onClose}
+            />
 
-          {/* Clean Bottom Sheet */}
-          <motion.div
-            variants={{
-              hidden: {
-                y: "100%",
-              },
-              visible: {
-                y: 0,
-                transition: {
-                  type: "tween",
-                  ease: [0.16, 1, 0.3, 1], // Smooth cubic ease-out without overshoot or bounce
-                  duration: 0.3,
+            {/* Clean Bottom Sheet */}
+            <motion.div
+              variants={{
+                hidden: {
+                  y: "100%",
+                  scale: 1,
+                  opacity: 1,
                 },
-              },
-              exit: {
-                y: "100%",
-                transition: {
-                  type: "tween",
-                  ease: [0.32, 0, 0.67, 0],
-                  duration: 0.2,
+                visible: {
+                  y: 0,
+                  scale: 1,
+                  opacity: 1,
+                  transition: {
+                    type: "tween",
+                    ease: [0.16, 1, 0.3, 1], // Smooth cubic ease-out without overshoot or bounce
+                    duration: 0.3,
+                  },
                 },
-              },
-            }}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            drag="y"
-            dragConstraints={{ top: 0 }}
+                stacked: {
+                  y: 12,
+                  scale: 0.95,
+                  opacity: 0.65,
+                  transition: {
+                    type: "tween",
+                    ease: [0.16, 1, 0.3, 1],
+                    duration: 0.25,
+                  },
+                },
+                exit: {
+                  y: "100%",
+                  scale: 1,
+                  opacity: 1,
+                  transition: {
+                    type: "tween",
+                    ease: [0.32, 0, 0.67, 0],
+                    duration: 0.2,
+                  },
+                },
+              }}
+              initial="hidden"
+              animate={isMoreOpen ? "stacked" : "visible"}
+              exit="exit"
+              drag="y"
+              dragConstraints={{ top: 0 }}
             dragElastic={0.35}
             onDragEnd={(_, info) => {
               if (info.offset.y > 80 || info.velocity.y > 320) {
@@ -362,58 +379,61 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               Scientia Timetabler EU • Dublin (Europe/Dublin)
             </div>
           </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
 
-          {/* Secondary "More Settings" Bottom Sheet (Jumps up from bottom with background blur) */}
-          <AnimatePresence>
-            {isMoreOpen && (
-              <div className="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
-                {/* Backdrop for "More" with background blur */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/65 backdrop-blur-md cursor-pointer drawer-backdrop"
-                  onClick={() => setIsMoreOpen(false)}
-                />
+    {/* Secondary "More Settings" Bottom Sheet (Jumps up from bottom IN FRONT with background blur) */}
+    <AnimatePresence>
+      {isOpen && isMoreOpen && (
+        <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden pointer-events-auto select-none">
+          {/* Backdrop for "More" with background blur */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/75 backdrop-blur-md cursor-pointer drawer-backdrop"
+            onClick={() => setIsMoreOpen(false)}
+          />
 
-                {/* More Sheet Container */}
-                <motion.div
-                  variants={{
-                    hidden: {
-                      y: "100%",
-                    },
-                    visible: {
-                      y: 0,
-                      transition: {
-                        type: "tween",
-                        ease: [0.16, 1, 0.3, 1],
-                        duration: 0.3,
-                      },
-                    },
-                    exit: {
-                      y: "100%",
-                      transition: {
-                        type: "tween",
-                        ease: [0.32, 0, 0.67, 0],
-                        duration: 0.2,
-                      },
-                    },
-                  }}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  drag="y"
-                  dragConstraints={{ top: 0 }}
-                  dragElastic={0.35}
-                  onDragEnd={(_, info) => {
-                    if (info.offset.y > 80 || info.velocity.y > 320) {
-                      triggerHapticFeedback();
-                      setIsMoreOpen(false);
-                    }
-                  }}
-                  className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border-2 border-white overflow-hidden flex flex-col touch-pan-y"
-                  onClick={(e) => e.stopPropagation()}
-                >
+          {/* More Sheet Container */}
+          <motion.div
+            variants={{
+              hidden: {
+                y: "100%",
+              },
+              visible: {
+                y: 0,
+                transition: {
+                  type: "tween",
+                  ease: [0.16, 1, 0.3, 1],
+                  duration: 0.3,
+                },
+              },
+              exit: {
+                y: "100%",
+                transition: {
+                  type: "tween",
+                  ease: [0.32, 0, 0.67, 0],
+                  duration: 0.2,
+                },
+              },
+            }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            drag="y"
+            dragConstraints={{ top: 0 }}
+            dragElastic={0.35}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 80 || info.velocity.y > 320) {
+                triggerHapticFeedback();
+                setIsMoreOpen(false);
+              }
+            }}
+            className="relative z-[80] w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border-2 border-white overflow-hidden flex flex-col touch-pan-y shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
                   {/* Fixed Central Ambient Glow matching reference design */}
                   <div
                     className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none flex items-center justify-center"
@@ -642,8 +662,6 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               </div>
             )}
           </AnimatePresence>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-};
+        </>
+      );
+    };
