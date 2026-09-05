@@ -14,8 +14,6 @@ import {
   GraduationCap,
   Sun,
   Moon,
-  Flame,
-  Monitor,
   Palette,
   Check,
 } from "lucide-react";
@@ -54,7 +52,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   weekSchedule,
   onStartTour,
 }) => {
-  const { themeMode, resolvedTheme, setThemeMode } = useTheme();
+  const { themeMode, setThemeMode } = useTheme();
   const { code: shortCode, title: programTitle } = parseProgramCodeAndTitle(
     selectedProgram.Name,
     selectedProgram.Description
@@ -245,24 +243,18 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 <div className="flex items-center justify-between mb-2 px-0.5">
                   <div className="flex items-center gap-1.5 text-[11px] font-black text-white uppercase tracking-wider">
                     <Palette className="w-3.5 h-3.5 text-white" />
-                    <span>Colour Mode</span>
+                    <span>Theme</span>
                   </div>
                   <span className="text-[10px] font-bold text-zinc-400 capitalize">
-                    {themeMode === "system" ? `System (${resolvedTheme})` : themeMode}
+                    {themeMode}
                   </span>
                 </div>
 
-                {/* 2x2 Grid of Distinct Color Modes */}
+                {/* 2-Option Selector: Dark and Light */}
                 <div className="grid grid-cols-2 gap-2">
-                  {THEME_OPTIONS.slice(0, 4).map((opt) => {
+                  {THEME_OPTIONS.filter(o => o.id === 'dark' || o.id === 'light').map((opt) => {
                     const isSelected = themeMode === opt.id;
-                    const getIcon = () => {
-                      if (opt.id === "dark") return <Moon className="w-3.5 h-3.5" />;
-                      if (opt.id === "light") return <Sun className="w-3.5 h-3.5" />;
-                      if (opt.id === "midnight") return <Sparkles className="w-3.5 h-3.5" />;
-                      if (opt.id === "sunset") return <Flame className="w-3.5 h-3.5" />;
-                      return <Monitor className="w-3.5 h-3.5" />;
-                    };
+                    const Icon = opt.id === "dark" ? Moon : Sun;
 
                     return (
                       <button
@@ -294,7 +286,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                           </div>
                           <div className="min-w-0">
                             <div className="text-xs font-black truncate flex items-center gap-1">
-                              {getIcon()}
+                              <Icon className="w-3.5 h-3.5" />
                               <span>{opt.label}</span>
                             </div>
                             <div
@@ -314,45 +306,6 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     );
                   })}
                 </div>
-
-                {/* 5th Option: System Auto Matcher */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setThemeMode("system");
-                    triggerHapticFeedback();
-                  }}
-                  className={`w-full mt-2 p-2.5 rounded-xl border-2 transition-all active:scale-98 flex items-center justify-between text-left ${
-                    themeMode === "system"
-                      ? "bg-white text-black border-white shadow-xs ring-1 ring-white/50"
-                      : "bg-black hover:bg-zinc-900 border-white text-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-white/30 text-white flex items-center justify-center shrink-0">
-                      <Monitor className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-black truncate flex items-center gap-1.5">
-                        <span>Auto System Mode</span>
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-zinc-800 text-white font-mono border border-white/20">
-                          OS Sync
-                        </span>
-                      </div>
-                      <div
-                        className={`text-[10px] font-medium truncate ${
-                          themeMode === "system" ? "text-zinc-600" : "text-zinc-400"
-                        }`}
-                      >
-                        Automatically switches with your device display setting
-                      </div>
-                    </div>
-                  </div>
-
-                  {themeMode === "system" && (
-                    <Check className="w-4 h-4 shrink-0 ml-1 stroke-[3]" />
-                  )}
-                </button>
               </div>
 
               {/* Quick Actions */}

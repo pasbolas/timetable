@@ -248,8 +248,8 @@ html.light .fixed.inset-0.bg-black\/80 {
 }
 
 /* Typography in Light mode */
-html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black),
-html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
+html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge),
+html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge) {
   color: #000000 !important;
 }
 
@@ -335,211 +335,6 @@ html.light .fill-zinc-500 {
 }
 
 
-/* -------------------------------------------------------------------------- */
-/* 2. MIDNIGHT THEME (Deep Slate Navy & Cyan Glow)                            */
-/* -------------------------------------------------------------------------- */
-html[data-theme="midnight"] {
-  background-color: #0b0f19 !important;
-  color-scheme: dark;
-}
-
-html[data-theme="midnight"] body {
-  background-color: #0b0f19 !important;
-  color: #f8fafc !important;
-}
-
-html[data-theme="midnight"] ::-webkit-scrollbar-thumb {
-  background: #38bdf8 !important;
-}
-
-html[data-theme="midnight"] * {
-  scrollbar-color: #38bdf8 transparent !important;
-}
-
-html[data-theme="midnight"] .bg-dot-grid {
-  background-image: radial-gradient(rgba(56, 189, 248, 0.18) 1.5px, transparent 1.5px) !important;
-}
-
-html[data-theme="midnight"] .bg-break-stripes {
-  background-color: #0b0f19 !important;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    #0b0f19,
-    #0b0f19 7px,
-    rgba(56, 189, 248, 0.18) 7px,
-    rgba(56, 189, 248, 0.18) 14px
-  ) !important;
-}
-
-html[data-theme="midnight"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
-  background-color: #0b0f19 !important;
-}
-
-html[data-theme="midnight"] .bg-black\/60,
-html[data-theme="midnight"] .bg-black\/75,
-html[data-theme="midnight"] .bg-black\/80,
-html[data-theme="midnight"] .bg-black\/85,
-html[data-theme="midnight"] .bg-black\/90 {
-  background-color: rgba(11, 15, 25, 0.9) !important;
-}
-
-html[data-theme="midnight"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
-  color: #f8fafc !important;
-}
-
-html[data-theme="midnight"] .text-zinc-300,
-html[data-theme="midnight"] .text-zinc-400 {
-  color: #94a3b8 !important;
-}
-
-html[data-theme="midnight"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
-  border-color: #38bdf8 !important;
-}
-
-html[data-theme="midnight"] .border-white\/20,
-html[data-theme="midnight"] .border-white\/30,
-html[data-theme="midnight"] .border-white\/40,
-html[data-theme="midnight"] .border-white\/50 {
-  border-color: rgba(56, 189, 248, 0.25) !important;
-}
-
-html[data-theme="midnight"] .ring-white {
-  --tw-ring-color: #38bdf8 !important;
-}
-
-html[data-theme="midnight"] .hover\:bg-zinc-900:hover,
-html[data-theme="midnight"] .hover\:bg-zinc-800:hover {
-  background-color: #1e293b !important;
-}
-
-html[data-theme="midnight"] .bg-zinc-900,
-html[data-theme="midnight"] .bg-zinc-800 {
-  background-color: #162032 !important;
-}
-
-html[data-theme="midnight"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
-  background-color: #38bdf8 !important;
-  color: #0b0f19 !important;
-  border-color: #38bdf8 !important;
-}
-
-html[data-theme="midnight"] .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
-  color: #0b0f19 !important;
-  stroke: #0b0f19 !important;
-}
-
-html[data-theme="midnight"] .fill-white {
-  fill: #38bdf8 !important;
-}
-
-html[data-theme="midnight"] .fill-zinc-700,
-html[data-theme="midnight"] .fill-zinc-500 {
-  fill: #334155 !important;
-}
-
-
-/* -------------------------------------------------------------------------- */
-/* 3. SUNSET THEME (Warm Dark Plum & Rose Gold)                               */
-/* -------------------------------------------------------------------------- */
-html[data-theme="sunset"] {
-  background-color: #180d15 !important;
-  color-scheme: dark;
-}
-
-html[data-theme="sunset"] body {
-  background-color: #180d15 !important;
-  color: #fdf2f8 !important;
-}
-
-html[data-theme="sunset"] ::-webkit-scrollbar-thumb {
-  background: #fb7185 !important;
-}
-
-html[data-theme="sunset"] * {
-  scrollbar-color: #fb7185 transparent !important;
-}
-
-html[data-theme="sunset"] .bg-dot-grid {
-  background-image: radial-gradient(rgba(251, 113, 133, 0.18) 1.5px, transparent 1.5px) !important;
-}
-
-html[data-theme="sunset"] .bg-break-stripes {
-  background-color: #180d15 !important;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    #180d15,
-    #180d15 7px,
-    rgba(251, 113, 133, 0.18) 7px,
-    rgba(251, 113, 133, 0.18) 14px
-  ) !important;
-}
-
-html[data-theme="sunset"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
-  background-color: #180d15 !important;
-}
-
-html[data-theme="sunset"] .bg-black\/60,
-html[data-theme="sunset"] .bg-black\/75,
-html[data-theme="sunset"] .bg-black\/80,
-html[data-theme="sunset"] .bg-black\/85,
-html[data-theme="sunset"] .bg-black\/90 {
-  background-color: rgba(24, 13, 21, 0.9) !important;
-}
-
-html[data-theme="sunset"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
-  color: #fdf2f8 !important;
-}
-
-html[data-theme="sunset"] .text-zinc-300,
-html[data-theme="sunset"] .text-zinc-400 {
-  color: #f472b6 !important;
-}
-
-html[data-theme="sunset"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
-  border-color: #fb7185 !important;
-}
-
-html[data-theme="sunset"] .border-white\/20,
-html[data-theme="sunset"] .border-white\/30,
-html[data-theme="sunset"] .border-white\/40,
-html[data-theme="sunset"] .border-white\/50 {
-  border-color: rgba(251, 113, 133, 0.28) !important;
-}
-
-html[data-theme="sunset"] .ring-white {
-  --tw-ring-color: #fb7185 !important;
-}
-
-html[data-theme="sunset"] .hover\:bg-zinc-900:hover,
-html[data-theme="sunset"] .hover\:bg-zinc-800:hover {
-  background-color: #3b1d34 !important;
-}
-
-html[data-theme="sunset"] .bg-zinc-900,
-html[data-theme="sunset"] .bg-zinc-800 {
-  background-color: #2a1526 !important;
-}
-
-html[data-theme="sunset"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
-  background-color: #fb7185 !important;
-  color: #180d15 !important;
-  border-color: #fb7185 !important;
-}
-
-html[data-theme="sunset"] .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
-  color: #180d15 !important;
-  stroke: #180d15 !important;
-}
-
-html[data-theme="sunset"] .fill-white {
-  fill: #fb7185 !important;
-}
-
-html[data-theme="sunset"] .fill-zinc-700,
-html[data-theme="sunset"] .fill-zinc-500 {
-  fill: #500724 !important;
-}
-
 
 /* -------------------------------------------------------------------------- */
 /* GLOBAL PROTECTED STYLES (Invariant Across Themes)                          */
@@ -565,3 +360,109 @@ html[data-theme="sunset"] .fill-zinc-500 {
   color: #ef4444 !important;
   fill: #ef4444 !important;
 }
+
+/* -------------------------------------------------------------------------- */
+/* LAB WIDGET & BADGE STYLES (Light shade of orange tint)                    */
+/* -------------------------------------------------------------------------- */
+.lab-widget {
+  background-color: rgba(249, 115, 22, 0.08) !important;
+  border-color: rgba(251, 146, 60, 0.45) !important;
+}
+
+.lab-widget:hover {
+  background-color: rgba(249, 115, 22, 0.14) !important;
+}
+
+.lab-accent-bar {
+  background-color: #f97316 !important;
+}
+
+.lab-badge,
+[class*="lab-badge"] {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  border-color: #ea580c !important;
+}
+
+.lab-badge *,
+[class*="lab-badge"] * {
+  color: #ffffff !important;
+}
+
+/* Light Mode: Delicate, very light shade of orange */
+html[data-theme="light"] .lab-widget,
+html.light .lab-widget {
+  background-color: #fff7ed !important; /* Tailwind orange-50 */
+  border-color: #fdba74 !important; /* Tailwind orange-300 */
+}
+
+html[data-theme="light"] .lab-widget:hover,
+html.light .lab-widget:hover {
+  background-color: #ffedd5 !important; /* Tailwind orange-100 */
+}
+
+html[data-theme="light"] .lab-accent-bar,
+html.light .lab-accent-bar {
+  background-color: #f97316 !important;
+}
+
+html[data-theme="light"] .lab-badge,
+html.light .lab-badge {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  border-color: #ea580c !important;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* LECTURE WIDGET & BADGE STYLES (Light shade of green tint)                  */
+/* -------------------------------------------------------------------------- */
+.lecture-widget {
+  background-color: rgba(34, 197, 94, 0.08) !important;
+  border-color: rgba(74, 222, 128, 0.4) !important;
+}
+
+.lecture-widget:hover {
+  background-color: rgba(34, 197, 94, 0.14) !important;
+}
+
+.lecture-accent-bar {
+  background-color: #228B22 !important;
+}
+
+.lecture-badge,
+[class*="lecture-badge"] {
+  background-color: #228B22 !important;
+  color: #ffffff !important;
+  border-color: #228B22 !important;
+}
+
+.lecture-badge *,
+[class*="lecture-badge"] * {
+  color: #ffffff !important;
+}
+
+/* Light Mode: Delicate, very light shade of green */
+html[data-theme="light"] .lecture-widget,
+html.light .lecture-widget {
+  background-color: #f0fdf4 !important; /* Tailwind green-50 */
+  border-color: #86efac !important; /* Tailwind green-300 */
+}
+
+html[data-theme="light"] .lecture-widget:hover,
+html.light .lecture-widget:hover {
+  background-color: #dcfce7 !important; /* Tailwind green-100 */
+}
+
+html[data-theme="light"] .lecture-accent-bar,
+html.light .lecture-accent-bar {
+  background-color: #228B22 !important;
+}
+
+html[data-theme="light"] .lecture-badge,
+html.light .lecture-badge {
+  background-color: #228B22 !important;
+  color: #ffffff !important;
+  border-color: #228B22 !important;
+}
+

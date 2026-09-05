@@ -11,7 +11,7 @@ const KEYS = {
   COURSE_ONBOARDED: "mytimetable_course_onboarded",
 };
 
-export type ThemeMode = "dark" | "light" | "midnight" | "sunset" | "system";
+export type ThemeMode = "dark" | "light";
 
 export class StorageService {
   static getSelectedProgram(): ProgramSearchResult {
@@ -95,8 +95,7 @@ export class StorageService {
   static getTheme(): ThemeMode {
     try {
       const val = localStorage.getItem(KEYS.THEME) as string | null;
-      if (val === "auto") return "system";
-      if (val === "dark" || val === "light" || val === "midnight" || val === "sunset" || val === "system") {
+      if (val === "light" || val === "dark") {
         return val;
       }
     } catch (e) {

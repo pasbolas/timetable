@@ -524,7 +524,13 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: `calc(${leftPercent}% + 3px)`,
                           width: `calc(${colWidth}% - 6px)`,
                         }}
-                        className={`absolute rounded-xl border-2 border-white bg-black cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group hover:bg-zinc-900 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] shadow-xs ${
+                        className={`absolute rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group active:scale-[0.99] shadow-xs ${
+                          isLecture
+                            ? "lecture-widget"
+                            : isLab
+                            ? "lab-widget"
+                            : "border-white bg-black hover:bg-zinc-900"
+                        } hover:shadow-md hover:-translate-y-0.5 ${
                           active
                             ? "ring-2 ring-white border-white z-10 shadow-sm"
                             : past
@@ -536,7 +542,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         )} – ${lesson.EndDateTime.format("HH:mm")})`}
                       >
                         {/* Left accent bar */}
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white" />
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
 
                         {/* Top: Time + Type Badge */}
                         <div className="flex items-center justify-between gap-1 leading-none pl-1">
@@ -547,7 +553,9 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           <span
                             className={`text-[8px] font-extrabold uppercase tracking-wider px-1 py-0.5 rounded shrink-0 ${
                               isLecture
-                                ? "bg-[#228B22] text-white"
+                                ? "lecture-badge text-white"
+                                : isLab
+                                ? "lab-badge text-white"
                                 : "bg-white text-black"
                             }`}
                           >

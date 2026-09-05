@@ -262,14 +262,18 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                   className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 border ${
                     lesson.EventType?.toLowerCase().includes("lecture") ||
                     lesson.EventType?.toLowerCase() === "lec"
-                      ? "bg-[#228B22] text-white border-white/20"
+                      ? "lecture-badge text-white border-transparent"
+                      : lesson.EventType?.toLowerCase().includes("lab") || Boolean(lesson.collapsedLocations)
+                      ? "lab-badge text-white border-transparent"
                       : "bg-white text-black border-white"
                   }`}
                 >
                   <span
                     className={`w-2 h-2 rounded-full ${
                       lesson.EventType?.toLowerCase().includes("lecture") ||
-                      lesson.EventType?.toLowerCase() === "lec"
+                      lesson.EventType?.toLowerCase() === "lec" ||
+                      lesson.EventType?.toLowerCase().includes("lab") ||
+                      Boolean(lesson.collapsedLocations)
                         ? "bg-white"
                         : "bg-black"
                     }`}

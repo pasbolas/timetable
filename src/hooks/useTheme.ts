@@ -1,13 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { StorageService, ThemeMode } from "../services/storage";
 
-export type ResolvedTheme = "dark" | "light" | "midnight" | "sunset";
+export type ResolvedTheme = "dark" | "light";
 
 export const THEME_META_COLORS: Record<ResolvedTheme, string> = {
   dark: "#000000",
   light: "#ffffff",
-  midnight: "#0b0f19",
-  sunset: "#180d15",
 };
 
 export const THEME_OPTIONS: Array<{
@@ -37,43 +35,10 @@ export const THEME_OPTIONS: Array<{
     previewText: "#000000",
     icon: "sun",
   },
-  {
-    id: "midnight",
-    label: "Midnight",
-    sublabel: "Deep Navy & Sky Blue",
-    previewBg: "#0b0f19",
-    previewBorder: "#38bdf8",
-    previewText: "#38bdf8",
-    icon: "sparkles",
-  },
-  {
-    id: "sunset",
-    label: "Sunset",
-    sublabel: "Warm Rose & Plum",
-    previewBg: "#180d15",
-    previewBorder: "#fb7185",
-    previewText: "#fb7185",
-    icon: "flame",
-  },
-  {
-    id: "system",
-    label: "Auto",
-    sublabel: "Sync with Device",
-    previewBg: "#27272a",
-    previewBorder: "#a1a1aa",
-    previewText: "#ffffff",
-    icon: "monitor",
-  },
 ];
 
 function resolveThemeMode(mode: ThemeMode): ResolvedTheme {
-  if (mode === "system") {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches) {
-      return "light";
-    }
-    return "dark";
-  }
-  return mode;
+  return mode === "light" ? "light" : "dark";
 }
 
 function applyThemeToDOM(resolved: ResolvedTheme, mode: ThemeMode) {
@@ -150,29 +115,6 @@ export function useTheme() {
 
     window.addEventListener("mytimetable_theme_changed", handleSync);
     return () => window.removeEventListener("mytimetable_theme_changed", handleSync);
-  }, []);
-
-  // Listen for system color-scheme changes if in system mode
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleMediaChange = () => {
-      const currentMode = StorageService.getTheme();
-      if (currentMode === "system") {
-        const resolved = resolveThemeMode("system");
-        setResolvedTheme(resolved);
-        applyThemeToDOM(resolved, "system");
-        window.dispatchEvent(
-          new CustomEvent("mytimetable_theme_changed", {
-            detail: { themeMode: "system", resolvedTheme: resolved },
-          })
-        );
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleMediaChange);
-    return () => mediaQuery.removeEventListener("change", handleMediaChange);
   }, []);
 
   return {

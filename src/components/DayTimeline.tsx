@@ -502,7 +502,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border-2 border-white cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group bg-black hover:bg-zinc-900 ${
+                  className={`absolute rounded-xl border-2 cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${
+                    isLecture
+                      ? "lecture-widget"
+                      : isLab
+                      ? "lab-widget"
+                      : "border-white bg-black hover:bg-zinc-900"
+                  } ${
                     isCompact
                       ? "p-2 sm:px-2.5 sm:py-2"
                       : isExtended
@@ -516,8 +522,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         : "border-white z-0"
                   }`}
                 >
-                  {/* Left accent black strip */}
-                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white" />
+                  {/* Left accent vertical strip */}
+                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
 
                   {/* --- TIER 1: COMPACT LAYOUT (1 HOUR / <= 60 MINS) --- */}
                   {isCompact && (
@@ -531,7 +537,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                           </span>
                           <span
                             className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate border ${
-                              isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
+                              isLecture
+                                ? "lecture-badge text-white border-transparent"
+                                : isLab
+                                ? "lab-badge text-white"
+                                : "bg-white text-black border-white"
                             }`}
                           >
                             {lesson.EventType}
@@ -586,7 +596,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
                         <span
                           className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
+                            isLecture
+                              ? "lecture-badge text-white border-transparent"
+                              : isLab
+                              ? "lab-badge text-white"
+                              : "bg-white text-black border-white"
                           }`}
                         >
                           {lesson.EventType}
@@ -648,7 +662,11 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
                         <span
                           className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
-                            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
+                            isLecture
+                              ? "lecture-badge text-white border-transparent"
+                              : isLab
+                              ? "lab-badge text-white"
+                              : "bg-white text-black border-white"
                           }`}
                         >
                           {lesson.EventType}

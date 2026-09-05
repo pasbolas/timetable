@@ -18,6 +18,9 @@ export const LessonCard: React.FC<LessonCardProps> = ({
   onClick,
   dataTour,
 }) => {
+  const isLab =
+    lesson.EventType?.toLowerCase().includes("lab") ||
+    Boolean(lesson.collapsedLocations);
   const isLecture =
     lesson.EventType?.toLowerCase().includes("lecture") ||
     lesson.EventType?.toLowerCase() === "lec";
@@ -26,7 +29,13 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     <div
       data-tour={dataTour}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border-2 border-white bg-black transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 hover:bg-zinc-900 ${
+      className={`relative overflow-hidden rounded-xl border-2 transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 ${
+        isLecture
+          ? "lecture-widget"
+          : isLab
+          ? "lab-widget"
+          : "border-white bg-black hover:bg-zinc-900"
+      } ${
         isActiveNow
           ? "ring-2 ring-white"
           : isPast
@@ -35,7 +44,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       }`}
     >
       {/* Sleek vertical accent line */}
-      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white" />
+      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isLecture ? "lecture-accent-bar" : isLab ? "lab-accent-bar" : "bg-white"}`} />
 
       {/* Top Header: Time and Event Type Pill */}
       <div className="flex items-center justify-between gap-2 mb-1.5 pl-1">
@@ -53,7 +62,11 @@ export const LessonCard: React.FC<LessonCardProps> = ({
 
         <span
           className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
+            isLecture
+              ? "lecture-badge text-white border-transparent"
+              : isLab
+              ? "lab-badge text-white"
+              : "bg-white text-black border-white"
           }`}
         >
           {lesson.EventType}
