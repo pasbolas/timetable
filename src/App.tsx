@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import moment from "moment-timezone";
 import { useSelectedProgram } from "./hooks/useSelectedProgram";
 import { useGetLessons } from "./hooks/useGetLessons";
@@ -21,7 +21,8 @@ import { trackEvent } from "./services/analytics";
 import { useTheme } from "./hooks/useTheme";
 
 export function App() {
-  useTheme();
+  const { setThemeMode } = useTheme();
+  const preTourThemeRef = useRef<string | null>(null);
   const { selectedProgram, selectProgram, recents } = useSelectedProgram();
   const { currentTime, isToday, isLessonActive, isLessonPast } = useLiveTime();
 
@@ -50,7 +51,12 @@ export function App() {
   }, []);
 
   // First-time onboarding sequence: Tour -> Mandatory Unskippable Course Selection
+  // Strictly enforce Zara theme throughout the entire onboarding process
   useEffect(() => {
+    if (!StorageService.isOnboardingCompleted()) {
+      setThemeMode("zara");
+    }
+
     if (!StorageService.hasCompletedTour()) {
       const timer = setTimeout(() => {
         setIsTourOpen(true);
@@ -59,7 +65,14 @@ export function App() {
     } else if (!StorageService.hasCompletedCourseOnboarding()) {
       setIsMandatoryCourseSelectOpen(true);
     }
-  }, []);
+  }, [setThemeMode]);
+
+  const handleStartTour = () => {
+    // When re-running the tour from settings, switch strictly to Zara theme during the onboarding tour
+    preTourThemeRef.current = StorageService.getTheme();
+    setThemeMode("zara");
+    setIsTourOpen(true);
+  };
 
   const handleTourClose = () => {
     setIsTourOpen(false);
@@ -69,6 +82,9 @@ export function App() {
       setTimeout(() => {
         setIsMandatoryCourseSelectOpen(true);
       }, 250);
+    } else if (preTourThemeRef.current && preTourThemeRef.current !== "zara") {
+      setThemeMode(preTourThemeRef.current as any);
+      preTourThemeRef.current = null;
     }
   };
 
@@ -82,6 +98,10 @@ export function App() {
     setIsSearchOpen(false);
     setIsCourseSetupOpen(false);
     setIsMandatoryCourseSelectOpen(false);
+    if (preTourThemeRef.current && preTourThemeRef.current !== "zara") {
+      setThemeMode(preTourThemeRef.current as any);
+      preTourThemeRef.current = null;
+    }
   };
 
   // Fetch schedule for selected program and active date's week
@@ -226,7 +246,7 @@ export function App() {
         isLoading={isLoading}
         isOffline={isOfflineData}
         weekSchedule={schedule}
-        onStartTour={() => setIsTourOpen(true)}
+        onStartTour={handleStartTour}
       />
 
       {/* Starting Phase & Rotary Year Selector Modal */}

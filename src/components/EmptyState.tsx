@@ -77,7 +77,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         />
       </div>
       <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
-        No class for you today morty
+        No class for you Morty
       </h3>
     </div>
   );

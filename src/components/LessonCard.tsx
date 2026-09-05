@@ -32,17 +32,17 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     <div
       data-tour={dataTour}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border-2 transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 timetable-widget ${
+      className={`relative overflow-hidden rounded-xl border transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 timetable-widget ${
         isLecture
           ? "lecture-widget"
           : isLab
           ? "lab-widget"
           : isTutorial
           ? "tutorial-widget"
-          : "border-white bg-black hover:bg-zinc-900"
+          : "border-white/10 bg-black hover:bg-zinc-900"
       } ${
         isActiveNow
-          ? "ring-2 ring-white"
+          ? "ring-2 ring-white/70"
           : isPast
           ? "opacity-60"
           : ""
@@ -54,7 +54,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       {/* Top Header: Time and Event Type Pill */}
       <div className="flex items-center justify-between gap-2 mb-1.5 pl-1">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black text-white">
+          <span className="text-xs font-bold text-white">
             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
           </span>
           {isActiveNow && (
@@ -80,9 +80,9 @@ export const LessonCard: React.FC<LessonCardProps> = ({
         </span>
       </div>
 
-      {/* Subject Title */}
+      {/* Subject / Class Title: Maximum Contrast */}
       <div className="mb-2 pl-1">
-        <h3 className="font-black text-sm sm:text-base text-white leading-snug">
+        <h3 className="font-black text-sm sm:text-base text-white leading-snug tracking-tight widget-class-title">
           {lesson.Description}
         </h3>
       </div>

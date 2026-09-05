@@ -19,7 +19,6 @@ import {
   Check,
   MoreHorizontal,
   Smartphone,
-  Share,
 } from "lucide-react";
 import { ProgramSearchResult, DayData } from "../types/timetable";
 import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
@@ -95,7 +94,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   onStartTour,
 }) => {
   const { themeMode, setThemeMode } = useTheme();
-  const { isInstalled, browserEnv, installApp, showInstallGuide, setShowInstallGuide } = usePWAInstall();
+  const { isInstalled, installApp } = usePWAInstall();
   const [isMoreOpen, setIsMoreOpen] = React.useState(false);
   const mainDragControls = useDragControls();
   const moreDragControls = useDragControls();
@@ -282,8 +281,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
             {/* Drawer Scrollable Body */}
             <div
-              className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
-              style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+              className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-0 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
             >
               {/* Active Course Card */}
               <div
@@ -444,13 +442,12 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
               {/* Rick & Morty Peeking Sticker Attached to Bottom */}
               <div
-                className="mt-auto pt-4 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 shrink-0"
-                style={{ marginBottom: "calc(-1 * max(env(safe-area-inset-bottom, 0px), 24px))" }}
+                className="mt-auto pt-6 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 -mb-px shrink-0 leading-none"
               >
                 <img
                   src="/rick-morty-clean.png?v=2"
                   alt="Rick and Morty"
-                  className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-0.5"
+                  className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-1"
                   loading="eager"
                 />
               </div>
@@ -590,8 +587,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
                   {/* More Drawer Scrollable Body */}
                   <div
-                    className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
-                    style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+                    className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-0 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
                   >
                     {/* Quick Actions */}
                     <div className="transition-all duration-300">
@@ -743,116 +739,16 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
                     {/* Rick & Morty Peeking Sticker Attached to Bottom */}
                     <div
-                      className="mt-auto pt-4 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 shrink-0"
-                      style={{ marginBottom: "calc(-1 * max(env(safe-area-inset-bottom, 0px), 24px))" }}
+                      className="mt-auto pt-6 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 -mb-px shrink-0 leading-none"
                     >
                       <img
                         src="/rick-morty-clean.png?v=2"
                         alt="Rick and Morty"
-                        className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-0.5"
+                        className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-1"
                         loading="eager"
                       />
                     </div>
                   </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-
-          {/* PWA Install Guide Modal (For iOS / unsupported browsers) */}
-          <AnimatePresence>
-            {showInstallGuide && (
-              <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-3 sm:p-4 pointer-events-auto">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
-                  onClick={() => setShowInstallGuide(false)}
-                />
-                <motion.div
-                  initial={{ scale: 0.94, opacity: 0, y: 20 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 0.94, opacity: 0, y: 20 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative w-full max-w-sm rounded-2xl bg-zinc-950 border border-white/20 p-5 shadow-2xl z-10 text-white select-none"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center">
-                        <Smartphone className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-black text-white">Install MyTimetable</h4>
-                        <p className="text-[11px] font-medium text-zinc-400">Add to your Home Screen</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setShowInstallGuide(false)}
-                      className="p-1.5 rounded-lg border border-white/20 hover:bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {browserEnv === "ios-safari" ? (
-                    <div className="space-y-2.5 text-xs text-zinc-300">
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
-                        <span>Tap the <strong>Share</strong> button <Share className="w-3.5 h-3.5 inline mx-0.5 text-white" /> in Safari&apos;s bottom toolbar</span>
-                      </div>
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
-                        <span>Scroll down and tap <strong>Add to Home Screen</strong></span>
-                      </div>
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">3</span>
-                        <span>Tap <strong>Add</strong> in the top-right corner</span>
-                      </div>
-                    </div>
-                  ) : browserEnv === "ios-other" ? (
-                    <div className="space-y-2.5 text-xs text-zinc-300">
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
-                        <span>Tap the browser <strong>Share</strong> or <strong>Menu (•••)</strong> button</span>
-                      </div>
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
-                        <span>Select <strong>Add to Home Screen</strong></span>
-                      </div>
-                    </div>
-                  ) : browserEnv.startsWith("desktop") ? (
-                    <div className="space-y-2.5 text-xs text-zinc-300">
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
-                        <span>Look for the <strong>Install icon <Download className="w-3.5 h-3.5 inline text-white" /></strong> in the right side of your address bar</span>
-                      </div>
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
-                        <span>Or click your browser menu (⋮) → select <strong>Install MyTimetable</strong></span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-2.5 text-xs text-zinc-300">
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
-                        <span>Tap the <strong>three-dots menu (⋮)</strong> in your browser</span>
-                      </div>
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
-                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
-                        <span>Select <strong>Install app</strong> or <strong>Add to Home screen</strong></span>
-                      </div>
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => setShowInstallGuide(false)}
-                    className="w-full mt-4 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-black transition-colors"
-                  >
-                    Got It
-                  </button>
                 </motion.div>
               </div>
             )}

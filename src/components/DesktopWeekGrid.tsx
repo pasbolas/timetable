@@ -535,17 +535,17 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: `calc(${leftPercent}% + 3px)`,
                           width: `calc(${colWidth}% - 6px)`,
                         }}
-                        className={`absolute rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group active:scale-[0.99] shadow-xs timetable-widget ${
+                        className={`absolute rounded-xl border cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group active:scale-[0.99] shadow-xs timetable-widget ${
                           isLecture
                             ? "lecture-widget"
                             : isLab
                             ? "lab-widget"
                             : isTutorial
                             ? "tutorial-widget"
-                            : "border-white bg-black hover:bg-zinc-900"
+                            : "border-white/10 bg-black hover:bg-zinc-900"
                         } hover:shadow-md hover:-translate-y-0.5 ${
                           active
-                            ? "ring-2 ring-white border-white z-10 shadow-sm"
+                            ? "ring-2 ring-white/70 border-white/40 z-10 shadow-sm"
                             : past
                             ? "opacity-65 z-0"
                             : "z-0"
@@ -578,10 +578,10 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           </span>
                         </div>
 
-                        {/* Middle: Title */}
+                        {/* Middle: Title - Highest Contrast Hierarchy */}
                         <div className="pl-1 my-auto">
                           <h4
-                            className={`font-bold text-white leading-tight line-clamp-2 ${
+                            className={`font-black text-white leading-tight line-clamp-2 widget-class-title ${
                               isShort ? "text-[11px]" : "text-xs"
                             }`}
                           >
@@ -590,7 +590,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         </div>
 
                         {/* Bottom: Location & Staff (if room available) */}
-                        <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-white/80">
+                        <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-zinc-100">
                           {!isLab && lesson.Location ? (
                             <RoomBadge location={lesson.Location} size="xs" hideDesc={heightPx < 90} />
                           ) : isLab && lesson.collapsedLocations ? (
@@ -599,13 +599,13 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                               <span>{lesson.Locations?.length ? `${lesson.Locations.length} Groups` : "Lab Info"}</span>
                             </span>
                           ) : (
-                            <span className="text-[9px] text-zinc-400 font-mono truncate">
+                            <span className="text-[9px] text-zinc-200 font-semibold font-mono truncate">
                               {lesson.Name}
                             </span>
                           )}
 
                           {lesson.staffName && heightPx >= 80 && (
-                            <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-400" title={lesson.staffName}>
+                            <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-200 font-semibold" title={lesson.staffName}>
                               <User className="w-2.5 h-2.5 text-white shrink-0" />
                               <span className="truncate max-w-[80px]">{lesson.staffName}</span>
                             </span>

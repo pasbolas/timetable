@@ -7,13 +7,16 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      devOptions: {
+        enabled: true
+      },
       includeAssets: ["apple-touch-icon.png", "favicon-32x32.png", "favicon-48x48.png", "icon-maskable-512.png"],
       manifest: {
         name: "MyTimetable - University Schedule",
         short_name: "Timetable",
         description: "Mobile-first PWA for university course schedules and lectures",
-        theme_color: "#ffffff",
-        background_color: "#ffffff",
+        theme_color: "#000000",
+        background_color: "#000000",
         display: "standalone",
         orientation: "portrait",
         start_url: "/",

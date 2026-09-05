@@ -58,7 +58,6 @@ export function usePWAInstall() {
   );
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [browserEnv, setBrowserEnv] = useState<BrowserEnvironment>("other");
-  const [showInstallGuide, setShowInstallGuide] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -99,7 +98,6 @@ export function usePWAInstall() {
       setIsInstalled(true);
       window.__pwaDeferredPrompt = null;
       setDeferredPrompt(null);
-      setShowInstallGuide(false);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstall);
@@ -120,10 +118,35 @@ export function usePWAInstall() {
   );
 
   const installApp = useCallback(async () => {
-    const promptEvent =
-      deferredPrompt || (typeof window !== "undefined" ? window.__pwaDeferredPrompt : null);
+    if (typeof window === "undefined") return "unsupported";
 
-    // 1. If native beforeinstallprompt is ready (Chromium on Android / Desktop / Edge / Brave / Samsung)
+    // If already in standalone/installed mode, nothing to do
+    if (isInstalled) {
+      return "already-installed";
+    }
+
+    let promptEvent =
+      deferredPrompt || window.__pwaDeferredPrompt || null;
+
+    // If promptEvent not ready yet, wait briefly (up to 700ms) in case beforeinstallprompt is firing
+    if (!promptEvent) {
+      promptEvent = await new Promise<BeforeInstallPromptEvent | null>((resolve) => {
+        const timer = setTimeout(() => {
+          window.removeEventListener("pwa-prompt-available", onReady);
+          resolve(window.__pwaDeferredPrompt || null);
+        }, 700);
+
+        const onReady = () => {
+          clearTimeout(timer);
+          window.removeEventListener("pwa-prompt-available", onReady);
+          resolve(window.__pwaDeferredPrompt || null);
+        };
+
+        window.addEventListener("pwa-prompt-available", onReady, { once: true });
+      });
+    }
+
+    // 1. Native Chromium prompt: Show Chrome/Edge/Samsung system prompt directly
     if (promptEvent) {
       try {
         await promptEvent.prompt();
@@ -139,10 +162,26 @@ export function usePWAInstall() {
       }
     }
 
-    // 2. Fallback: on iOS Safari or when native prompt is unavailable, show browser-specific guidance
-    setShowInstallGuide(true);
-    return "guide";
-  }, [deferredPrompt]);
+    // 2. Native iOS / mobile system share: Opens native system sheet with "Add to Home Screen"
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "MyTimetable",
+          text: "MyTimetable - University Schedule",
+          url: window.location.href,
+        });
+        return "shared";
+      } catch (err) {
+        // User closed the native sheet without choosing an action - standard native behavior
+        if ((err as Error).name !== "AbortError") {
+          console.warn("Native share error:", err);
+        }
+        return "dismissed";
+      }
+    }
+
+    return "unsupported";
+  }, [deferredPrompt, isInstalled]);
 
   return {
     isInstalled,
@@ -150,7 +189,5 @@ export function usePWAInstall() {
     browserEnv,
     isIOS: browserEnv === "ios-safari" || browserEnv === "ios-other",
     installApp,
-    showInstallGuide,
-    setShowInstallGuide,
   };
 }

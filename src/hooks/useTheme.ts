@@ -135,5 +135,6 @@ export function useTheme() {
     resolvedTheme,
     setThemeMode,
     isDark: resolvedTheme === "dark",
+    isZara: resolvedTheme === "zara",
   };
 }

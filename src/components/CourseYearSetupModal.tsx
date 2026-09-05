@@ -224,7 +224,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       onClick={isMandatory ? undefined : onClose}
     >
       <div
-        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-black text-white sm:rounded-2xl border border-white/20 flex flex-col overflow-hidden relative transition-colors shadow-2xl"
+        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-black text-white sm:rounded-2xl border border-white/20 flex flex-col overflow-hidden relative transition-colors shadow-2xl course-setup-modal"
         onClick={(e) => e.stopPropagation()}
         style={{
           minHeight: "100dvh sm:620px",
@@ -232,12 +232,12 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       >
         {/* Top Minimal Bar */}
         <div
-          className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b border-white/15 bg-black"
+          className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b border-white/15 bg-black course-setup-header"
           style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100">
-            <span className="w-2 h-2 rounded-full bg-zinc-300" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-100">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 course-step-badge">
+            <span className="w-2 h-2 rounded-full bg-zinc-300 course-step-dot" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-100 course-step-text">
               {phase === "input" ? "Step 1 • Enter Course ID" : "Step 2 • Select Course Year"}
             </span>
           </div>
@@ -245,7 +245,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {!isMandatory && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-white border border-white/20 hover:bg-zinc-800 transition-colors"
+              className="p-1.5 rounded-lg text-white border border-white/20 hover:bg-zinc-800 transition-colors course-close-btn"
             >
               <X className="w-5 h-5 text-white" />
             </button>
@@ -419,7 +419,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 <button
                   type="button"
                   onClick={handleConfirmSelection}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm border border-zinc-600 transition-colors cursor-pointer shadow-sm"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm border border-zinc-600 transition-colors cursor-pointer shadow-sm course-confirm-btn"
                 >
                   <Maximize2 className="w-4 h-4 text-white" />
                   <span>Confirm & Continue</span>

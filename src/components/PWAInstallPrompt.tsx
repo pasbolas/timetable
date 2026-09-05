@@ -1,61 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Download, X, Smartphone, Share } from "lucide-react";
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+import { Download, X, Smartphone } from "lucide-react";
+import { usePWAInstall } from "../hooks/usePWAInstall";
 
 export const PWAInstallPrompt: React.FC = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const { isInstalled, installApp } = usePWAInstall();
   const [showPrompt, setShowPrompt] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Check if already in standalone mode
-    const isStandalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-
-    if (isStandalone) return;
-
-    // Detect iOS
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
-    setIsIOS(isIosDevice);
-
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      const promptEvent = e as BeforeInstallPromptEvent;
-      window.__pwaDeferredPrompt = promptEvent;
-      setDeferredPrompt(promptEvent);
-      setShowPrompt(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    // Show iOS tip if visited multiple times
-    const dismissed = localStorage.getItem("mytimetable_install_dismissed");
-    if (isIosDevice && !dismissed) {
-      setShowPrompt(true);
+    if (isInstalled) {
+      setShowPrompt(false);
+      return;
     }
 
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    };
-  }, []);
+    const dismissed = localStorage.getItem("mytimetable_install_dismissed");
+    if (!dismissed) {
+      setShowPrompt(true);
+    }
+  }, [isInstalled]);
 
   const handleInstallClick = async () => {
-    const prompt = deferredPrompt || (typeof window !== "undefined" ? window.__pwaDeferredPrompt : null);
-    if (!prompt) return;
-    prompt.prompt();
-    const { outcome } = await prompt.userChoice;
+    const outcome = await installApp();
     if (outcome === "accepted") {
       setShowPrompt(false);
-    }
-    setDeferredPrompt(null);
-    if (typeof window !== "undefined") {
-      window.__pwaDeferredPrompt = null;
     }
   };
 
@@ -64,7 +30,7 @@ export const PWAInstallPrompt: React.FC = () => {
     localStorage.setItem("mytimetable_install_dismissed", "true");
   };
 
-  if (!showPrompt) return null;
+  if (!showPrompt || isInstalled) return null;
 
   return (
     <div
@@ -80,33 +46,26 @@ export const PWAInstallPrompt: React.FC = () => {
             <div className="text-xs font-black text-white truncate">
               Install MyTimetable
             </div>
-            <div className="text-[11px] text-zinc-300 font-medium leading-tight">
-              {isIOS ? (
-                <span className="flex items-center gap-1">
-                  Tap <Share className="w-3 h-3 inline text-white" /> then &quot;Add to Home Screen&quot;
-                </span>
-              ) : (
-                "Add to your phone for instant offline access"
-              )}
+            <div className="text-[11px] text-zinc-300 font-medium leading-tight truncate">
+              Add to your device for instant offline access
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          {!isIOS && deferredPrompt && (
-            <button
-              onClick={handleInstallClick}
-              className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold border border-zinc-600 active:scale-95 transition-all flex items-center gap-1"
-            >
-              <Download className="w-3.5 h-3.5 text-white" />
-              Install
-            </button>
-          )}
+          <button
+            onClick={handleInstallClick}
+            className="px-3 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold active:scale-95 transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+          >
+            <Download className="w-3.5 h-3.5 text-black" />
+            Install
+          </button>
           <button
             onClick={handleDismiss}
-            className="p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Dismiss"
           >
-            <X className="w-4 h-4 text-white" />
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>

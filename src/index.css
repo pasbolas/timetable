@@ -500,10 +500,10 @@ html.zara .bg-break-stripes * {
 }
 
 /* Inner card, widget, modal backgrounds in Zara mode */
-html[data-theme="zara"] .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
-html[data-theme="zara"] .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
-html.zara .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
-html.zara .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main) {
+html[data-theme="zara"] .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(.course-setup-header):not(body):not(main),
+html[data-theme="zara"] .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(.course-setup-header):not(body):not(main),
+html.zara .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(.course-setup-header):not(body):not(main),
+html.zara .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(.course-setup-header):not(body):not(main) {
   background-color: #ffffff !important;
 }
 
@@ -582,6 +582,104 @@ html.zara .preference-drawer-header .preference-drawer-close-btn:hover,
 html[data-theme="zara"] .preference-drawer-header .preference-drawer-back-btn:hover,
 html.zara .preference-drawer-header .preference-drawer-back-btn:hover {
   background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Onboarding Course Selection Pane Header in Zara Mode (#E2C4A6) */
+html[data-theme="zara"] .course-setup-header,
+html.zara .course-setup-header,
+html[data-theme="zara"] div.course-setup-header,
+html.zara div.course-setup-header {
+  background-color: #E2C4A6 !important;
+  border-bottom-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-step-badge,
+html.zara .course-setup-header .course-step-badge {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-step-dot,
+html.zara .course-setup-header .course-step-dot {
+  background-color: #000000 !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-step-text,
+html.zara .course-setup-header .course-step-text {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-close-btn,
+html.zara .course-setup-header .course-close-btn {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-close-btn svg,
+html.zara .course-setup-header .course-close-btn svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+html[data-theme="zara"] .course-setup-header .course-close-btn:hover,
+html.zara .course-setup-header .course-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Tour Step Card Header in Zara Mode */
+html[data-theme="zara"] .tour-step-card-header,
+html.zara .tour-step-card-header {
+  background-color: #DE838D !important;
+  border-bottom-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .tour-step-card-header .tour-icon-box,
+html.zara .tour-step-card-header .tour-icon-box,
+html[data-theme="zara"] .tour-step-card-header .tour-close-btn,
+html.zara .tour-step-card-header .tour-close-btn {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .tour-step-card-header .tour-icon-box svg,
+html.zara .tour-step-card-header .tour-icon-box svg,
+html[data-theme="zara"] .tour-step-card-header .tour-close-btn svg,
+html.zara .tour-step-card-header .tour-close-btn svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+html[data-theme="zara"] .tour-step-card-header .tour-title,
+html.zara .tour-step-card-header .tour-title {
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .tour-step-card-header .tour-badge,
+html.zara .tour-step-card-header .tour-badge {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Onboarding Confirm Button in Zara Mode */
+html[data-theme="zara"] .course-confirm-btn,
+html.zara .course-confirm-btn {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+html[data-theme="zara"] .course-confirm-btn *,
+html.zara .course-confirm-btn * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html[data-theme="zara"] .course-confirm-btn:hover,
+html.zara .course-confirm-btn:hover {
+  background-color: #27272a !important;
 }
 
 html[data-theme="zara"] .top-bar-surface .bg-zinc-900,
@@ -774,18 +872,19 @@ html.zara .fill-zinc-500 {
   opacity: 1;
 }
 
-/* Default / generic lesson widgets in Dark Mode */
+/* Default / generic lesson widgets in Dark Mode - reduced subtle border contrast */
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 :root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
   background-color: #111114 !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
 :root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
   background-color: #1a1a20 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 /* Break pills in Dark Mode with solid opaque background */
@@ -831,11 +930,12 @@ html.zara .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-
 /* -------------------------------------------------------------------------- */
 .lab-widget {
   background-color: #23140a !important;
-  border-color: rgba(251, 146, 60, 0.55) !important;
+  border-color: rgba(251, 146, 60, 0.22) !important;
 }
 
 .lab-widget:hover {
   background-color: #2e1a0d !important;
+  border-color: rgba(251, 146, 60, 0.38) !important;
 }
 
 .lab-accent-bar {
@@ -891,11 +991,12 @@ html.zara .lab-badge {
 /* -------------------------------------------------------------------------- */
 .lecture-widget {
   background-color: #132216 !important;
-  border-color: rgba(194, 222, 185, 0.6) !important;
+  border-color: rgba(194, 222, 185, 0.2) !important;
 }
 
 .lecture-widget:hover {
   background-color: #192c1e !important;
+  border-color: rgba(194, 222, 185, 0.35) !important;
 }
 
 .lecture-accent-bar {
@@ -958,11 +1059,12 @@ html.zara .lecture-badge * {
 /* -------------------------------------------------------------------------- */
 .tutorial-widget {
   background-color: #18181b !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .tutorial-widget:hover {
   background-color: #242429 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .tutorial-accent-bar {
@@ -1155,5 +1257,74 @@ html[data-theme="light"] .modal-event-header:not(.lab-widget):not(.lecture-widge
 html.light .modal-event-header:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
   background-color: #ffffff !important;
 }
+
+/* -------------------------------------------------------------------------- */
+/* WIDGET TEXT CONTRAST ENHANCEMENTS & MAXIMUM CLASS CONTRAST                 */
+/* -------------------------------------------------------------------------- */
+/* The class name / course title receives MAXIMUM contrast and highest hierarchy */
+.widget-class-title {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.015em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="light"] .widget-class-title,
+html.light .widget-class-title,
+html[data-theme="zara"] .widget-class-title,
+html.zara .widget-class-title {
+  color: #000000 !important;
+  text-shadow: none;
+}
+
+/* Increase contrast of supporting text inside timetable widgets in dark theme */
+html[data-theme="dark"] .timetable-widget .text-zinc-400,
+html.dark .timetable-widget .text-zinc-400,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .text-zinc-400 {
+  color: #e4e4e7 !important; /* Zinc 200 - crisp, bright, highly legible */
+}
+
+html[data-theme="dark"] .timetable-widget .text-zinc-500,
+html.dark .timetable-widget .text-zinc-500,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .text-zinc-500 {
+  color: #d4d4d8 !important; /* Zinc 300 */
+}
+
+html[data-theme="dark"] .timetable-widget .text-white\/80,
+html.dark .timetable-widget .text-white\/80,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .text-white\/80 {
+  color: #f4f4f5 !important; /* Zinc 100 */
+}
+
+/* RoomBadge contrast in dark theme */
+html[data-theme="dark"] .timetable-widget .room-highlight-pill,
+html.dark .timetable-widget .room-highlight-pill,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .room-highlight-pill {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .timetable-widget .room-highlight-pill svg,
+html.dark .timetable-widget .room-highlight-pill svg,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .room-highlight-pill svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html[data-theme="dark"] .timetable-widget .room-code-tag,
+html.dark .timetable-widget .room-code-tag,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .room-code-tag {
+  background-color: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+html[data-theme="dark"] .timetable-widget .room-desc-text,
+html.dark .timetable-widget .room-desc-text,
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget .room-desc-text {
+  color: #f4f4f5 !important; /* Zinc 100 - crisp, bright text */
+}
+
 
 

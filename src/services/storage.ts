@@ -94,6 +94,10 @@ export class StorageService {
 
   static getTheme(): ThemeMode {
     try {
+      // The onboarding process strictly uses the Zara theme until all steps are completed
+      if (!this.hasCompletedCourseOnboarding() || !this.hasCompletedTour()) {
+        return "zara";
+      }
       const val = localStorage.getItem(KEYS.THEME) as string | null;
       if (val === "light" || val === "dark" || val === "zara") {
         return val;
@@ -101,7 +105,7 @@ export class StorageService {
     } catch (e) {
       console.warn("Error reading theme from storage:", e);
     }
-    return "dark";
+    return "zara";
   }
 
   static setTheme(theme: ThemeMode): void {
@@ -158,6 +162,10 @@ export class StorageService {
     } catch (e) {
       console.warn("Error saving course onboarding state:", e);
     }
+  }
+
+  static isOnboardingCompleted(): boolean {
+    return this.hasCompletedTour() && this.hasCompletedCourseOnboarding();
   }
 
   static getFavoriteGroups(): Record<string, string> {

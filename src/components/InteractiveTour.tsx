@@ -13,6 +13,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../hooks/useTheme";
 
 export interface TourStep {
   id: string;
@@ -125,6 +126,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { isZara } = useTheme();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [windowSize, setWindowSize] = useState({
@@ -289,7 +291,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         >
           <path
             d={getCutoutPath(targetRect, windowSize.width, windowSize.height)}
-            fill="rgba(0, 0, 0, 0.85)"
+            fill={isZara ? "rgba(0, 0, 0, 0.45)" : "rgba(0, 0, 0, 0.85)"}
             fillRule="evenodd"
             className="transition-all duration-200 pointer-events-auto cursor-pointer"
             onClick={handleCompleteTour}
@@ -324,20 +326,20 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
         }`}
       >
         <div
-          className="pointer-events-auto w-full max-w-md bg-black text-white rounded-2xl border-2 border-white overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95 shadow-2xl"
+          className="pointer-events-auto w-full max-w-md bg-black text-white rounded-2xl border-2 border-white overflow-hidden transform transition-all duration-300 animate-in slide-in-from-bottom-6 sm:zoom-in-95 shadow-2xl tour-step-card"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Bar */}
-          <div className="p-4 sm:p-5 pb-3 border-b-2 border-white flex items-center justify-between bg-black">
+          <div className="p-4 sm:p-5 pb-3 border-b-2 border-white flex items-center justify-between bg-black tour-step-card-header">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-black border border-white text-white flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white text-white flex items-center justify-center shrink-0 tour-icon-box">
                 {currentStep.icon}
               </div>
               <div>
-                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400 block leading-none">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400 block leading-none tour-badge">
                   {currentStep.badge}
                 </span>
-                <h3 className="text-sm sm:text-base font-black text-white mt-0.5">
+                <h3 className="text-sm sm:text-base font-black text-white mt-0.5 tour-title">
                   {currentStep.title}
                 </h3>
               </div>
@@ -345,7 +347,7 @@ export const InteractiveTour: React.FC<InteractiveTourProps> = ({
 
             <button
               onClick={handleCompleteTour}
-              className="p-1.5 rounded-xl text-white hover:bg-zinc-800 transition-colors"
+              className="p-1.5 rounded-xl text-white hover:bg-zinc-800 transition-colors tour-close-btn"
               title="Skip Tour"
             >
               <X className="w-4 h-4 text-white" />
