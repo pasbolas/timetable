@@ -1,9 +1,40 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
 import { Clock, Info, ChevronRight, MapPin, User, Coffee } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
+
+// Date transition variants for silky blur-in blur-out transitions
+const dateBlurVariants = {
+  initial: {
+    opacity: 0,
+    filter: "blur(14px)",
+    scale: 0.992,
+  },
+  animate: {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: {
+      duration: 0.22,
+      ease: [0.22, 1, 0.36, 1],
+    },
+    transitionEnd: {
+      filter: "none",
+    },
+  },
+  exit: {
+    opacity: 0,
+    filter: "blur(14px)",
+    scale: 0.992,
+    transition: {
+      duration: 0.14,
+      ease: [0.32, 0, 0.67, 0],
+    },
+  },
+};
 
 interface DayTimelineProps {
   activeDate: moment.Moment;
@@ -77,6 +108,13 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentMinutesFromStart = (nowHour - startHour) * 60 + nowMinute;
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
+  const activeDateKey = activeDate.format("YYYY-MM-DD");
+
+  // When switching between dates, smoothly reset scroll to top of day timeline
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeDateKey]);
+
   return (
     <div className="w-full max-w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky flush below TopBar when scrolling lessons */}
@@ -87,33 +125,73 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           top: lessons.length > 0 ? "calc(58px + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-base font-black text-white">
-            {activeDate.format("dddd, D MMMM")}
-          </h2>
-          {isToday && (
-            <span className="text-[11px] font-bold text-white">
-              • {currentLiveTime.format("h:mm A")}
-            </span>
-          )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeDateKey}
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(8px)" }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            style={{ willChange: "filter, opacity" }}
+            className="flex items-baseline gap-2"
+          >
+            <h2 className="text-base font-black text-white">
+              {activeDate.format("dddd, D MMMM")}
+            </h2>
+            {isToday && (
+              <span className="text-[11px] font-bold text-white">
+                • {currentLiveTime.format("h:mm A")}
+              </span>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex items-center">
+          <AnimatePresence mode="wait" initial={false}>
+            {isLoading && (
+              <motion.span
+                key="loading"
+                initial={{ opacity: 0, filter: "blur(6px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(6px)" }}
+                transition={{ duration: 0.14 }}
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white"
+              >
+                <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                Loading schedule...
+              </motion.span>
+            )}
+
+            {!isLoading && !error && lessons.length > 0 && (
+              <motion.span
+                key={`count-${activeDateKey}`}
+                initial={{ opacity: 0, filter: "blur(6px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(6px)" }}
+                transition={{ duration: 0.14 }}
+                className="text-[11px] font-bold text-white"
+              >
+                {lessons.length} {lessons.length === 1 ? "class" : "classes"}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
-
-        {isLoading && (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white">
-            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-            Loading schedule...
-          </span>
-        )}
-
-        {!isLoading && !error && lessons.length > 0 && (
-          <span className="text-[11px] font-bold text-white">
-            {lessons.length} {lessons.length === 1 ? "class" : "classes"}
-          </span>
-        )}
       </div>
 
-      {/* Loading Timetable Grid Skeleton */}
-      {isLoading && (
+      {/* Date Switch Animated Timeline Container */}
+      <div className="relative flex-1 flex flex-col w-full overflow-hidden">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeDateKey}
+            variants={dateBlurVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ willChange: "filter, opacity, transform" }}
+            className="flex-1 flex flex-col w-full"
+          >
+            {/* Loading Timetable Grid Skeleton */}
+            {isLoading && (
         <div className="relative flex-1 flex w-full bg-transparent min-h-[calc(100vh-100px)] animate-pulse select-none">
           {/* Left Time Column (Hours Gutter Skeleton) */}
           <div
@@ -736,6 +814,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           </div>
         </div>
       )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Lesson Detail Modal */}
       <LessonDetailModal
