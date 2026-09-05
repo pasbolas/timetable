@@ -299,14 +299,14 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
               >
             {/* Pinned Sticky Top Header Row: Day Columns Header */}
             <div
-              className={`sticky top-0 z-30 grid border-b-2 border-white bg-black/85 backdrop-blur-md select-none ${
+              className={`sticky top-0 z-30 grid border-b-2 border-white bg-black/85 backdrop-blur-md select-none week-header-surface ${
                 displaySevenDays
                   ? "grid-cols-[60px_repeat(7,minmax(0,1fr))]"
                   : "grid-cols-[60px_repeat(5,minmax(0,1fr))]"
               }`}
             >
               {/* Top-left corner time label */}
-              <div className="p-2.5 border-r-2 border-white flex items-center justify-center bg-black/70 backdrop-blur-xs select-none">
+              <div className="p-2.5 border-r-2 border-white flex items-center justify-center bg-black/70 backdrop-blur-xs select-none week-corner-cell">
                 <Clock className="w-4 h-4 text-white/70" />
               </div>
 

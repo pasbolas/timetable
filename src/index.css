@@ -228,6 +228,25 @@ html.light .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.pr
   background-color: #ffffff !important;
 }
 
+/* Pinned sticky top navigation header & subheader: slightly greyish shade of white */
+html[data-theme="light"] header.sticky,
+html[data-theme="light"] .top-bar-surface,
+html[data-theme="light"] .timeline-subheader-surface,
+html[data-theme="light"] .week-header-surface,
+html[data-theme="light"] .week-corner-cell,
+html.light header.sticky,
+html.light .top-bar-surface,
+html.light .timeline-subheader-surface,
+html.light .week-header-surface,
+html.light .week-corner-cell {
+  background-color: #f4f4f5 !important;
+}
+
+html[data-theme="light"] .top-bar-surface .bg-zinc-900,
+html.light .top-bar-surface .bg-zinc-900 {
+  background-color: #ffffff !important;
+}
+
 html[data-theme="light"] .bg-black\/60,
 html[data-theme="light"] .bg-black\/75,
 html[data-theme="light"] .bg-black\/80,
@@ -292,7 +311,7 @@ html[data-theme="light"] .hover\:bg-zinc-900:hover,
 html[data-theme="light"] .hover\:bg-zinc-800:hover,
 html.light .hover\:bg-zinc-900:hover,
 html.light .hover\:bg-zinc-800:hover {
-  background-color: #f4f4f5 !important;
+  background-color: #e4e4e7 !important;
 }
 
 html[data-theme="light"] .bg-zinc-900,

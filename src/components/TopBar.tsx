@@ -90,7 +90,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none w-full max-w-full overflow-hidden"
+      className="sticky top-0 z-30 bg-black border-b-2 border-white transition-colors select-none w-full max-w-full overflow-hidden top-bar-surface"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="max-w-[1600px] h-[58px] mx-auto px-2.5 sm:px-4 lg:px-6 flex items-center justify-between gap-2 sm:gap-3 w-full max-w-full">

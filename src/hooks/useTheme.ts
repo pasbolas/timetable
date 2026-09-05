@@ -5,7 +5,7 @@ export type ResolvedTheme = "dark" | "light";
 
 export const THEME_META_COLORS: Record<ResolvedTheme, string> = {
   dark: "#000000",
-  light: "#ffffff",
+  light: "#f4f4f5",
 };
 
 export const THEME_OPTIONS: Array<{
