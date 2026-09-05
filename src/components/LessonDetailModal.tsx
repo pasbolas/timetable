@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -37,28 +37,41 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   initialSnap,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
   const [snapState, setSnapState] = useState<SheetSnap>(() => {
     if (initialSnap) return initialSnap;
-    if (!lesson) return "half";
-    const isDesktop =
-      typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 768px)").matches;
-    return isDesktop ? "full" : "half";
+    return typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches
+      ? "full"
+      : "half";
   });
+
+  const prevLessonIdRef = useRef<string | null>(null);
+  if (lesson && lesson.id !== prevLessonIdRef.current) {
+    prevLessonIdRef.current = lesson.id;
+    const targetSnap = initialSnap || (isDesktop ? "full" : "half");
+    if (snapState !== targetSnap) {
+      setSnapState(targetSnap);
+    }
+  } else if (!lesson && prevLessonIdRef.current !== null) {
+    prevLessonIdRef.current = null;
+  }
 
   useEffect(() => {
     if (lesson) {
-      if (initialSnap) {
-        setSnapState(initialSnap);
-      } else {
-        const isDesktop =
-          typeof window !== "undefined" &&
-          window.matchMedia("(min-width: 768px)").matches;
-        setSnapState(isDesktop ? "full" : "half");
-      }
       triggerHapticFeedback();
     }
-  }, [lesson, initialSnap]);
+  }, [lesson]);
 
   const colorTheme = lesson ? getLessonColorTheme(lesson) : null;
   const moduleKey = lesson ? getLessonModuleKey(lesson) : "";
@@ -166,28 +179,45 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   };
 
   const sheetVariants = {
-    hidden: {
-      y: "100%",
-      opacity: 0,
-    },
+    hidden: isDesktop
+      ? {
+          opacity: 0,
+          scale: 0.95,
+          y: 0,
+          transition: {
+            duration: 0.18,
+            ease: "easeOut",
+          },
+        }
+      : {
+          opacity: 0,
+          y: "100%",
+          scale: 1,
+          transition: {
+            duration: 0.22,
+            ease: [0.32, 0.72, 0, 1],
+          },
+        },
     half: {
       y: 0,
       opacity: 1,
+      scale: 1,
       height: "54dvh",
       transition: {
-        type: "spring",
-        damping: 28,
-        stiffness: 340,
+        type: "tween",
+        duration: 0.24,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
     full: {
       y: 0,
       opacity: 1,
-      height: "88dvh",
+      scale: 1,
+      height: isDesktop ? "85dvh" : "88dvh",
       transition: {
-        type: "spring",
-        damping: 28,
-        stiffness: 340,
+        type: "tween",
+        duration: 0.24,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
@@ -208,16 +238,17 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             onClick={onClose}
           />
 
-          {/* Magnetic 3-State Spring Sheet (Half Open, Fully Open, Fully Close) */}
+          {/* Smooth Expand Sheet (Half Open, Fully Open, Fully Close) */}
           <motion.div
             variants={sheetVariants}
             initial="hidden"
             animate={snapState}
             exit="hidden"
-            drag="y"
+            drag={isDesktop ? false : "y"}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.18}
             onDragEnd={(_, info) => {
+              if (isDesktop) return;
               const { offset, velocity } = info;
 
               if (snapState === "half") {

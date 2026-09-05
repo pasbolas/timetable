@@ -1,5 +1,5 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import {
   X,
   Compass,
@@ -18,17 +18,20 @@ import {
   Palette,
   Check,
   MoreHorizontal,
+  Smartphone,
+  Share,
 } from "lucide-react";
 import { ProgramSearchResult, DayData } from "../types/timetable";
 import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 import { triggerHapticFeedback } from "../services/haptics";
 import { useTheme, THEME_OPTIONS } from "../hooks/useTheme";
+import { usePWAInstall } from "../hooks/usePWAInstall";
 
-// Cute half-length double wavy lines divider
+// Cute half-length single wavy line divider
 const CuteWavyDivider: React.FC<{ className?: string }> = ({ className = "" }) => (
   <div
-    className={`flex items-center justify-center gap-2.5 py-1 select-none pointer-events-none ${className}`}
+    className={`flex items-center justify-center gap-2.5 py-1.5 select-none pointer-events-none ${className}`}
     aria-hidden="true"
   >
     {/* Cute Left Sparkle Star */}
@@ -36,34 +39,19 @@ const CuteWavyDivider: React.FC<{ className?: string }> = ({ className = "" }) =
       <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
     </svg>
 
-    {/* Half-length cute double wavy lines */}
-    <div className="w-1/2 max-w-[140px] flex flex-col items-center gap-1.5">
-      <svg className="w-full h-2 overflow-visible" viewBox="0 0 128 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Half-length cute single wavy line */}
+    <div className="w-1/2 max-w-[140px] flex items-center justify-center">
+      <svg className="w-full h-2.5 overflow-visible" viewBox="0 0 128 10" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="cuteWaveGradA" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="cuteWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#818cf8" />
             <stop offset="50%" stopColor="#c084fc" />
             <stop offset="100%" stopColor="#f472b6" />
           </linearGradient>
         </defs>
         <path
-          d="M 4 4 Q 16 0, 28 4 T 52 4 T 76 4 T 100 4 T 124 4"
-          stroke="url(#cuteWaveGradA)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-      </svg>
-      <svg className="w-full h-2 overflow-visible" viewBox="0 0 128 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="cuteWaveGradB" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#818cf8" />
-            <stop offset="50%" stopColor="#c084fc" />
-            <stop offset="100%" stopColor="#f472b6" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M 4 10 Q 16 6, 28 10 T 52 10 T 76 10 T 100 10 T 124 10"
-          stroke="url(#cuteWaveGradB)"
+          d="M 4 5 Q 16 1, 28 5 T 52 5 T 76 5 T 100 5 T 124 5"
+          stroke="url(#cuteWaveGrad)"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -107,7 +95,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   onStartTour,
 }) => {
   const { themeMode, setThemeMode } = useTheme();
+  const { isInstalled, browserEnv, installApp, showInstallGuide, setShowInstallGuide } = usePWAInstall();
   const [isMoreOpen, setIsMoreOpen] = React.useState(false);
+  const mainDragControls = useDragControls();
+  const moreDragControls = useDragControls();
 
   React.useEffect(() => {
     if (!isOpen) {
@@ -205,84 +196,95 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               animate={isMoreOpen ? "stacked" : "visible"}
               exit="exit"
               drag="y"
-              dragConstraints={{ top: 0 }}
-            dragElastic={0.35}
-            onDragEnd={(_, info) => {
-              if (info.offset.y > 80 || info.velocity.y > 320) {
-                triggerHapticFeedback();
-                onClose();
-              }
-            }}
-            className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border border-white/20 overflow-hidden flex flex-col touch-pan-y"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Fixed Central Ambient Glow matching reference design */}
-            <div
-              className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none flex items-center justify-center"
-              aria-hidden="true"
-            >
-              {/* Primary Radial Glow Core */}
-              <div
-                className="w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] rounded-full blur-3xl opacity-85"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(99, 102, 241, 0.32) 0%, rgba(147, 130, 255, 0.22) 35%, rgba(196, 181, 253, 0.12) 55%, transparent 72%)",
-                }}
-              />
-              {/* Secondary Soft Blue Accent Glow */}
-              <div
-                className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full blur-2xl opacity-75"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(96, 165, 250, 0.26) 0%, rgba(147, 197, 253, 0.15) 45%, transparent 70%)",
-                  transform: "translate(10px, 20px)",
-                }}
-              />
-            </div>
-
-            {/* Big Minimise Handle at the Top */}
-            <motion.div
-              onClick={() => {
-                triggerHapticFeedback();
-                onClose();
+              dragListener={false}
+              dragControls={mainDragControls}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.4 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 80 || info.velocity.y > 320) {
+                  triggerHapticFeedback();
+                  onClose();
+                }
               }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.92 }}
-              className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
-              title="Tap or drag down to minimise"
+              className="relative z-10 w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border border-white/20 overflow-hidden flex flex-col shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs" />
-            </motion.div>
-
-            {/* Drawer Header */}
-            <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0">
-                  <GraduationCap className="w-5 h-5 text-white" />
-                </div>
-                <h2 className="font-black text-lg sm:text-xl text-white tracking-tight leading-none m-0 p-0">
-                  Preference
-                </h2>
+              {/* Fixed Central Ambient Glow matching reference design */}
+              <div
+                className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none flex items-center justify-center"
+                aria-hidden="true"
+              >
+                {/* Primary Radial Glow Core */}
+                <div
+                  className="w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] rounded-full blur-3xl opacity-85"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(99, 102, 241, 0.32) 0%, rgba(147, 130, 255, 0.22) 35%, rgba(196, 181, 253, 0.12) 55%, transparent 72%)",
+                  }}
+                />
+                {/* Secondary Soft Blue Accent Glow */}
+                <div
+                  className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full blur-2xl opacity-75"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(96, 165, 250, 0.26) 0%, rgba(147, 197, 253, 0.15) 45%, transparent 70%)",
+                    transform: "translate(10px, 20px)",
+                  }}
+                />
               </div>
 
-              <div className="flex items-center gap-1.5">
-                {isOffline && (
-                  <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-white/20 bg-zinc-900 text-white font-bold">
-                    <WifiOff className="w-2.5 h-2.5 text-white" />
-                    Offline
-                  </span>
-                )}
-                <button
-                  onClick={onClose}
-                  className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all"
-                >
-                  <X className="w-5 h-5 text-white" />
-                </button>
+              {/* Preference Drawer Header Area */}
+              <div
+                className="preference-drawer-header shrink-0 relative z-10 cursor-grab active:cursor-grabbing touch-none select-none"
+                onPointerDown={(e) => mainDragControls.start(e)}
+              >
+              {/* Big Minimise Handle at the Top */}
+              <motion.div
+                onClick={() => {
+                  triggerHapticFeedback();
+                  onClose();
+                }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.92 }}
+                className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
+                title="Tap or drag down to minimise"
+              >
+                <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
+              </motion.div>
+
+              {/* Drawer Header */}
+              <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0 preference-drawer-icon-box">
+                    <GraduationCap className="w-5 h-5 text-white" />
+                  </div>
+                  <h2 className="font-black text-lg sm:text-xl text-white tracking-tight leading-none m-0 p-0 preference-drawer-title">
+                    Preference
+                  </h2>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  {isOffline && (
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-white/20 bg-zinc-900 text-white font-bold">
+                      <WifiOff className="w-2.5 h-2.5 text-white" />
+                      Offline
+                    </span>
+                  )}
+                  <button
+                    onClick={onClose}
+                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn"
+                  >
+                    <X className="w-5 h-5 text-white" />
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* Drawer Scrollable Body */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-transparent relative z-10">
+            <div
+              className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
+              style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+            >
               {/* Active Course Card */}
               <div
                 className={`transition-all duration-300 transform ${
@@ -378,6 +380,41 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 </div>
               </div>
 
+              {/* Install as App Pill */}
+              <div className="pt-2 transition-all duration-300">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    triggerHapticFeedback();
+                    await installApp();
+                  }}
+                  className="w-full p-3 rounded-full bg-zinc-950 hover:bg-zinc-900 border border-white/20 flex items-center justify-between text-left transition-all active:scale-98 group shadow-xs cursor-pointer"
+                  title={isInstalled ? "App is already installed" : "Install MyTimetable as an App"}
+                >
+                  <div className="flex items-center gap-2.5 pl-1.5 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0 shadow-xs">
+                      {isInstalled ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <Smartphone className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+                      )}
+                    </div>
+                    <span className="text-xs sm:text-sm font-black text-white leading-tight truncate">
+                      {isInstalled ? "App Installed" : "Install App"}
+                    </span>
+                  </div>
+                  <div className="pr-1.5 flex items-center shrink-0">
+                    {isInstalled ? (
+                      <span className="text-[10px] font-bold py-0.5 px-2 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+                        Active
+                      </span>
+                    ) : (
+                      <Download className="w-4 h-4 text-white group-hover:translate-y-0.5 transition-transform" />
+                    )}
+                  </div>
+                </button>
+              </div>
+
               {/* "More" Pill Button */}
               <div className="pt-1 transition-all duration-300">
                 <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 px-0.5">
@@ -404,14 +441,19 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   </div>
                 </button>
               </div>
-            </div>
 
-            {/* Drawer Footer */}
-            <div
-              className="p-3 bg-black border-t border-white/15 text-center text-[10px] font-bold text-zinc-400 shrink-0"
-              style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
-            >
-              Scientia Timetabler EU • Dublin (Europe/Dublin)
+              {/* Rick & Morty Peeking Sticker Attached to Bottom */}
+              <div
+                className="mt-auto pt-4 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 shrink-0"
+                style={{ marginBottom: "calc(-1 * max(env(safe-area-inset-bottom, 0px), 24px))" }}
+              >
+                <img
+                  src="/rick-morty-clean.png?v=2"
+                  alt="Rick and Morty"
+                  className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-0.5"
+                  loading="eager"
+                />
+              </div>
             </div>
           </motion.div>
         </div>
@@ -458,15 +500,17 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             animate="visible"
             exit="exit"
             drag="y"
-            dragConstraints={{ top: 0 }}
-            dragElastic={0.35}
+            dragListener={false}
+            dragControls={moreDragControls}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.4 }}
             onDragEnd={(_, info) => {
               if (info.offset.y > 80 || info.velocity.y > 320) {
                 triggerHapticFeedback();
                 setIsMoreOpen(false);
               }
             }}
-            className="relative z-[80] w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border border-white/20 overflow-hidden flex flex-col touch-pan-y shadow-2xl"
+            className="relative z-[80] w-full sm:max-w-md h-[88dvh] max-h-[88dvh] bg-black rounded-t-3xl sm:rounded-2xl border border-white/20 overflow-hidden flex flex-col shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
                   {/* Fixed Central Ambient Glow matching reference design */}
@@ -491,55 +535,64 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     />
                   </div>
 
-                  {/* Minimise Handle at the Top */}
-                  <motion.div
-                    onClick={() => {
-                      triggerHapticFeedback();
-                      setIsMoreOpen(false);
-                    }}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.92 }}
-                    className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
-                    title="Tap or drag down to minimise"
+                  {/* More Settings Drawer Header Area */}
+                  <div
+                    className="preference-drawer-header shrink-0 relative z-10 cursor-grab active:cursor-grabbing touch-none select-none"
+                    onPointerDown={(e) => moreDragControls.start(e)}
                   >
-                    <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs" />
-                  </motion.div>
-
-                  {/* Drawer Header */}
-                  <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10">
-                    <button
+                    {/* Minimise Handle at the Top */}
+                    <motion.div
                       onClick={() => {
                         triggerHapticFeedback();
                         setIsMoreOpen(false);
                       }}
-                      className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors"
-                      title="Back to preferences"
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.92 }}
+                      className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
+                      title="Tap or drag down to minimise"
                     >
-                      <ChevronLeft className="w-3.5 h-3.5 text-white" />
-                      <span>Back</span>
-                    </button>
+                      <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
+                    </motion.div>
 
-                    <div className="text-center">
-                      <span className="font-black text-sm text-white block leading-none">
-                        More Settings
-                      </span>
-                      <span className="text-[10px] font-bold text-zinc-400">Additional options</span>
+                    {/* Drawer Header */}
+                    <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
+                      <button
+                        onClick={() => {
+                          triggerHapticFeedback();
+                          setIsMoreOpen(false);
+                        }}
+                        className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn"
+                        title="Back to preferences"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5 text-white" />
+                        <span>Back</span>
+                      </button>
+
+                      <div className="text-center">
+                        <span className="font-black text-sm text-white block leading-none">
+                          More Settings
+                        </span>
+                        <span className="text-[10px] font-bold text-zinc-400">Additional options</span>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setIsMoreOpen(false);
+                          onClose();
+                        }}
+                        className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn"
+                        title="Close"
+                      >
+                        <X className="w-5 h-5 text-white" />
+                      </button>
                     </div>
-
-                    <button
-                      onClick={() => {
-                        setIsMoreOpen(false);
-                        onClose();
-                      }}
-                      className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all"
-                      title="Close"
-                    >
-                      <X className="w-5 h-5 text-white" />
-                    </button>
                   </div>
 
                   {/* More Drawer Scrollable Body */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-transparent relative z-10">
+                  <div
+                    className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y"
+                    style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+                  >
                     {/* Quick Actions */}
                     <div className="transition-all duration-300">
                       <div className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">
@@ -687,15 +740,119 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                         </div>
                       </div>
                     )}
+
+                    {/* Rick & Morty Peeking Sticker Attached to Bottom */}
+                    <div
+                      className="mt-auto pt-4 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 shrink-0"
+                      style={{ marginBottom: "calc(-1 * max(env(safe-area-inset-bottom, 0px), 24px))" }}
+                    >
+                      <img
+                        src="/rick-morty-clean.png?v=2"
+                        alt="Rick and Morty"
+                        className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-0.5"
+                        loading="eager"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* PWA Install Guide Modal (For iOS / unsupported browsers) */}
+          <AnimatePresence>
+            {showInstallGuide && (
+              <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-3 sm:p-4 pointer-events-auto">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
+                  onClick={() => setShowInstallGuide(false)}
+                />
+                <motion.div
+                  initial={{ scale: 0.94, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.94, opacity: 0, y: 20 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative w-full max-w-sm rounded-2xl bg-zinc-950 border border-white/20 p-5 shadow-2xl z-10 text-white select-none"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center">
+                        <Smartphone className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-black text-white">Install MyTimetable</h4>
+                        <p className="text-[11px] font-medium text-zinc-400">Add to your Home Screen</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowInstallGuide(false)}
+                      className="p-1.5 rounded-lg border border-white/20 hover:bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
 
-                  {/* Drawer Footer */}
-                  <div
-                    className="p-3 bg-black border-t border-white/15 text-center text-[10px] font-bold text-zinc-400 shrink-0"
-                    style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
+                  {browserEnv === "ios-safari" ? (
+                    <div className="space-y-2.5 text-xs text-zinc-300">
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+                        <span>Tap the <strong>Share</strong> button <Share className="w-3.5 h-3.5 inline mx-0.5 text-white" /> in Safari&apos;s bottom toolbar</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+                        <span>Scroll down and tap <strong>Add to Home Screen</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">3</span>
+                        <span>Tap <strong>Add</strong> in the top-right corner</span>
+                      </div>
+                    </div>
+                  ) : browserEnv === "ios-other" ? (
+                    <div className="space-y-2.5 text-xs text-zinc-300">
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+                        <span>Tap the browser <strong>Share</strong> or <strong>Menu (•••)</strong> button</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+                        <span>Select <strong>Add to Home Screen</strong></span>
+                      </div>
+                    </div>
+                  ) : browserEnv.startsWith("desktop") ? (
+                    <div className="space-y-2.5 text-xs text-zinc-300">
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+                        <span>Look for the <strong>Install icon <Download className="w-3.5 h-3.5 inline text-white" /></strong> in the right side of your address bar</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+                        <span>Or click your browser menu (⋮) → select <strong>Install MyTimetable</strong></span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5 text-xs text-zinc-300">
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+                        <span>Tap the <strong>three-dots menu (⋮)</strong> in your browser</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/90 border border-white/10">
+                        <span className="w-5 h-5 rounded-full bg-white text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+                        <span>Select <strong>Install app</strong> or <strong>Add to Home screen</strong></span>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setShowInstallGuide(false)}
+                    className="w-full mt-4 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-black transition-colors"
                   >
-                    Scientia Timetabler EU • Dublin (Europe/Dublin)
-                  </div>
+                    Got It
+                  </button>
                 </motion.div>
               </div>
             )}

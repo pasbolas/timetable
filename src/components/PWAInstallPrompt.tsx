@@ -26,7 +26,9 @@ export const PWAInstallPrompt: React.FC = () => {
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      const promptEvent = e as BeforeInstallPromptEvent;
+      window.__pwaDeferredPrompt = promptEvent;
+      setDeferredPrompt(promptEvent);
       setShowPrompt(true);
     };
 
@@ -44,13 +46,17 @@ export const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    const prompt = deferredPrompt || (typeof window !== "undefined" ? window.__pwaDeferredPrompt : null);
+    if (!prompt) return;
+    prompt.prompt();
+    const { outcome } = await prompt.userChoice;
     if (outcome === "accepted") {
       setShowPrompt(false);
     }
     setDeferredPrompt(null);
+    if (typeof window !== "undefined") {
+      window.__pwaDeferredPrompt = null;
+    }
   };
 
   const handleDismiss = () => {

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo, useCallback, useState } from "react";
 import moment from "moment-timezone";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DayData } from "../types/timetable";
 import { TIMETABLE_CONFIG } from "../config/timetableConfig";
@@ -399,10 +399,15 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                   </button>
                   <button
                     type="button"
-                    onClick={handleCloseCalendar}
-                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-zinc-900 text-white border border-white/20 hover:bg-zinc-800 transition-colors"
+                    onClick={() => {
+                      triggerHapticFeedback();
+                      handleCloseCalendar();
+                    }}
+                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-red-500 hover:bg-red-600 active:scale-95 text-white transition-all shadow-xs shrink-0 cursor-pointer border-0"
+                    title="Close calendar"
+                    aria-label="Close calendar"
                   >
-                    Cancel
+                    <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white stroke-[2.5]" />
                   </button>
                 </div>
               </div>
@@ -474,11 +479,6 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                     </button>
                   );
                 })}
-              </div>
-
-              {/* Bottom Drag-to-cancel Hint */}
-              <div className="pt-1 text-center text-[10px] font-bold text-white">
-                Pull down or tap Cancel to close
               </div>
             </div>
           ) : (

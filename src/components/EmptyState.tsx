@@ -1,5 +1,4 @@
-import React from "react";
-import { Coffee, SunMedium, AlertCircle, RotateCcw, Calendar } from "lucide-react";
+import { AlertCircle, RotateCcw, Calendar } from "lucide-react";
 import moment from "moment-timezone";
 
 interface EmptyStateProps {
@@ -12,7 +11,7 @@ interface EmptyStateProps {
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   type,
-  date,
+  date: _date,
   errorMessage,
   onRetry,
   onOpenSearch,
@@ -42,22 +41,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     );
   }
 
-  if (type === "weekend") {
-    return (
-      <div className="flex flex-col items-center justify-center py-2 px-4 text-center animate-in fade-in duration-300">
-        <div className="w-16 h-16 rounded-2xl bg-black border-2 border-white text-white flex items-center justify-center mb-4">
-          <SunMedium className="w-8 h-8" />
-        </div>
-        <h3 className="text-base font-black text-white mb-1">
-          Weekend Break
-        </h3>
-        <p className="text-xs text-white font-medium max-w-xs">
-          No classes scheduled on {date?.format("dddd")}. Take some time to relax, recharge, or catch up on coursework! ☕
-        </p>
-      </div>
-    );
-  }
-
   if (type === "no-program") {
     return (
       <div className="flex flex-col items-center justify-center py-2 px-4 text-center">
@@ -82,18 +65,20 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     );
   }
 
-  // Free day
+  // Days with no class: weekend or free day
   return (
-    <div className="flex flex-col items-center justify-center py-2 px-4 text-center animate-in fade-in duration-300">
-      <div className="w-16 h-16 rounded-2xl bg-black border-2 border-white text-white flex items-center justify-center mb-4">
-        <Coffee className="w-8 h-8" />
+    <div className="flex flex-col items-center justify-center py-4 px-4 text-center select-none animate-in fade-in duration-300">
+      <div className="relative mb-3 flex items-center justify-center">
+        <img
+          src="/pickle-rick.png"
+          alt="Pickle Rick"
+          className="w-44 sm:w-52 max-w-[210px] h-auto object-contain select-none pointer-events-none drop-shadow-xl"
+          loading="eager"
+        />
       </div>
-      <h3 className="text-base font-black text-white mb-1">
-        No Classes Today
+      <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+        No class for you today morty
       </h3>
-      <p className="text-xs text-white font-medium max-w-xs">
-        You have no scheduled lectures or labs for {date?.format("dddd, D MMMM")}. Enjoy your free day! 🎉
-      </p>
     </div>
   );
 };

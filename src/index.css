@@ -500,10 +500,10 @@ html.zara .bg-break-stripes * {
 }
 
 /* Inner card, widget, modal backgrounds in Zara mode */
-html[data-theme="zara"] .bg-black:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
-html[data-theme="zara"] .bg-zinc-950:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
-html.zara .bg-black:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
-html.zara .bg-zinc-950:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main) {
+html[data-theme="zara"] .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
+html[data-theme="zara"] .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
+html.zara .bg-black:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main),
+html.zara .bg-zinc-950:not(.app-canvas-root):not(.top-bar-surface):not(header):not(.week-header-surface):not(.week-corner-cell):not(.timeline-subheader-surface):not(.preference-drawer-header):not(.preference-drawer-bar):not(body):not(main) {
   background-color: #ffffff !important;
 }
 
@@ -519,14 +519,20 @@ html.zara body {
 
 /* Pinned sticky top navigation header & week header surface */
 html[data-theme="zara"] header.sticky,
+html[data-theme="zara"] header.top-bar-surface,
+html[data-theme="zara"] header.sticky.top-bar-surface,
+html[data-theme="zara"] header.sticky.top-bar-surface.bg-black,
 html[data-theme="zara"] .top-bar-surface,
 html[data-theme="zara"] .week-header-surface,
 html[data-theme="zara"] .week-corner-cell,
 html.zara header.sticky,
+html.zara header.top-bar-surface,
+html.zara header.sticky.top-bar-surface,
+html.zara header.sticky.top-bar-surface.bg-black,
 html.zara .top-bar-surface,
 html.zara .week-header-surface,
 html.zara .week-corner-cell {
-  background-color: #f4f4f5 !important;
+  background-color: #E2C4A6 !important;
 }
 
 /* Date subheader ("Saturday, 5 September • ...") in Zara mode */
@@ -537,6 +543,45 @@ html.zara div.timeline-subheader-surface {
   background-color: #DE838D !important;
   border-top-color: #000000 !important;
   border-bottom-color: #000000 !important;
+}
+
+/* Preference tab / drawer header in Zara mode */
+html[data-theme="zara"] .preference-drawer-header,
+html.zara .preference-drawer-header,
+html[data-theme="zara"] .preference-drawer-bar,
+html.zara .preference-drawer-bar {
+  background-color: #DE838D !important;
+}
+
+html[data-theme="zara"] .preference-drawer-bar,
+html.zara .preference-drawer-bar {
+  border-bottom-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .preference-drawer-handle,
+html.zara .preference-drawer-handle {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+html[data-theme="zara"] .preference-drawer-header .preference-drawer-icon-box,
+html.zara .preference-drawer-header .preference-drawer-icon-box {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .preference-drawer-header .preference-drawer-close-btn,
+html.zara .preference-drawer-header .preference-drawer-close-btn,
+html[data-theme="zara"] .preference-drawer-header .preference-drawer-back-btn,
+html.zara .preference-drawer-header .preference-drawer-back-btn {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .preference-drawer-header .preference-drawer-close-btn:hover,
+html.zara .preference-drawer-header .preference-drawer-close-btn:hover,
+html[data-theme="zara"] .preference-drawer-header .preference-drawer-back-btn:hover,
+html.zara .preference-drawer-header .preference-drawer-back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.75) !important;
 }
 
 html[data-theme="zara"] .top-bar-surface .bg-zinc-900,
@@ -555,12 +600,12 @@ html.zara .bg-zinc-950\/95 {
 html[data-theme="zara"] .bg-black\/60,
 html[data-theme="zara"] .bg-black\/75,
 html[data-theme="zara"] .bg-black\/80,
-html[data-theme="zara"] .bg-black\/85,
+html[data-theme="zara"] .bg-black\/85:not(.preference-drawer-bar):not(.preference-drawer-header):not(.week-header-surface),
 html[data-theme="zara"] .bg-black\/90,
 html.zara .bg-black\/60,
 html.zara .bg-black\/75,
 html.zara .bg-black\/80,
-html.zara .bg-black\/85,
+html.zara .bg-black\/85:not(.preference-drawer-bar):not(.preference-drawer-header):not(.week-header-surface),
 html.zara .bg-black\/90 {
   background-color: rgba(255, 255, 255, 0.88) !important;
 }

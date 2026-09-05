@@ -98,7 +98,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenMenu}
           data-tour="course-chip"
-          className="flex items-center gap-1.5 sm:gap-2 text-left py-1 px-2 sm:px-2.5 rounded-xl border border-white/25 bg-zinc-950 hover:bg-zinc-900 hover:border-white/40 active:scale-98 transition-colors group flex-1 min-w-0 max-w-[210px] sm:max-w-xs md:max-w-[280px] lg:max-w-sm"
+          className="flex items-center gap-1.5 sm:gap-2 text-left py-1 px-2 sm:px-2.5 rounded-xl border border-white/25 bg-zinc-950 hover:bg-zinc-900 hover:border-white/40 active:scale-98 transition-colors group flex-1 min-w-0 md:max-w-[280px] lg:max-w-sm"
           title="Open course details and menu"
         >
           <span className="font-bold text-xs shrink-0 cursor-pointer py-0.5 px-2 rounded-full bg-zinc-800 text-zinc-100 border border-zinc-700">
@@ -131,16 +131,23 @@ export const TopBar: React.FC<TopBarProps> = ({
             </div>
 
             {/* Jump to This Week (if not current week) */}
-            {!isTodayActive && (
-              <button
-                onClick={onGoToToday}
-                className="inline-flex items-center gap-1 text-xs font-black px-2.5 py-1 rounded-xl bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors cursor-pointer"
-                title="Jump to current week"
-              >
-                <Sparkles className="w-3 h-3 text-black fill-black" />
-                <span>Today</span>
-              </button>
-            )}
+            <AnimatePresence initial={false}>
+              {!isTodayActive && (
+                <motion.button
+                  key="desktop-today-btn"
+                  initial={{ width: 0, opacity: 0, scale: 0.8 }}
+                  animate={{ width: "auto", opacity: 1, scale: 1 }}
+                  exit={{ width: 0, opacity: 0, scale: 0.8 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 30 }}
+                  onClick={onGoToToday}
+                  className="inline-flex items-center gap-1 text-xs font-black px-2.5 py-1 rounded-xl bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors cursor-pointer overflow-hidden whitespace-nowrap"
+                  title="Jump to current week"
+                >
+                  <Sparkles className="w-3 h-3 text-black fill-black shrink-0" />
+                  <span>Today</span>
+                </motion.button>
+              )}
+            </AnimatePresence>
 
             {/* Week Date Range Title */}
             <div className="flex items-center gap-1.5 text-xs lg:text-sm font-black text-white h-5 overflow-hidden">
@@ -210,18 +217,34 @@ export const TopBar: React.FC<TopBarProps> = ({
             </span>
           )}
 
-          {/* Mobile Jump to Today (shown only on mobile when not today) */}
-          {!isTodayActive && (
-            <button
-              onClick={onGoToToday}
-              data-tour="today-button"
-              className="md:hidden h-8 px-2.5 text-xs font-black rounded-xl shrink-0 bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors flex items-center gap-1 cursor-pointer"
-              title="Jump to today"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-black shrink-0 fill-black" />
-              <span>Today</span>
-            </button>
-          )}
+          {/* Mobile Jump to Today (animated growing from nothing when not on today) */}
+          <AnimatePresence initial={false}>
+            {!isTodayActive && (
+              <motion.div
+                key="mobile-today-anim-wrapper"
+                initial={{ width: 0, opacity: 0, scale: 0.85, marginRight: -8 }}
+                animate={{ width: "auto", opacity: 1, scale: 1, marginRight: 0 }}
+                exit={{ width: 0, opacity: 0, scale: 0.85, marginRight: -8 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 420,
+                  damping: 30,
+                  mass: 0.8,
+                }}
+                className="overflow-hidden md:hidden shrink-0 flex items-center origin-right"
+              >
+                <button
+                  onClick={onGoToToday}
+                  data-tour="today-button"
+                  className="h-8 px-2.5 text-xs font-black rounded-xl shrink-0 bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors flex items-center gap-1 cursor-pointer whitespace-nowrap active:scale-95"
+                  title="Jump to today"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-black shrink-0 fill-black" />
+                  <span>Today</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Expandable Menu Button */}
           <Button

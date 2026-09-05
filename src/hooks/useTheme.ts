@@ -6,7 +6,7 @@ export type ResolvedTheme = "dark" | "light" | "zara";
 export const THEME_META_COLORS: Record<ResolvedTheme, string> = {
   dark: "#000000",
   light: "#f4f4f5",
-  zara: "#F3E0BE",
+  zara: "#E2C4A6",
 };
 
 export const THEME_OPTIONS: Array<{

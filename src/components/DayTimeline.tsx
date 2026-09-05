@@ -348,9 +348,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
       {/* Empty State when no classes */}
       {!isLoading && !error && lessons.length === 0 && (
         <div
-          className="max-w-md mx-auto px-4 flex-1 flex flex-col items-center justify-center select-none"
+          className="max-w-md mx-auto px-4 flex-1 flex flex-col items-center justify-center select-none min-h-[calc(100dvh-200px)] py-6"
           style={{
-            paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))",
+            paddingBottom: "calc(90px + env(safe-area-inset-bottom, 0px))",
           }}
         >
           <EmptyState

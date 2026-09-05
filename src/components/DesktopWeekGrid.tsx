@@ -250,15 +250,17 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
       {!isLoading && !error && displayedDays.length === 0 && (
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-4 select-none">
           <div className="max-w-md w-full p-6 rounded-2xl border-2 border-white bg-black/90 backdrop-blur-md shadow-sm text-center text-white">
-            <div className="w-12 h-12 rounded-xl bg-zinc-900 border-2 border-white flex items-center justify-center mx-auto mb-3">
-              <Coffee className="w-6 h-6 text-white" />
+            <div className="flex justify-center mb-3">
+              <img
+                src="/pickle-rick.png"
+                alt="Pickle Rick"
+                className="w-32 h-32 object-contain drop-shadow-xl"
+                loading="eager"
+              />
             </div>
-            <h3 className="text-lg font-black text-white mb-1">
-              No Classes Scheduled This Week
+            <h3 className="text-lg font-black text-white mb-4">
+              No class for you today morty
             </h3>
-            <p className="text-xs font-bold text-zinc-400 mb-4">
-              Enjoy your free time, or check the previous or upcoming weeks for class timetables.
-            </p>
             <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => onSelectDate(activeDate.clone().subtract(1, "week"))}
@@ -435,10 +437,15 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
 
                   {/* Empty Day Indicator (Only when other days have classes to avoid visual clutter) */}
                   {totalClassesCount > 0 && dayData.lessons.length === 0 && (
-                    <div className="absolute inset-x-2 top-28 flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-white/25 bg-black/50 backdrop-blur-xs text-center pointer-events-none select-none">
-                      <Coffee className="w-4 h-4 text-white/50 mb-1" />
-                      <span className="text-[11px] font-bold text-white/60">
-                        No classes
+                    <div className="absolute inset-x-2 top-24 flex flex-col items-center justify-center p-2.5 rounded-xl border border-dashed border-white/25 bg-black/50 backdrop-blur-xs text-center pointer-events-none select-none">
+                      <img
+                        src="/pickle-rick.png"
+                        alt="Pickle Rick"
+                        className="w-14 h-14 object-contain mb-1.5 drop-shadow-md"
+                        loading="eager"
+                      />
+                      <span className="text-[11px] font-black text-white leading-tight">
+                        No class today Morty
                       </span>
                     </div>
                   )}
@@ -629,15 +636,17 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
             {totalClassesCount === 0 && (
               <div className="absolute inset-0 left-[60px] flex items-center justify-center p-4 z-20 pointer-events-none select-none">
                 <div className="max-w-md w-full p-6 sm:p-7 rounded-2xl border-2 border-white bg-black/90 backdrop-blur-md shadow-lg text-center pointer-events-auto">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border-2 border-white flex items-center justify-center mx-auto mb-3 shadow-xs">
-                    <Coffee className="w-6 h-6 text-white" />
+                  <div className="flex justify-center mb-3">
+                    <img
+                      src="/pickle-rick.png"
+                      alt="Pickle Rick"
+                      className="w-32 h-32 object-contain drop-shadow-xl"
+                      loading="eager"
+                    />
                   </div>
-                  <h3 className="text-lg font-black text-white mb-1">
-                    No Classes Scheduled This Week
+                  <h3 className="text-lg font-black text-white mb-4">
+                    No class for you today morty
                   </h3>
-                  <p className="text-xs font-bold text-zinc-400 mb-4">
-                    Enjoy your free time, or check the previous or upcoming weeks for class timetables.
-                  </p>
                   <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={() => onSelectDate(activeDate.clone().subtract(1, "week"))}
