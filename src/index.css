@@ -8,11 +8,13 @@
 
 html {
   background-color: #000000;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body {
   background-color: #000000;
   color: #ffffff;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Viewport expansion and overscroll prevention for PWAs */
@@ -166,3 +168,392 @@ body {
   animation: indeterminate-bar 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* ========================================================================== */
+/* DYNAMIC COLOUR MODES & THEMES ENGINE                                       */
+/* ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/* 1. LIGHT THEME (Minimal Paper White & Deep Black)                          */
+/* -------------------------------------------------------------------------- */
+html[data-theme="light"],
+html.light {
+  background-color: #ffffff !important;
+  color-scheme: light;
+}
+
+html[data-theme="light"] body,
+html.light body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-thumb,
+html.light ::-webkit-scrollbar-thumb {
+  background: #000000 !important;
+}
+
+html[data-theme="light"] *,
+html.light * {
+  scrollbar-color: #000000 transparent !important;
+}
+
+html[data-theme="light"] .bg-dot-grid,
+html.light .bg-dot-grid {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.12) 1.5px, transparent 1.5px) !important;
+}
+
+html[data-theme="light"] .bg-break-stripes,
+html.light .bg-break-stripes {
+  background-color: #ffffff !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #ffffff,
+    #ffffff 7px,
+    rgba(0, 0, 0, 0.12) 7px,
+    rgba(0, 0, 0, 0.12) 14px
+  ) !important;
+}
+
+/* Canvas, card, header, container backgrounds */
+html[data-theme="light"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color),
+html.light .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
+  background-color: #ffffff !important;
+}
+
+html[data-theme="light"] .bg-black\/60,
+html[data-theme="light"] .bg-black\/75,
+html[data-theme="light"] .bg-black\/80,
+html[data-theme="light"] .bg-black\/85,
+html[data-theme="light"] .bg-black\/90,
+html.light .bg-black\/60,
+html.light .bg-black\/75,
+html.light .bg-black\/80,
+html.light .bg-black\/85,
+html.light .bg-black\/90 {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Modal and bottom sheet backdrops stay dim */
+html[data-theme="light"] .fixed.inset-0.bg-black\/80,
+html.light .fixed.inset-0.bg-black\/80 {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Typography in Light mode */
+html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color),
+html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+  color: #000000 !important;
+}
+
+html[data-theme="light"] .text-white\/90,
+html.light .text-white\/90 {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+html[data-theme="light"] .text-zinc-300,
+html[data-theme="light"] .text-zinc-400,
+html.light .text-zinc-300,
+html.light .text-zinc-400 {
+  color: #52525b !important;
+}
+
+/* Borders in Light mode */
+html[data-theme="light"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color),
+html.light .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  border-color: #000000 !important;
+}
+
+html[data-theme="light"] .border-white\/20,
+html[data-theme="light"] .border-white\/30,
+html[data-theme="light"] .border-white\/40,
+html[data-theme="light"] .border-white\/50,
+html.light .border-white\/20,
+html.light .border-white\/30,
+html.light .border-white\/40,
+html.light .border-white\/50 {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="light"] .ring-white,
+html.light .ring-white {
+  --tw-ring-color: #000000 !important;
+}
+
+/* Hovers in Light mode */
+html[data-theme="light"] .hover\:bg-zinc-900:hover,
+html[data-theme="light"] .hover\:bg-zinc-800:hover,
+html.light .hover\:bg-zinc-900:hover,
+html.light .hover\:bg-zinc-800:hover {
+  background-color: #f4f4f5 !important;
+}
+
+html[data-theme="light"] .bg-zinc-900,
+html[data-theme="light"] .bg-zinc-800,
+html.light .bg-zinc-900,
+html.light .bg-zinc-800 {
+  background-color: #f4f4f5 !important;
+}
+
+/* Inverted badges, primary active action buttons */
+html[data-theme="light"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color),
+html.light .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+html[data-theme="light"] .bg-white.text-black:not([class*="bg-[#228B22]"]) *,
+html.light .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html[data-theme="light"] .hover\:bg-zinc-200:hover,
+html.light .hover\:bg-zinc-200:hover {
+  background-color: #27272a !important;
+}
+
+/* SVG Fill Inversion */
+html[data-theme="light"] .fill-white,
+html.light .fill-white {
+  fill: #000000 !important;
+}
+
+html[data-theme="light"] .fill-zinc-700,
+html[data-theme="light"] .fill-zinc-500,
+html.light .fill-zinc-700,
+html.light .fill-zinc-500 {
+  fill: #71717a !important;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* 2. MIDNIGHT THEME (Deep Slate Navy & Cyan Glow)                            */
+/* -------------------------------------------------------------------------- */
+html[data-theme="midnight"] {
+  background-color: #0b0f19 !important;
+  color-scheme: dark;
+}
+
+html[data-theme="midnight"] body {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="midnight"] ::-webkit-scrollbar-thumb {
+  background: #38bdf8 !important;
+}
+
+html[data-theme="midnight"] * {
+  scrollbar-color: #38bdf8 transparent !important;
+}
+
+html[data-theme="midnight"] .bg-dot-grid {
+  background-image: radial-gradient(rgba(56, 189, 248, 0.18) 1.5px, transparent 1.5px) !important;
+}
+
+html[data-theme="midnight"] .bg-break-stripes {
+  background-color: #0b0f19 !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #0b0f19,
+    #0b0f19 7px,
+    rgba(56, 189, 248, 0.18) 7px,
+    rgba(56, 189, 248, 0.18) 14px
+  ) !important;
+}
+
+html[data-theme="midnight"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
+  background-color: #0b0f19 !important;
+}
+
+html[data-theme="midnight"] .bg-black\/60,
+html[data-theme="midnight"] .bg-black\/75,
+html[data-theme="midnight"] .bg-black\/80,
+html[data-theme="midnight"] .bg-black\/85,
+html[data-theme="midnight"] .bg-black\/90 {
+  background-color: rgba(11, 15, 25, 0.9) !important;
+}
+
+html[data-theme="midnight"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+  color: #f8fafc !important;
+}
+
+html[data-theme="midnight"] .text-zinc-300,
+html[data-theme="midnight"] .text-zinc-400 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="midnight"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  border-color: #38bdf8 !important;
+}
+
+html[data-theme="midnight"] .border-white\/20,
+html[data-theme="midnight"] .border-white\/30,
+html[data-theme="midnight"] .border-white\/40,
+html[data-theme="midnight"] .border-white\/50 {
+  border-color: rgba(56, 189, 248, 0.25) !important;
+}
+
+html[data-theme="midnight"] .ring-white {
+  --tw-ring-color: #38bdf8 !important;
+}
+
+html[data-theme="midnight"] .hover\:bg-zinc-900:hover,
+html[data-theme="midnight"] .hover\:bg-zinc-800:hover {
+  background-color: #1e293b !important;
+}
+
+html[data-theme="midnight"] .bg-zinc-900,
+html[data-theme="midnight"] .bg-zinc-800 {
+  background-color: #162032 !important;
+}
+
+html[data-theme="midnight"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  background-color: #38bdf8 !important;
+  color: #0b0f19 !important;
+  border-color: #38bdf8 !important;
+}
+
+html[data-theme="midnight"] .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
+  color: #0b0f19 !important;
+  stroke: #0b0f19 !important;
+}
+
+html[data-theme="midnight"] .fill-white {
+  fill: #38bdf8 !important;
+}
+
+html[data-theme="midnight"] .fill-zinc-700,
+html[data-theme="midnight"] .fill-zinc-500 {
+  fill: #334155 !important;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* 3. SUNSET THEME (Warm Dark Plum & Rose Gold)                               */
+/* -------------------------------------------------------------------------- */
+html[data-theme="sunset"] {
+  background-color: #180d15 !important;
+  color-scheme: dark;
+}
+
+html[data-theme="sunset"] body {
+  background-color: #180d15 !important;
+  color: #fdf2f8 !important;
+}
+
+html[data-theme="sunset"] ::-webkit-scrollbar-thumb {
+  background: #fb7185 !important;
+}
+
+html[data-theme="sunset"] * {
+  scrollbar-color: #fb7185 transparent !important;
+}
+
+html[data-theme="sunset"] .bg-dot-grid {
+  background-image: radial-gradient(rgba(251, 113, 133, 0.18) 1.5px, transparent 1.5px) !important;
+}
+
+html[data-theme="sunset"] .bg-break-stripes {
+  background-color: #180d15 !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #180d15,
+    #180d15 7px,
+    rgba(251, 113, 133, 0.18) 7px,
+    rgba(251, 113, 133, 0.18) 14px
+  ) !important;
+}
+
+html[data-theme="sunset"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
+  background-color: #180d15 !important;
+}
+
+html[data-theme="sunset"] .bg-black\/60,
+html[data-theme="sunset"] .bg-black\/75,
+html[data-theme="sunset"] .bg-black\/80,
+html[data-theme="sunset"] .bg-black\/85,
+html[data-theme="sunset"] .bg-black\/90 {
+  background-color: rgba(24, 13, 21, 0.9) !important;
+}
+
+html[data-theme="sunset"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+  color: #fdf2f8 !important;
+}
+
+html[data-theme="sunset"] .text-zinc-300,
+html[data-theme="sunset"] .text-zinc-400 {
+  color: #f472b6 !important;
+}
+
+html[data-theme="sunset"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  border-color: #fb7185 !important;
+}
+
+html[data-theme="sunset"] .border-white\/20,
+html[data-theme="sunset"] .border-white\/30,
+html[data-theme="sunset"] .border-white\/40,
+html[data-theme="sunset"] .border-white\/50 {
+  border-color: rgba(251, 113, 133, 0.28) !important;
+}
+
+html[data-theme="sunset"] .ring-white {
+  --tw-ring-color: #fb7185 !important;
+}
+
+html[data-theme="sunset"] .hover\:bg-zinc-900:hover,
+html[data-theme="sunset"] .hover\:bg-zinc-800:hover {
+  background-color: #3b1d34 !important;
+}
+
+html[data-theme="sunset"] .bg-zinc-900,
+html[data-theme="sunset"] .bg-zinc-800 {
+  background-color: #2a1526 !important;
+}
+
+html[data-theme="sunset"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  background-color: #fb7185 !important;
+  color: #180d15 !important;
+  border-color: #fb7185 !important;
+}
+
+html[data-theme="sunset"] .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
+  color: #180d15 !important;
+  stroke: #180d15 !important;
+}
+
+html[data-theme="sunset"] .fill-white {
+  fill: #fb7185 !important;
+}
+
+html[data-theme="sunset"] .fill-zinc-700,
+html[data-theme="sunset"] .fill-zinc-500 {
+  fill: #500724 !important;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* GLOBAL PROTECTED STYLES (Invariant Across Themes)                          */
+/* -------------------------------------------------------------------------- */
+
+/* Lecture event badges always keep #228B22 green and crisp white text */
+.bg-\[\#228B22\],
+[class*="bg-[#228B22]"] {
+  background-color: #228B22 !important;
+  color: #ffffff !important;
+}
+
+.bg-\[\#228B22\] *,
+[class*="bg-[#228B22]"] * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Favouriting red hearts always stay bright red */
+.fill-red-500,
+.text-red-500,
+.text-red-400 {
+  color: #ef4444 !important;
+  fill: #ef4444 !important;
+}

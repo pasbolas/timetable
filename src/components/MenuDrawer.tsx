@@ -12,11 +12,18 @@ import {
   ChevronRight,
   Download,
   GraduationCap,
+  Sun,
+  Moon,
+  Flame,
+  Monitor,
+  Palette,
+  Check,
 } from "lucide-react";
 import { ProgramSearchResult, DayData } from "../types/timetable";
 import { generateLessonIcs, downloadIcsFile } from "../services/icalExport";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 import { triggerHapticFeedback } from "../services/haptics";
+import { useTheme, THEME_OPTIONS } from "../hooks/useTheme";
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -47,6 +54,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   weekSchedule,
   onStartTour,
 }) => {
+  const { themeMode, resolvedTheme, setThemeMode } = useTheme();
   const { code: shortCode, title: programTitle } = parseProgramCodeAndTitle(
     selectedProgram.Name,
     selectedProgram.Description
@@ -230,6 +238,121 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     Change Degree / Course
                   </button>
                 </div>
+              </div>
+
+              {/* Colour Mode Switcher */}
+              <div className="transition-all duration-300">
+                <div className="flex items-center justify-between mb-2 px-0.5">
+                  <div className="flex items-center gap-1.5 text-[11px] font-black text-white uppercase tracking-wider">
+                    <Palette className="w-3.5 h-3.5 text-white" />
+                    <span>Colour Mode</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-zinc-400 capitalize">
+                    {themeMode === "system" ? `System (${resolvedTheme})` : themeMode}
+                  </span>
+                </div>
+
+                {/* 2x2 Grid of Distinct Color Modes */}
+                <div className="grid grid-cols-2 gap-2">
+                  {THEME_OPTIONS.slice(0, 4).map((opt) => {
+                    const isSelected = themeMode === opt.id;
+                    const getIcon = () => {
+                      if (opt.id === "dark") return <Moon className="w-3.5 h-3.5" />;
+                      if (opt.id === "light") return <Sun className="w-3.5 h-3.5" />;
+                      if (opt.id === "midnight") return <Sparkles className="w-3.5 h-3.5" />;
+                      if (opt.id === "sunset") return <Flame className="w-3.5 h-3.5" />;
+                      return <Monitor className="w-3.5 h-3.5" />;
+                    };
+
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => {
+                          setThemeMode(opt.id);
+                          triggerHapticFeedback();
+                        }}
+                        className={`p-2.5 rounded-xl border-2 transition-all active:scale-95 flex items-center justify-between text-left ${
+                          isSelected
+                            ? "bg-white text-black border-white shadow-xs ring-1 ring-white/50"
+                            : "bg-black hover:bg-zinc-900 border-white text-white"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          {/* Mini Palette Swatch */}
+                          <div
+                            className="w-4 h-4 rounded-full border shrink-0 flex items-center justify-center shadow-xs"
+                            style={{
+                              backgroundColor: opt.previewBg,
+                              borderColor: opt.previewBorder,
+                            }}
+                          >
+                            <span
+                              className="w-1.5 h-1.5 rounded-full"
+                              style={{ backgroundColor: opt.previewText }}
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-xs font-black truncate flex items-center gap-1">
+                              {getIcon()}
+                              <span>{opt.label}</span>
+                            </div>
+                            <div
+                              className={`text-[9px] font-semibold truncate ${
+                                isSelected ? "text-zinc-600" : "text-zinc-400"
+                              }`}
+                            >
+                              {opt.sublabel}
+                            </div>
+                          </div>
+                        </div>
+
+                        {isSelected && (
+                          <Check className="w-3.5 h-3.5 shrink-0 ml-1 stroke-[3]" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 5th Option: System Auto Matcher */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setThemeMode("system");
+                    triggerHapticFeedback();
+                  }}
+                  className={`w-full mt-2 p-2.5 rounded-xl border-2 transition-all active:scale-98 flex items-center justify-between text-left ${
+                    themeMode === "system"
+                      ? "bg-white text-black border-white shadow-xs ring-1 ring-white/50"
+                      : "bg-black hover:bg-zinc-900 border-white text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-white/30 text-white flex items-center justify-center shrink-0">
+                      <Monitor className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-black truncate flex items-center gap-1.5">
+                        <span>Auto System Mode</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-zinc-800 text-white font-mono border border-white/20">
+                          OS Sync
+                        </span>
+                      </div>
+                      <div
+                        className={`text-[10px] font-medium truncate ${
+                          themeMode === "system" ? "text-zinc-600" : "text-zinc-400"
+                        }`}
+                      >
+                        Automatically switches with your device display setting
+                      </div>
+                    </div>
+                  </div>
+
+                  {themeMode === "system" && (
+                    <Check className="w-4 h-4 shrink-0 ml-1 stroke-[3]" />
+                  )}
+                </button>
               </div>
 
               {/* Quick Actions */}

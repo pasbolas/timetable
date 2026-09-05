@@ -11,6 +11,8 @@ const KEYS = {
   COURSE_ONBOARDED: "mytimetable_course_onboarded",
 };
 
+export type ThemeMode = "dark" | "light" | "midnight" | "sunset" | "system";
+
 export class StorageService {
   static getSelectedProgram(): ProgramSearchResult {
     try {
@@ -90,12 +92,25 @@ export class StorageService {
     }
   }
 
-  static getTheme(): "light" | "dark" | "auto" {
-    return (localStorage.getItem(KEYS.THEME) as "light" | "dark" | "auto") || "auto";
+  static getTheme(): ThemeMode {
+    try {
+      const val = localStorage.getItem(KEYS.THEME) as string | null;
+      if (val === "auto") return "system";
+      if (val === "dark" || val === "light" || val === "midnight" || val === "sunset" || val === "system") {
+        return val;
+      }
+    } catch (e) {
+      console.warn("Error reading theme from storage:", e);
+    }
+    return "dark";
   }
 
-  static setTheme(theme: "light" | "dark" | "auto"): void {
-    localStorage.setItem(KEYS.THEME, theme);
+  static setTheme(theme: ThemeMode): void {
+    try {
+      localStorage.setItem(KEYS.THEME, theme);
+    } catch (e) {
+      console.warn("Error saving theme to storage:", e);
+    }
   }
 
   static hasCompletedTour(): boolean {
