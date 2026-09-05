@@ -25,6 +25,58 @@ import { parseProgramCodeAndTitle } from "../services/transformer";
 import { triggerHapticFeedback } from "../services/haptics";
 import { useTheme, THEME_OPTIONS } from "../hooks/useTheme";
 
+// Cute half-length double wavy lines divider
+const CuteWavyDivider: React.FC<{ className?: string }> = ({ className = "" }) => (
+  <div
+    className={`flex items-center justify-center gap-2.5 py-1 select-none pointer-events-none ${className}`}
+    aria-hidden="true"
+  >
+    {/* Cute Left Sparkle Star */}
+    <svg className="w-2.5 h-2.5 text-indigo-400/80 dark:text-indigo-300/80 shrink-0 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+    </svg>
+
+    {/* Half-length cute double wavy lines */}
+    <div className="w-1/2 max-w-[140px] flex flex-col items-center gap-1.5">
+      <svg className="w-full h-2 overflow-visible" viewBox="0 0 128 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cuteWaveGradA" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#818cf8" />
+            <stop offset="50%" stopColor="#c084fc" />
+            <stop offset="100%" stopColor="#f472b6" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 4 4 Q 16 0, 28 4 T 52 4 T 76 4 T 100 4 T 124 4"
+          stroke="url(#cuteWaveGradA)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </svg>
+      <svg className="w-full h-2 overflow-visible" viewBox="0 0 128 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cuteWaveGradB" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#818cf8" />
+            <stop offset="50%" stopColor="#c084fc" />
+            <stop offset="100%" stopColor="#f472b6" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 4 10 Q 16 6, 28 10 T 52 10 T 76 10 T 100 10 T 124 10"
+          stroke="url(#cuteWaveGradB)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+
+    {/* Cute Right Sparkle Star */}
+    <svg className="w-2.5 h-2.5 text-pink-400/80 dark:text-pink-300/80 shrink-0 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+    </svg>
+  </div>
+);
+
 interface MenuDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -204,16 +256,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
             {/* Drawer Header */}
             <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center">
-                  <GraduationCap className="w-4 h-4 text-white" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <span className="font-black text-sm text-white block leading-none">
-                    Preferences & Menu
-                  </span>
-                  <span className="text-[10px] font-bold text-zinc-400">Timetable options</span>
-                </div>
+                <h2 className="font-black text-lg sm:text-xl text-white tracking-tight leading-none m-0 p-0">
+                  Preference
+                </h2>
               </div>
 
               <div className="flex items-center gap-1.5">
@@ -265,6 +314,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 </div>
               </div>
 
+              {/* Cute Wavy Lines Divider in Middle of Settings */}
+              <CuteWavyDivider />
+
               {/* Colour Mode Switcher */}
               <div className="transition-all duration-300">
                 <div className="flex items-center justify-between mb-2 px-0.5">
@@ -311,18 +363,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                               style={{ backgroundColor: opt.previewText }}
                             />
                           </div>
-                          <div className="min-w-0">
-                            <div className="text-xs font-black truncate flex items-center gap-1">
-                              <Icon className="w-3.5 h-3.5" />
-                              <span>{opt.label}</span>
-                            </div>
-                            <div
-                              className={`text-[9px] font-semibold truncate ${
-                                isSelected ? "text-zinc-600" : "text-zinc-400"
-                              }`}
-                            >
-                              {opt.sublabel}
-                            </div>
+                          <div className="text-xs font-black truncate flex items-center gap-1.5">
+                            <Icon className="w-3.5 h-3.5" />
+                            <span>{opt.label}</span>
                           </div>
                         </div>
 
@@ -352,19 +395,11 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     <div className="w-7 h-7 rounded-full bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0 shadow-xs">
                       <MoreHorizontal className="w-4 h-4 text-white" />
                     </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-black text-white leading-tight truncate">
-                        More
-                      </div>
-                      <div className="text-[10px] font-medium text-zinc-400 truncate">
-                        Actions, sync, tour & courses
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pr-1.5 flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-900 text-white border border-white/20 group-hover:border-white/40 transition-colors">
-                      Explore
+                    <span className="text-xs sm:text-sm font-black text-white leading-tight truncate">
+                      More
                     </span>
+                  </div>
+                  <div className="pr-1.5 flex items-center shrink-0">
                     <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </button>
@@ -551,6 +586,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                         </button>
                       </div>
                     </div>
+
+                    {/* Cute Wavy Lines Divider in Middle of More Settings */}
+                    <CuteWavyDivider />
 
                     {/* Interactive Feature Tour */}
                     <div className="transition-all duration-300">

@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
-import { Clock, Info, ChevronRight, MapPin, User, Coffee } from "lucide-react";
+import { Clock, Info, ChevronRight, User, Coffee } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
+import { RoomBadge } from "./RoomBadge";
 
 // Date transition variants for silky blur-in blur-out transitions
 const dateBlurVariants = {
@@ -653,12 +654,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                           {lesson.Description}
                         </h4>
                         {!isLab && lesson.Location && (
-                          <span className="text-[10px] font-bold text-white flex items-center gap-0.5 shrink-0">
-                            <MapPin className="w-2.5 h-2.5 text-white shrink-0" />
-                            <span className="truncate max-w-[110px] sm:max-w-[160px]">
-                              {lesson.Location}
-                            </span>
-                          </span>
+                          <div className="shrink-0 max-w-[130px] sm:max-w-[180px]">
+                            <RoomBadge location={lesson.Location} size="xs" />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -700,9 +698,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                           {lesson.Description}
                         </h4>
                         {!isLab && lesson.Location && (
-                          <div className="flex items-center gap-1 text-[11px] font-bold text-white mt-1">
-                            <MapPin className="w-3 h-3 text-white shrink-0" />
-                            <span className="truncate">{lesson.Location}</span>
+                          <div className="mt-1.5 flex items-center">
+                            <RoomBadge location={lesson.Location} size="sm" />
                           </div>
                         )}
                       </div>
@@ -775,9 +772,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
                           {!isLab && lesson.Location && (
-                            <div className="flex items-center gap-1.5 text-xs text-white bg-black px-2.5 py-1.5 rounded-lg border border-white">
-                              <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
-                              <span className="truncate font-bold">{lesson.Location}</span>
+                            <div className="flex items-center">
+                              <RoomBadge location={lesson.Location} size="md" />
                             </div>
                           )}
 

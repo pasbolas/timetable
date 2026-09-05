@@ -4,6 +4,21 @@
 
 :root {
   color-scheme: dark;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+*,
+*::before,
+*::after,
+html,
+body,
+#root,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
 html {
@@ -65,16 +80,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffffff;
+  background: #3f3f46;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e4e4e7;
+  background: #52525b;
 }
 
 * {
-  scrollbar-color: #ffffff transparent;
+  scrollbar-color: #3f3f46 transparent;
   scrollbar-width: thin;
 }
 
@@ -224,7 +239,9 @@ html.light .bg-break-stripes {
 
 /* Canvas, card, header, container backgrounds */
 html[data-theme="light"] .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color),
-html.light .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
+html[data-theme="light"] .bg-zinc-950:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color),
+html.light .bg-black:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color),
+html.light .bg-zinc-950:not([class*="bg-[#228B22]"]):not([class*="bg-red"]):not(.preserve-color) {
   background-color: #ffffff !important;
 }
 
@@ -243,8 +260,16 @@ html.light .week-corner-cell {
 }
 
 html[data-theme="light"] .top-bar-surface .bg-zinc-900,
-html.light .top-bar-surface .bg-zinc-900 {
+html[data-theme="light"] .top-bar-surface .bg-zinc-950,
+html.light .top-bar-surface .bg-zinc-900,
+html.light .top-bar-surface .bg-zinc-950 {
   background-color: #ffffff !important;
+}
+
+html[data-theme="light"] .bg-zinc-950\/95,
+html.light .bg-zinc-950\/95 {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
 }
 
 html[data-theme="light"] .bg-black\/60,
@@ -284,6 +309,13 @@ html.light .text-white\/90 {
   color: rgba(0, 0, 0, 0.9) !important;
 }
 
+html[data-theme="light"] .text-zinc-100,
+html[data-theme="light"] .text-zinc-200,
+html.light .text-zinc-100,
+html.light .text-zinc-200 {
+  color: #09090b !important;
+}
+
 html[data-theme="light"] .text-zinc-300,
 html[data-theme="light"] .text-zinc-400,
 html.light .text-zinc-300,
@@ -297,25 +329,44 @@ html.light .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
   border-color: #000000 !important;
 }
 
+html[data-theme="light"] .border-white\/15,
 html[data-theme="light"] .border-white\/20,
+html[data-theme="light"] .border-white\/25,
 html[data-theme="light"] .border-white\/30,
+html[data-theme="light"] .border-white\/35,
 html[data-theme="light"] .border-white\/40,
 html[data-theme="light"] .border-white\/50,
+html.light .border-white\/15,
 html.light .border-white\/20,
+html.light .border-white\/25,
 html.light .border-white\/30,
+html.light .border-white\/35,
 html.light .border-white\/40,
 html.light .border-white\/50 {
   border-color: rgba(0, 0, 0, 0.15) !important;
 }
 
+html[data-theme="light"] .border-zinc-800,
+html[data-theme="light"] .border-zinc-700,
+html[data-theme="light"] .border-zinc-600,
+html.light .border-zinc-800,
+html.light .border-zinc-700,
+html.light .border-zinc-600 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
 html[data-theme="light"] .ring-white,
-html.light .ring-white {
+html[data-theme="light"] .ring-white\/30,
+html.light .ring-white,
+html.light .ring-white\/30 {
   --tw-ring-color: #000000 !important;
 }
 
 /* Hovers in Light mode */
+html[data-theme="light"] .hover\:bg-zinc-950:hover,
 html[data-theme="light"] .hover\:bg-zinc-900:hover,
 html[data-theme="light"] .hover\:bg-zinc-800:hover,
+html.light .hover\:bg-zinc-950:hover,
 html.light .hover\:bg-zinc-900:hover,
 html.light .hover\:bg-zinc-800:hover {
   background-color: #e4e4e7 !important;
@@ -323,8 +374,12 @@ html.light .hover\:bg-zinc-800:hover {
 
 html[data-theme="light"] .bg-zinc-900,
 html[data-theme="light"] .bg-zinc-800,
+html[data-theme="light"] [class*="bg-zinc-900"],
+html[data-theme="light"] [class*="bg-zinc-800"],
 html.light .bg-zinc-900,
-html.light .bg-zinc-800 {
+html.light .bg-zinc-800,
+html.light [class*="bg-zinc-900"],
+html.light [class*="bg-zinc-800"] {
   background-color: #f4f4f5 !important;
 }
 
@@ -345,6 +400,15 @@ html.light .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
 html[data-theme="light"] .hover\:bg-zinc-200:hover,
 html.light .hover\:bg-zinc-200:hover {
   background-color: #27272a !important;
+}
+
+/* Date strip dot indicator in light mode */
+.date-strip-dot {
+  background-color: #ffffff;
+}
+html[data-theme="light"] .date-strip-dot,
+html.light .date-strip-dot {
+  background-color: #09090b !important;
 }
 
 /* SVG Fill Inversion */
@@ -399,7 +463,7 @@ html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 :root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
   background-color: #111114 !important;
-  border-color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
@@ -542,7 +606,7 @@ html.light .lecture-badge * {
 /* -------------------------------------------------------------------------- */
 .tutorial-widget {
   background-color: #18181b !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 .tutorial-widget:hover {
@@ -550,19 +614,19 @@ html.light .lecture-badge * {
 }
 
 .tutorial-accent-bar {
-  background-color: #ffffff !important;
+  background-color: #a1a1aa !important;
 }
 
 .tutorial-badge,
 [class*="tutorial-badge"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  color: #000000 !important;
-  border-color: #ffffff !important;
+  background-color: #27272a !important;
+  color: #e4e4e7 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 .tutorial-badge *,
 [class*="tutorial-badge"] * {
-  color: #000000 !important;
+  color: #e4e4e7 !important;
 }
 
 /* Light Mode: Delicate, light shade of white */
@@ -592,6 +656,132 @@ html.light .tutorial-badge {
 html[data-theme="light"] .tutorial-badge *,
 html.light .tutorial-badge * {
   color: #0f172a !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROOM HIGHLIGHT BADGE                                                       */
+/* -------------------------------------------------------------------------- */
+.room-highlight-pill {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.45rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+/* Light Mode: Crisp white pill with distinct dark border and inverted black room tag */
+html[data-theme="light"] .room-highlight-pill,
+html.light .room-highlight-pill {
+  background-color: #ffffff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.35) !important;
+  color: #000000 !important;
+}
+
+html[data-theme="light"] .room-highlight-pill *,
+html.light .room-highlight-pill * {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+html[data-theme="light"] .room-code-tag,
+html.light .room-code-tag {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+html[data-theme="light"] .room-code-tag *,
+html.light .room-code-tag * {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .room-desc-text,
+html.light .room-desc-text {
+  color: #27272a !important;
+}
+
+/* Dark Mode: Soft, balanced pill with subtle border and muted room tag */
+html[data-theme="dark"] .room-highlight-pill,
+html.dark .room-highlight-pill,
+:root:not([data-theme="light"]) .room-highlight-pill {
+  background-color: #18181b !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] .room-highlight-pill *,
+html.dark .room-highlight-pill *,
+:root:not([data-theme="light"]) .room-highlight-pill * {
+  color: #e4e4e7 !important;
+  stroke: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] .room-code-tag,
+html.dark .room-code-tag,
+:root:not([data-theme="light"]) .room-code-tag {
+  background-color: #27272a !important;
+  color: #f4f4f5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+html[data-theme="dark"] .room-code-tag *,
+html.dark .room-code-tag *,
+:root:not([data-theme="light"]) .room-code-tag * {
+  color: #f4f4f5 !important;
+}
+
+html[data-theme="dark"] .room-desc-text,
+html.dark .room-desc-text,
+:root:not([data-theme="light"]) .room-desc-text {
+  color: #a1a1aa !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* MODAL EXPANDED VIEW EVENT HEADER (Subtle dividing border)                   */
+/* -------------------------------------------------------------------------- */
+.modal-event-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+html[data-theme="light"] .modal-event-header,
+html.light .modal-event-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Prevent hover background shifts on modal header */
+.modal-event-header.lab-widget:hover {
+  background-color: #23140a !important;
+}
+html[data-theme="light"] .modal-event-header.lab-widget:hover,
+html.light .modal-event-header.lab-widget:hover {
+  background-color: #fff7ed !important;
+}
+
+.modal-event-header.lecture-widget:hover {
+  background-color: #132216 !important;
+}
+html[data-theme="light"] .modal-event-header.lecture-widget:hover,
+html.light .modal-event-header.lecture-widget:hover {
+  background-color: #c2deb9 !important;
+}
+
+.modal-event-header.tutorial-widget:hover {
+  background-color: #18181b !important;
+}
+html[data-theme="light"] .modal-event-header.tutorial-widget:hover,
+html.light .modal-event-header.tutorial-widget:hover {
+  background-color: #f8fafc !important;
+}
+
+.modal-event-header:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
+  background-color: #000000 !important;
+}
+html[data-theme="light"] .modal-event-header:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+html.light .modal-event-header:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
+  background-color: #ffffff !important;
 }
 
 

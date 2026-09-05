@@ -393,7 +393,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       onSelectDate(currentLiveTime);
                       setIsExpanded(false);
                     }}
-                    className="px-2 py-1 rounded-lg text-xs font-bold text-white border border-white/25 bg-zinc-900 hover:bg-zinc-800 transition-colors"
+                    className="px-2.5 py-1 rounded-lg text-xs font-black text-black bg-[#4ade80] hover:bg-[#86efac] shadow-none border-0 transition-colors cursor-pointer"
                   >
                     Today
                   </button>
@@ -436,7 +436,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                       }}
                       className={`h-9 sm:h-10 w-full rounded-xl flex flex-col items-center justify-center relative transition-colors ${
                         isActive
-                          ? "text-black font-black z-10"
+                          ? "bg-white text-black font-black z-10"
                           : isToday
                           ? "bg-black text-white font-bold border border-white/35"
                           : !isCurrentMonth
@@ -448,7 +448,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                         <motion.div
                           layoutId="active-date-highlight"
                           transition={smoothTransition}
-                          className="absolute inset-0 rounded-xl bg-white z-0"
+                          className="absolute inset-0 rounded-xl bg-white text-black z-0 pointer-events-none"
                         />
                       )}
 
@@ -466,7 +466,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                             className={`w-1 h-1 rounded-full ${
                               isActive
                                 ? "bg-black"
-                                : "bg-white"
+                                : "date-strip-dot"
                             }`}
                           />
                         )}
@@ -506,7 +506,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
               >
                 {/* Visual Pull Bar */}
                 <div className="w-full flex items-center justify-center pt-0.5 pb-1">
-                  <div className="w-8 h-1 rounded-full bg-white group-hover:bg-zinc-300 transition-colors" />
+                  <div className="w-8 h-1 rounded-full bg-zinc-400 dark:bg-white group-hover:bg-zinc-500 dark:group-hover:bg-zinc-300 transition-colors" />
                 </div>
 
                 <div className="flex items-center justify-between px-2 mb-0.5 text-white">
@@ -634,7 +634,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
                               className={`w-1 h-1 rounded-full ${
                                 isActive
                                   ? "bg-black"
-                                  : "bg-white"
+                                  : "date-strip-dot"
                               }`}
                             />
                           )}

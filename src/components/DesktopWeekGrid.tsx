@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
-import { Clock, MapPin, User, Coffee, Users } from "lucide-react";
+import { Clock, User, Coffee, Users } from "lucide-react";
 import { DayData, NormalizedLesson } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
+import { RoomBadge } from "./RoomBadge";
 
 interface DesktopWeekGridProps {
   activeDate: moment.Moment;
@@ -584,10 +585,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                         {/* Bottom: Location & Staff (if room available) */}
                         <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-white/80">
                           {!isLab && lesson.Location ? (
-                            <span className="flex items-center gap-0.5 truncate" title={lesson.Location}>
-                              <MapPin className="w-2.5 h-2.5 text-white shrink-0" />
-                              <span className="truncate">{lesson.Location}</span>
-                            </span>
+                            <RoomBadge location={lesson.Location} size="xs" hideDesc={heightPx < 90} />
                           ) : isLab && lesson.collapsedLocations ? (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold text-white bg-zinc-900 px-1.5 py-0.5 rounded border border-white/20 shrink-0" title="Click to view lab groups and rooms">
                               <Users className="w-2.5 h-2.5 text-white shrink-0" />

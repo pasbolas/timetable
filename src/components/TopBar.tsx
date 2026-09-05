@@ -134,10 +134,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             {!isTodayActive && (
               <button
                 onClick={onGoToToday}
-                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white border border-white/25 transition-colors shadow-xs"
+                className="inline-flex items-center gap-1 text-xs font-black px-2.5 py-1 rounded-xl bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors cursor-pointer"
                 title="Jump to current week"
               >
-                <Sparkles className="w-3 h-3" />
+                <Sparkles className="w-3 h-3 text-black fill-black" />
                 <span>Today</span>
               </button>
             )}
@@ -212,17 +212,15 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Mobile Jump to Today (shown only on mobile when not today) */}
           {!isTodayActive && (
-            <Button
-              size="sm"
-              variant="flat"
-              onPress={onGoToToday}
+            <button
+              onClick={onGoToToday}
               data-tour="today-button"
-              startContent={<Sparkles className="w-3.5 h-3.5 text-white shrink-0" />}
-              className="md:hidden h-8 px-2 text-xs font-bold rounded-xl shrink-0 bg-zinc-950 text-white border border-white/30 hover:bg-zinc-800 transition-colors"
+              className="md:hidden h-8 px-2.5 text-xs font-black rounded-xl shrink-0 bg-[#4ade80] hover:bg-[#86efac] text-black shadow-none border-0 transition-colors flex items-center gap-1 cursor-pointer"
               title="Jump to today"
             >
-              Today
-            </Button>
+              <Sparkles className="w-3.5 h-3.5 text-black shrink-0 fill-black" />
+              <span>Today</span>
+            </button>
           )}
 
           {/* Expandable Menu Button */}

@@ -142,6 +142,22 @@ export function getLessonModuleKey(lesson: {
 }
 
 /**
+ * Separate room code from venue description (e.g. "CQ-009 Small Tiered Lecture Theatre" -> code: "CQ-009", desc: "Small Tiered Lecture Theatre")
+ */
+export function parseRoomLocation(locationStr?: string): { code: string; desc: string } {
+  if (!locationStr) return { code: "Room TBD", desc: "" };
+  const trimmed = locationStr.trim();
+  const match = trimmed.match(/^([A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z]+[0-9]+|[A-Za-z0-9]{2,6})\s+(.*)$/);
+  if (match && match[1]) {
+    return {
+      code: match[1].trim(),
+      desc: match[2]?.trim() || "",
+    };
+  }
+  return { code: trimmed, desc: "" };
+}
+
+/**
  * Format group - room information for widget cards
  */
 export function getLessonGroupRoomStrings(lesson: NormalizedLesson): string[] {

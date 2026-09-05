@@ -21,6 +21,7 @@ import { getLessonColorTheme, getLessonModuleKey } from "../services/transformer
 import { StorageService } from "../services/storage";
 import { triggerHapticFeedback } from "../services/haptics";
 import { trackEvent } from "../services/analytics";
+import { RoomBadge } from "./RoomBadge";
 
 interface LessonDetailModalProps {
   lesson: NormalizedLesson | null;
@@ -63,6 +64,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
   const moduleKey = lesson ? getLessonModuleKey(lesson) : "";
   const isLab = Boolean(
     lesson?.EventType?.toLowerCase().includes("lab") ||
+    lesson?.EventType?.toLowerCase().includes("pract") ||
     lesson?.collapsedLocations
   );
   const isLecture = Boolean(
@@ -252,92 +254,118 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                 }
               }
             }}
-            className="relative z-10 w-full sm:max-w-md bg-black text-white rounded-t-3xl sm:rounded-2xl border-2 border-white overflow-hidden flex flex-col touch-pan-y"
+            className="relative z-10 w-full sm:max-w-md bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 rounded-t-3xl sm:rounded-2xl border border-zinc-200 dark:border-zinc-700/80 overflow-hidden flex flex-col touch-pan-y shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Pull Handle: Tap toggles half/full, drag snaps magnetically */}
+            {/* Modal Top Header Area: Styled in matching event widget colour */}
             <div
-              onClick={() => {
-                setSnapState((prev) => (prev === "half" ? "full" : "half"));
-                triggerHapticFeedback();
-              }}
-              className="w-full pt-3 pb-1 cursor-pointer flex flex-col items-center justify-center group"
-              title={snapState === "half" ? "Tap to expand fully" : "Tap to collapse to half"}
+              className={`relative border-b border-zinc-200 dark:border-zinc-800 shrink-0 overflow-hidden modal-event-header timetable-widget ${
+                isLecture
+                  ? "lecture-widget"
+                  : isLab
+                  ? "lab-widget"
+                  : isTutorial
+                  ? "tutorial-widget"
+                  : "bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+              }`}
             >
-              <div className="w-12 h-1.5 bg-white group-hover:bg-zinc-300 rounded-full transition-colors" />
-            </div>
+              {/* Sleek vertical accent bar on left matching timetable widget */}
+              <div
+                className={`absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 z-10 ${
+                  isLecture
+                    ? "lecture-accent-bar"
+                    : isLab
+                    ? "lab-accent-bar"
+                    : isTutorial
+                    ? "tutorial-accent-bar"
+                    : "bg-zinc-400"
+                }`}
+              />
 
-            {/* Modal Header */}
-            <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b-2 border-white flex items-start justify-between gap-3 shrink-0 bg-black">
-              <div>
-                <div
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 border ${
-                    isLecture
-                      ? "lecture-badge text-white border-transparent"
-                      : isLab
-                      ? "lab-badge text-white border-transparent"
-                      : isTutorial
-                      ? "tutorial-badge border-transparent"
-                      : "bg-white text-black border-white"
-                  }`}
-                >
-                  <span className="w-2 h-2 rounded-full bg-current opacity-80" />
-                  {lesson.EventType}
-                </div>
-                <h2 className="text-base sm:text-lg font-black text-white leading-snug">
-                  {lesson.Description}
-                </h2>
-                <div className="text-[11px] text-zinc-300 font-mono mt-0.5">
-                  {lesson.Name}
-                </div>
+              {/* Modal Pull Handle: Tap toggles half/full, drag snaps magnetically */}
+              <div
+                onClick={() => {
+                  setSnapState((prev) => (prev === "half" ? "full" : "half"));
+                  triggerHapticFeedback();
+                }}
+                className="w-full pt-3 pb-1 cursor-pointer flex flex-col items-center justify-center group"
+                title={snapState === "half" ? "Tap to expand fully" : "Tap to collapse to half"}
+              >
+                <div className="w-12 h-1.5 rounded-full bg-black/20 dark:bg-white/25 group-hover:bg-black/35 dark:group-hover:bg-white/40 transition-colors" />
               </div>
 
-              <div className="flex items-center gap-1 shrink-0">
-                {/* Magnetic Snap Toggle Button */}
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={() => {
-                    setSnapState((prev) => (prev === "half" ? "full" : "half"));
-                    triggerHapticFeedback();
-                  }}
-                  className="w-8 h-8 rounded-xl text-white border border-white hover:bg-zinc-800"
-                  title={snapState === "half" ? "Expand to full" : "Collapse to half"}
-                >
-                  {snapState === "half" ? (
-                    <ChevronUp className="w-4 h-4 text-white" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-white" />
-                  )}
-                </Button>
+              {/* Modal Header */}
+              <div className="px-4 py-3 sm:px-5 sm:py-3.5 pl-5 sm:pl-6 flex items-start justify-between gap-3">
+                <div>
+                  <div
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-1.5 border ${
+                      isLecture
+                        ? "lecture-badge text-white border-transparent"
+                        : isLab
+                        ? "lab-badge text-white border-transparent"
+                        : isTutorial
+                        ? "tutorial-badge border-transparent"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-zinc-700"
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-current opacity-80" />
+                    {lesson.EventType}
+                  </div>
+                  <h2 className="text-base sm:text-lg font-black text-zinc-900 dark:text-white leading-snug">
+                    {lesson.Description}
+                  </h2>
+                  <div className="text-[11px] text-zinc-500 dark:text-zinc-300 font-mono mt-0.5">
+                    {lesson.Name}
+                  </div>
+                </div>
 
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={onClose}
-                  className="w-8 h-8 rounded-xl text-white border border-white hover:bg-zinc-800"
-                  title="Close panel"
-                >
-                  <X className="w-5 h-5 text-white" />
-                </Button>
+                <div className="flex items-center gap-1 shrink-0">
+                  {/* Magnetic Snap Toggle Button */}
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onPress={() => {
+                      setSnapState((prev) => (prev === "half" ? "full" : "half"));
+                      triggerHapticFeedback();
+                    }}
+                    className="w-8 h-8 rounded-xl border border-zinc-300/80 dark:border-white/15 bg-black/5 hover:bg-black/10 dark:bg-black/30 dark:hover:bg-black/50 text-zinc-700 dark:text-zinc-200 transition-colors"
+                    title={snapState === "half" ? "Expand to full" : "Collapse to half"}
+                  >
+                    {snapState === "half" ? (
+                      <ChevronUp className="w-4 h-4 text-current" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-current" />
+                    )}
+                  </Button>
+
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onPress={onClose}
+                    className="w-8 h-8 rounded-xl border border-zinc-300/80 dark:border-white/15 bg-black/5 hover:bg-black/10 dark:bg-black/30 dark:hover:bg-black/50 text-zinc-700 dark:text-zinc-200 transition-colors"
+                    title="Close panel"
+                  >
+                    <X className="w-5 h-5 text-current" />
+                  </Button>
+                </div>
               </div>
             </div>
 
             {/* Modal Content - Expands cleanly in both half and full */}
-            <div className="p-4 sm:p-5 space-y-3.5 flex-1 overflow-y-auto bg-black text-white">
+            <div className="p-4 sm:p-5 space-y-3 flex-1 overflow-y-auto bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
               {/* Time & Date */}
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
-                <Clock className="w-5 h-5 text-white shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800">
+                <Clock className="w-5 h-5 text-zinc-500 dark:text-zinc-400 shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                  <div className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Date & Time
                   </div>
-                  <div className="text-sm font-bold text-white mt-0.5">
+                  <div className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mt-0.5">
                     {lesson.StartDateTime.format("dddd, D MMMM YYYY")}
                   </div>
-                  <div className="text-xs font-bold text-white mt-0.5">
+                  <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mt-0.5">
                     {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")} ({lesson.EndDateTime.diff(lesson.StartDateTime, "minutes")} mins)
                   </div>
                 </div>
@@ -345,16 +373,16 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
               {/* Location (Only when NOT broken down into sub-groups) */}
               {!lesson.collapsedLocations && (
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
-                  <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center shrink-0 mt-0.5">
-                    <MapPin className="w-4 h-4 text-black" />
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <MapPin className="w-4 h-4 text-current" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
+                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
                       Room / Venue
                     </div>
-                    <div className="text-sm font-bold text-white mt-0.5">
-                      {lesson.Location || "Location to be confirmed"}
+                    <div>
+                      <RoomBadge location={lesson.Location || "Location to be confirmed"} size="md" />
                     </div>
                   </div>
                 </div>
@@ -362,15 +390,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
               {/* Lecturer / Staff (Only when NOT broken down into sub-groups) */}
               {!lesson.collapsedLocations && lesson.staffName && (
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-black border-2 border-white">
-                  <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="w-4 h-4 text-black" />
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-4 h-4 text-current" />
                   </div>
                   <div>
-                    <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
+                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                       Lecturer / Instructor
                     </div>
-                    <div className="text-sm font-bold text-white mt-0.5">
+                    <div className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mt-0.5">
                       {lesson.staffName.includes(",")
                         ? `${lesson.staffName.split(",")[1].trim()} ${lesson.staffName.split(",")[0].trim()}`
                         : lesson.staffName}
@@ -383,15 +411,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               {lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0 && (
                 <div className="space-y-3 pt-1">
                   <div className="flex items-center justify-between px-1">
-                    <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
-                      <Users className="w-4 h-4 text-white" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                      <Users className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
                       <span>Sub-Groups & Rooms</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-semibold text-zinc-400 hidden sm:inline">
+                      <span className="text-[10px] font-semibold text-zinc-500 hidden sm:inline">
                         Tap heart to favourite
                       </span>
-                      <span className="text-[11px] font-bold text-white bg-black px-2.5 py-0.5 rounded-full border border-white">
+                      <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 px-2.5 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-800">
                         {lesson.Locations.length} Groups
                       </span>
                     </div>
@@ -419,21 +447,21 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       return (
                         <div
                           key={`${loc.originalIdx}-${groupLabel}`}
-                          className={`p-3.5 sm:p-4 rounded-xl bg-black border-2 border-white space-y-2.5 transition-all ${
-                            isFav ? "ring-2 ring-white bg-zinc-900/90" : ""
+                          className={`p-3.5 sm:p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800 space-y-2.5 transition-all ${
+                            isFav ? "ring-1.5 ring-zinc-400 dark:ring-zinc-500 bg-zinc-100 dark:bg-zinc-900/90" : ""
                           }`}
                         >
                           {/* Header: Group Badge + Room Tag & Favourite Heart Button */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1.5 flex-1 min-w-0">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white text-black font-bold text-xs tracking-tight border border-white">
-                                <span className="w-1.5 h-1.5 rounded-full bg-black" />
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold text-xs tracking-tight border border-zinc-300/80 dark:border-zinc-700">
+                                <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 dark:bg-zinc-400" />
                                 {groupLabel}
                               </span>
 
                               {/* Room Specification (e.g. Specialist Computer Lab 5) */}
                               {roomDesc && (
-                                <div className="text-xs font-bold text-white pl-0.5 leading-relaxed">
+                                <div className="text-xs font-medium text-zinc-700 dark:text-zinc-300 pl-0.5 leading-relaxed">
                                   {roomDesc}
                                 </div>
                               )}
@@ -441,9 +469,9 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                             {/* Right side: Room Tag with Heart Favourite Button under it */}
                             <div className="flex flex-col items-end gap-1.5 shrink-0">
-                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black border border-white">
-                                <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
-                                <span className="text-xs font-black text-white">
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 shadow-xs">
+                                <MapPin className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
+                                <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                                   {roomCode}
                                 </span>
                               </div>
@@ -453,8 +481,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                                 onClick={() => handleToggleFavoriteGroup(groupLabel)}
                                 className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer select-none active:scale-90 border ${
                                   isFav
-                                    ? "bg-red-950/60 text-red-400 border-red-500 shadow-xs"
-                                    : "bg-black text-zinc-400 hover:text-red-400 border-white/30 hover:border-white/60"
+                                    ? "bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 border-red-300 dark:border-red-500/50 shadow-xs"
+                                    : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-red-500 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
                                 }`}
                                 title={
                                   isFav
@@ -478,9 +506,9 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                           {/* Instructor Line */}
                           {staffFormatted && (
-                            <div className="flex items-center gap-2 pt-1 border-t border-white/30 text-xs text-white pl-1">
-                              <User className="w-3.5 h-3.5 text-white shrink-0" />
-                              <span className="font-bold text-white">
+                            <div className="flex items-center gap-2 pt-1 border-t border-zinc-200 dark:border-zinc-800/80 text-xs text-zinc-500 dark:text-zinc-400 pl-1">
+                              <User className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                              <span className="font-medium text-zinc-700 dark:text-zinc-300">
                                 {staffFormatted}
                               </span>
                             </div>
@@ -494,12 +522,12 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="p-4 sm:p-5 bg-black border-t-2 border-white flex gap-2.5">
+            <div className="p-4 sm:p-5 bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 flex gap-2.5">
               <Button
-                variant="solid"
+                variant="flat"
                 onPress={handleExportIcs}
-                startContent={<CalendarPlus className="w-4 h-4 text-black" />}
-                className="flex-1 h-11 font-bold text-xs rounded-xl bg-white hover:bg-zinc-200 text-black border-2 border-white shadow-sm"
+                startContent={<CalendarPlus className="w-4 h-4 text-white dark:text-zinc-200" />}
+                className="flex-1 h-11 font-bold text-xs rounded-xl bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-800 dark:hover:bg-zinc-700 text-white dark:text-zinc-100 border border-zinc-900 dark:border-zinc-700 transition-colors shadow-sm"
               >
                 Add to Calendar
               </Button>
@@ -507,8 +535,8 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               <Button
                 variant="flat"
                 onPress={handleCopyInfo}
-                startContent={copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
-                className="h-11 px-4 font-bold text-xs rounded-xl bg-black text-white hover:bg-zinc-800 border-2 border-white shadow-sm"
+                startContent={copied ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />}
+                className="h-11 px-4 font-bold text-xs rounded-xl bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800 transition-colors shadow-sm"
               >
                 {copied ? "Copied!" : "Copy"}
               </Button>

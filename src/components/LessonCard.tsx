@@ -1,7 +1,7 @@
 import React from "react";
-import { MapPin } from "lucide-react";
 import { NormalizedLesson } from "../types/timetable";
 import { getLessonGroupRoomStrings } from "../services/transformer";
+import { RoomBadge } from "./RoomBadge";
 
 interface LessonCardProps {
   lesson: NormalizedLesson;
@@ -88,11 +88,11 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       </div>
 
       {/* Bottom: Group - Room */}
-      <div className="flex items-center gap-1.5 text-xs font-semibold text-white pl-1 truncate">
-        <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
-        <span className="truncate">
-          {getLessonGroupRoomStrings(lesson).join(" · ")}
-        </span>
+      <div className="mt-2 pl-1 truncate flex items-center">
+        <RoomBadge
+          location={lesson.Location || getLessonGroupRoomStrings(lesson)[0]}
+          size="sm"
+        />
       </div>
     </div>
   );
