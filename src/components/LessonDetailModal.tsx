@@ -281,13 +281,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       : "bg-white text-black border-white"
                   }`}
                 >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      isLecture || isLab
-                        ? "bg-white"
-                        : "bg-black"
-                    }`}
-                  />
+                  <span className="w-2 h-2 rounded-full bg-current opacity-80" />
                   {lesson.EventType}
                 </div>
                 <h2 className="text-base sm:text-lg font-black text-white leading-snug">

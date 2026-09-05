@@ -274,8 +274,8 @@ html.light .drawer-backdrop {
 }
 
 /* Typography in Light mode */
-html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge),
-html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge) {
+html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge):not(.lecture-badge *):not(.lecture-badge),
+html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge):not(.lecture-badge *):not(.lecture-badge) {
   color: #000000 !important;
 }
 
@@ -396,18 +396,18 @@ html.light .fill-zinc-500 {
 }
 
 /* Default / generic lesson widgets in Dark Mode */
-html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget),
-html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget),
-:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget) {
+html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
   background-color: rgba(10, 10, 12, 0.7) !important;
   border-color: rgba(255, 255, 255, 0.85) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
-html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):hover,
-html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):hover,
-:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):hover {
+html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
+html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
+:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
   background-color: rgba(24, 24, 28, 0.82) !important;
 }
 
@@ -490,57 +490,64 @@ html.light .lab-badge {
 
 
 /* -------------------------------------------------------------------------- */
-/* LECTURE WIDGET & BADGE STYLES (Light shade of green tint)                  */
+/* LECTURE WIDGET & BADGE STYLES (Soft pastel sage #c2deb9)                   */
 /* -------------------------------------------------------------------------- */
 .lecture-widget {
-  background-color: rgba(34, 197, 94, 0.12) !important;
-  border-color: rgba(74, 222, 128, 0.45) !important;
+  background-color: rgba(194, 222, 185, 0.25) !important;
+  border-color: rgba(194, 222, 185, 0.6) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
 .lecture-widget:hover {
-  background-color: rgba(34, 197, 94, 0.2) !important;
+  background-color: rgba(194, 222, 185, 0.35) !important;
 }
 
 .lecture-accent-bar {
-  background-color: #228B22 !important;
+  background-color: #c2deb9 !important;
 }
 
 .lecture-badge,
 [class*="lecture-badge"] {
-  background-color: #228B22 !important;
-  color: #ffffff !important;
-  border-color: #228B22 !important;
+  background-color: #c2deb9 !important;
+  color: #122810 !important;
+  border-color: #c2deb9 !important;
 }
 
 .lecture-badge *,
 [class*="lecture-badge"] * {
-  color: #ffffff !important;
+  color: #122810 !important;
 }
 
-/* Light Mode: Delicate, very light shade of green */
+/* Light Mode: Pastel sage green (#c2deb9) slightly opaque with clean borders */
 html[data-theme="light"] .lecture-widget,
 html.light .lecture-widget {
-  background-color: #f0fdf4 !important; /* Tailwind green-50 */
-  border-color: #86efac !important; /* Tailwind green-300 */
+  background-color: rgba(194, 222, 185, 0.88) !important; /* Soft sage pastel from reference */
+  border-color: #8bb380 !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 html[data-theme="light"] .lecture-widget:hover,
 html.light .lecture-widget:hover {
-  background-color: #dcfce7 !important; /* Tailwind green-100 */
+  background-color: #b2d4aa !important;
 }
 
 html[data-theme="light"] .lecture-accent-bar,
 html.light .lecture-accent-bar {
-  background-color: #228B22 !important;
+  background-color: #3b6631 !important;
 }
 
 html[data-theme="light"] .lecture-badge,
 html.light .lecture-badge {
-  background-color: #228B22 !important;
+  background-color: #3b6631 !important;
   color: #ffffff !important;
-  border-color: #228B22 !important;
+  border-color: #3b6631 !important;
+}
+
+html[data-theme="light"] .lecture-badge *,
+html.light .lecture-badge * {
+  color: #ffffff !important;
 }
 
 
