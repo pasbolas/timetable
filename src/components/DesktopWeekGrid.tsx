@@ -578,39 +578,66 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           </span>
                         </div>
 
-                        {/* Middle: Title - Highest Contrast Hierarchy */}
-                        <div className="pl-1 my-auto">
-                          <h4
-                            className={`font-black text-white leading-tight line-clamp-2 widget-class-title ${
-                              isShort ? "text-[11px]" : "text-xs"
-                            }`}
-                          >
-                            {lesson.Description}
-                          </h4>
-                        </div>
+                        {isShort ? (
+                          /* ── 1-hour pill: title + room side by side ── */
+                          <div className="pl-1 flex items-center gap-2 min-w-0 flex-1">
+                            <h4
+                              className="font-black text-white leading-tight line-clamp-2 widget-class-title text-sm flex-1 min-w-0"
+                            >
+                              {lesson.Description}
+                            </h4>
+                            <div className="shrink-0">
+                              {!isLab && lesson.Location ? (
+                                <RoomBadge location={lesson.Location} size="xs" hideDesc />
+                              ) : isLab && lesson.collapsedLocations ? (
+                                <span className="inline-flex items-center gap-1 text-[9px] font-bold text-white bg-zinc-900 px-1.5 py-0.5 rounded border border-white/20 shrink-0" title="Click to view lab groups and rooms">
+                                  <Users className="w-2.5 h-2.5 text-white shrink-0" />
+                                  <span>{lesson.Locations?.length ? `${lesson.Locations.length}G` : "Lab"}</span>
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-zinc-200 font-semibold font-mono truncate max-w-[64px]">
+                                  {lesson.Name}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          /* ── Taller pill: stacked layout ── */
+                          <>
+                            {/* Middle: Title */}
+                            <div className="pl-1 my-auto">
+                              <h4
+                                className="font-black text-white leading-tight line-clamp-2 widget-class-title text-sm"
+                              >
+                                {lesson.Description}
+                              </h4>
+                            </div>
 
-                        {/* Bottom: Location & Staff (if room available) */}
-                        <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-zinc-100">
-                          {!isLab && lesson.Location ? (
-                            <RoomBadge location={lesson.Location} size="xs" hideDesc={heightPx < 90} />
-                          ) : isLab && lesson.collapsedLocations ? (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-white bg-zinc-900 px-1.5 py-0.5 rounded border border-white/20 shrink-0" title="Click to view lab groups and rooms">
-                              <Users className="w-2.5 h-2.5 text-white shrink-0" />
-                              <span>{lesson.Locations?.length ? `${lesson.Locations.length} Groups` : "Lab Info"}</span>
-                            </span>
-                          ) : (
-                            <span className="text-[9px] text-zinc-200 font-semibold font-mono truncate">
-                              {lesson.Name}
-                            </span>
-                          )}
+                            {/* Bottom: Location & Staff */}
+                            <div className="pl-1 flex items-center justify-between gap-1 text-[10px] font-bold text-zinc-100">
+                              {!isLab && lesson.Location ? (
+                                <RoomBadge location={lesson.Location} size="xs" hideDesc={heightPx < 90} />
+                              ) : isLab && lesson.collapsedLocations ? (
+                                <span className="inline-flex items-center gap-1 text-[9px] font-bold text-white bg-zinc-900 px-1.5 py-0.5 rounded border border-white/20 shrink-0" title="Click to view lab groups and rooms">
+                                  <Users className="w-2.5 h-2.5 text-white shrink-0" />
+                                  <span>{lesson.Locations?.length ? `${lesson.Locations.length} Groups` : "Lab Info"}</span>
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-zinc-200 font-semibold font-mono truncate">
+                                  {lesson.Name}
+                                </span>
+                              )}
 
-                          {lesson.staffName && heightPx >= 80 && (
-                            <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-200 font-semibold" title={lesson.staffName}>
-                              <User className="w-2.5 h-2.5 text-white shrink-0" />
-                              <span className="truncate max-w-[80px]">{lesson.staffName}</span>
-                            </span>
-                          )}
-                        </div>
+                              {lesson.staffName && heightPx >= 80 && (
+                                <span className="flex items-center gap-0.5 truncate text-[9px] text-zinc-200 font-semibold" title={lesson.staffName}>
+                                  <User className="w-2.5 h-2.5 text-white shrink-0" />
+                                  <span className="truncate max-w-[80px]">{lesson.staffName}</span>
+                                </span>
+                              )}
+                            </div>
+                          </>
+                        )}
+
                       </div>
                     );
                   })}

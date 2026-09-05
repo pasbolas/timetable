@@ -1,4 +1,5 @@
 import React from "react";
+import { PWAInstallModal } from "./PWAInstallModal";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import {
   X,
@@ -94,7 +95,8 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
   onStartTour,
 }) => {
   const { themeMode, setThemeMode } = useTheme();
-  const { isInstalled, installApp } = usePWAInstall();
+  const { isInstalled, installApp, canPromptNatively, browserEnv } = usePWAInstall();
+  const [showInstallGuide, setShowInstallGuide] = React.useState(false);
   const [isMoreOpen, setIsMoreOpen] = React.useState(false);
   const mainDragControls = useDragControls();
   const moreDragControls = useDragControls();
@@ -384,7 +386,11 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   type="button"
                   onClick={async () => {
                     triggerHapticFeedback();
-                    await installApp();
+                    if (canPromptNatively) {
+                      await installApp();
+                    } else {
+                      setShowInstallGuide(true);
+                    }
                   }}
                   className="w-full p-3 rounded-full bg-zinc-950 hover:bg-zinc-900 border border-white/20 flex items-center justify-between text-left transition-all active:scale-98 group shadow-xs cursor-pointer"
                   title={isInstalled ? "App is already installed" : "Install MyTimetable as an App"}
@@ -753,6 +759,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               </div>
             )}
           </AnimatePresence>
-        </>
-      );
-    };
+
+      {/* PWA Install Guide for unsupported browsers (Safari, Firefox, etc.) */}
+      <PWAInstallModal
+        isOpen={showInstallGuide}
+        onClose={() => setShowInstallGuide(false)}
+        browserEnv={browserEnv}
+      />
+    </>
+  );
+};
