@@ -52,8 +52,8 @@ export const LessonCard: React.FC<LessonCardProps> = ({
         </div>
 
         <span
-          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md text-white border border-white ${
-            isLecture ? "bg-[#228B22]" : "bg-white text-black"
+          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
           }`}
         >
           {lesson.EventType}

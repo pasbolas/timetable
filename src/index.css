@@ -8,7 +8,7 @@
 
 html {
   background-color: #000000;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
   width: 100%;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -17,7 +17,7 @@ html {
 body {
   background-color: #000000;
   color: #ffffff;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
   width: 100%;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -34,7 +34,7 @@ body,
   margin: 0;
   padding: 0;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -248,8 +248,8 @@ html.light .fixed.inset-0.bg-black\/80 {
 }
 
 /* Typography in Light mode */
-html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color),
-html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+html[data-theme="light"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black),
+html.light .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
   color: #000000 !important;
 }
 
@@ -383,7 +383,7 @@ html[data-theme="midnight"] .bg-black\/90 {
   background-color: rgba(11, 15, 25, 0.9) !important;
 }
 
-html[data-theme="midnight"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+html[data-theme="midnight"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
   color: #f8fafc !important;
 }
 
@@ -486,7 +486,7 @@ html[data-theme="sunset"] .bg-black\/90 {
   background-color: rgba(24, 13, 21, 0.9) !important;
 }
 
-html[data-theme="sunset"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color) {
+html[data-theme="sunset"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black) {
   color: #fdf2f8 !important;
 }
 

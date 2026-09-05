@@ -78,7 +78,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden flex-1 flex flex-col">
+    <div className="w-full max-w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky flush below TopBar when scrolling lessons */}
       <div
         className="z-20 bg-black border-b-2 border-white flex items-center justify-between px-3 sm:px-6 py-2.5 transition-colors shadow-xs w-full max-w-full"
@@ -530,8 +530,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                             {lesson.StartDateTime.format("HH:mm")} – {lesson.EndDateTime.format("HH:mm")}
                           </span>
                           <span
-                            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate text-white border border-white ${
-                              isLecture ? "bg-[#228B22]" : "bg-white text-black"
+                            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md truncate border ${
+                              isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
                             }`}
                           >
                             {lesson.EventType}
@@ -585,8 +585,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         </div>
 
                         <span
-                          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md text-white border border-white ${
-                            isLecture ? "bg-[#228B22]" : "bg-white text-black"
+                          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
                           }`}
                         >
                           {lesson.EventType}
@@ -647,8 +647,8 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                         </div>
 
                         <span
-                          className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg text-white border border-white ${
-                            isLecture ? "bg-[#228B22]" : "bg-white text-black"
+                          className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
+                            isLecture ? "bg-[#228B22] text-white border-transparent" : "bg-white text-black border-white"
                           }`}
                         >
                           {lesson.EventType}
