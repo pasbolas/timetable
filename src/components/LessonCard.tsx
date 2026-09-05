@@ -29,7 +29,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     <div
       data-tour={dataTour}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border-2 transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 ${
+      className={`relative overflow-hidden rounded-xl border-2 transition-colors cursor-pointer active:scale-[0.99] p-3.5 my-2 timetable-widget ${
         isLecture
           ? "lecture-widget"
           : isLab

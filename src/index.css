@@ -381,15 +381,64 @@ html.light .fill-zinc-500 {
 }
 
 /* -------------------------------------------------------------------------- */
+/* TIMETABLE WIDGETS GLASSMORPHISM (Dark Mode Blur & Frosted Glass)           */
+/* -------------------------------------------------------------------------- */
+.timetable-widget {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Default / generic lesson widgets in Dark Mode */
+html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget),
+html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget),
+:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget) {
+  background-color: rgba(10, 10, 12, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):hover,
+html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):hover,
+:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):hover {
+  background-color: rgba(24, 24, 28, 0.82) !important;
+}
+
+/* Break pills in Dark Mode with blurred frosted background */
+html[data-theme="dark"] .bg-break-stripes,
+html.dark .bg-break-stripes,
+:root:not([data-theme="light"]) .bg-break-stripes {
+  background-color: rgba(10, 10, 12, 0.6) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(10, 10, 12, 0.6),
+    rgba(10, 10, 12, 0.6) 7px,
+    rgba(255, 255, 255, 0.12) 7px,
+    rgba(255, 255, 255, 0.12) 14px
+  ) !important;
+}
+
+/* Light mode resets backdrop blur for solid clean rendering */
+html[data-theme="light"] .timetable-widget,
+html.light .timetable-widget {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* -------------------------------------------------------------------------- */
 /* LAB WIDGET & BADGE STYLES (Light shade of orange tint)                    */
 /* -------------------------------------------------------------------------- */
 .lab-widget {
-  background-color: rgba(249, 115, 22, 0.08) !important;
-  border-color: rgba(251, 146, 60, 0.45) !important;
+  background-color: rgba(249, 115, 22, 0.12) !important;
+  border-color: rgba(251, 146, 60, 0.5) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .lab-widget:hover {
-  background-color: rgba(249, 115, 22, 0.14) !important;
+  background-color: rgba(249, 115, 22, 0.2) !important;
 }
 
 .lab-accent-bar {
@@ -437,12 +486,14 @@ html.light .lab-badge {
 /* LECTURE WIDGET & BADGE STYLES (Light shade of green tint)                  */
 /* -------------------------------------------------------------------------- */
 .lecture-widget {
-  background-color: rgba(34, 197, 94, 0.08) !important;
-  border-color: rgba(74, 222, 128, 0.4) !important;
+  background-color: rgba(34, 197, 94, 0.12) !important;
+  border-color: rgba(74, 222, 128, 0.45) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .lecture-widget:hover {
-  background-color: rgba(34, 197, 94, 0.14) !important;
+  background-color: rgba(34, 197, 94, 0.2) !important;
 }
 
 .lecture-accent-bar {

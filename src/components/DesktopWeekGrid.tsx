@@ -524,7 +524,7 @@ export const DesktopWeekGrid: React.FC<DesktopWeekGridProps> = ({
                           left: `calc(${leftPercent}% + 3px)`,
                           width: `calc(${colWidth}% - 6px)`,
                         }}
-                        className={`absolute rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group active:scale-[0.99] shadow-xs ${
+                        className={`absolute rounded-xl border-2 cursor-pointer overflow-hidden flex flex-col justify-between transition-all p-2 group active:scale-[0.99] shadow-xs timetable-widget ${
                           isLecture
                             ? "lecture-widget"
                             : isLab

@@ -20,7 +20,7 @@ export const BreakCard: React.FC<BreakCardProps> = ({ dayBreak }) => {
 
   return (
     <div className="flex items-center justify-center my-2">
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[11px] font-bold border-2 border-white">
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white text-[11px] font-bold border-2 border-white timetable-widget">
         <Coffee className="w-3 h-3 text-white" />
         <span>{durationStr} free</span>
         <span className="text-white">•</span>

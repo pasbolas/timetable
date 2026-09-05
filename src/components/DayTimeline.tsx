@@ -502,7 +502,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
                     left: "8px",
                     right: "8px",
                   }}
-                  className={`absolute rounded-xl border-2 cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group ${
+                  className={`absolute rounded-xl border-2 cursor-pointer transition-colors overflow-hidden flex flex-col justify-between active:scale-[0.99] group timetable-widget ${
                     isLecture
                       ? "lecture-widget"
                       : isLab
