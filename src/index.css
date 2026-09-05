@@ -432,6 +432,269 @@ html.light .fill-zinc-500 {
   fill: #71717a !important;
 }
 
+/* -------------------------------------------------------------------------- */
+/* 2. ZARA THEME (Copy of Light Theme)                                        */
+/* -------------------------------------------------------------------------- */
+html[data-theme="zara"],
+html.zara {
+  background-color: #F3E0BE !important;
+  color-scheme: light;
+}
+
+html[data-theme="zara"] body,
+html.zara body,
+html[data-theme="zara"] #root,
+html.zara #root,
+html[data-theme="zara"] .app-canvas-root,
+html.zara .app-canvas-root {
+  background-color: #F3E0BE !important;
+  color: #000000 !important;
+}
+
+/* Calendar schedule container: transparent so revolving balls float over #F3E0BE */
+html[data-theme="zara"] main,
+html.zara main {
+  background-color: transparent !important;
+}
+
+/* Revolving balls on top of calendar bg, under UI & widgets */
+html[data-theme="zara"] .ambient-background-layer [class*="animate-float-"],
+html.zara .ambient-background-layer [class*="animate-float-"] {
+  opacity: 0.65 !important;
+  mix-blend-mode: multiply;
+}
+
+html[data-theme="zara"] ::-webkit-scrollbar-thumb,
+html.zara ::-webkit-scrollbar-thumb {
+  background: #000000 !important;
+}
+
+html[data-theme="zara"] *,
+html.zara * {
+  scrollbar-color: #000000 transparent !important;
+}
+
+html[data-theme="zara"] .bg-dot-grid,
+html.zara .bg-dot-grid {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.12) 1.5px, transparent 1.5px) !important;
+}
+
+html[data-theme="zara"] .bg-break-stripes,
+html.zara .bg-break-stripes {
+  background-color: #ffffff !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #ffffff,
+    #ffffff 7px,
+    rgba(0, 0, 0, 0.12) 7px,
+    rgba(0, 0, 0, 0.12) 14px
+  ) !important;
+  color: #18181b !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+html[data-theme="zara"] .bg-break-stripes *,
+html.zara .bg-break-stripes * {
+  color: #18181b !important;
+  stroke: #18181b !important;
+}
+
+/* Inner card, widget, modal backgrounds in Zara mode */
+html[data-theme="zara"] .bg-black:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
+html[data-theme="zara"] .bg-zinc-950:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
+html.zara .bg-black:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main),
+html.zara .bg-zinc-950:not(.app-canvas-root):not(.timeline-subheader-surface):not(body):not(main) {
+  background-color: #ffffff !important;
+}
+
+/* Strong enforcement: Calendar canvas root always stays #F3E0BE in Zara mode */
+html[data-theme="zara"] .app-canvas-root,
+html.zara .app-canvas-root,
+html[data-theme="zara"] #root,
+html.zara #root,
+html[data-theme="zara"] body,
+html.zara body {
+  background-color: #F3E0BE !important;
+}
+
+/* Pinned sticky top navigation header & week header surface */
+html[data-theme="zara"] header.sticky,
+html[data-theme="zara"] .top-bar-surface,
+html[data-theme="zara"] .week-header-surface,
+html[data-theme="zara"] .week-corner-cell,
+html.zara header.sticky,
+html.zara .top-bar-surface,
+html.zara .week-header-surface,
+html.zara .week-corner-cell {
+  background-color: #f4f4f5 !important;
+}
+
+/* Date subheader ("Saturday, 5 September • ...") in Zara mode */
+html[data-theme="zara"] .timeline-subheader-surface,
+html.zara .timeline-subheader-surface,
+html[data-theme="zara"] div.timeline-subheader-surface,
+html.zara div.timeline-subheader-surface {
+  background-color: #DE838D !important;
+  border-top-color: #000000 !important;
+  border-bottom-color: #000000 !important;
+}
+
+html[data-theme="zara"] .top-bar-surface .bg-zinc-900,
+html[data-theme="zara"] .top-bar-surface .bg-zinc-950,
+html.zara .top-bar-surface .bg-zinc-900,
+html.zara .top-bar-surface .bg-zinc-950 {
+  background-color: #ffffff !important;
+}
+
+html[data-theme="zara"] .bg-zinc-950\/95,
+html.zara .bg-zinc-950\/95 {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="zara"] .bg-black\/60,
+html[data-theme="zara"] .bg-black\/75,
+html[data-theme="zara"] .bg-black\/80,
+html[data-theme="zara"] .bg-black\/85,
+html[data-theme="zara"] .bg-black\/90,
+html.zara .bg-black\/60,
+html.zara .bg-black\/75,
+html.zara .bg-black\/80,
+html.zara .bg-black\/85,
+html.zara .bg-black\/90 {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html[data-theme="zara"] .fixed.inset-0.bg-black\/80,
+html.zara .fixed.inset-0.bg-black\/80,
+html[data-theme="zara"] .drawer-backdrop,
+html.zara .drawer-backdrop {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Typography in Zara mode */
+html[data-theme="zara"] .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge):not(.lecture-badge *):not(.lecture-badge),
+html.zara .text-white:not([class*="bg-[#228B22]"] *):not([class*="bg-[#228B22]"]):not([class*="bg-red"] *):not(.preserve-color):not(.bg-white):not(.text-black):not(.lab-badge *):not(.lab-badge):not(.tutorial-badge *):not(.tutorial-badge):not(.lecture-badge *):not(.lecture-badge) {
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .text-white\/90,
+html.zara .text-white\/90 {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+html[data-theme="zara"] .text-zinc-100,
+html[data-theme="zara"] .text-zinc-200,
+html.zara .text-zinc-100,
+html.zara .text-zinc-200 {
+  color: #09090b !important;
+}
+
+html[data-theme="zara"] .text-zinc-300,
+html[data-theme="zara"] .text-zinc-400,
+html.zara .text-zinc-300,
+html.zara .text-zinc-400 {
+  color: #52525b !important;
+}
+
+/* Borders in Zara mode */
+html[data-theme="zara"] .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color),
+html.zara .border-white:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  border-color: #000000 !important;
+}
+
+html[data-theme="zara"] .border-white\/15,
+html[data-theme="zara"] .border-white\/20,
+html[data-theme="zara"] .border-white\/25,
+html[data-theme="zara"] .border-white\/30,
+html[data-theme="zara"] .border-white\/35,
+html[data-theme="zara"] .border-white\/40,
+html[data-theme="zara"] .border-white\/50,
+html.zara .border-white\/15,
+html.zara .border-white\/20,
+html.zara .border-white\/25,
+html.zara .border-white\/30,
+html.zara .border-white\/35,
+html.zara .border-white\/40,
+html.zara .border-white\/50 {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html[data-theme="zara"] .border-zinc-800,
+html[data-theme="zara"] .border-zinc-700,
+html[data-theme="zara"] .border-zinc-600,
+html.zara .border-zinc-800,
+html.zara .border-zinc-700,
+html.zara .border-zinc-600 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+html[data-theme="zara"] .ring-white,
+html[data-theme="zara"] .ring-white\/30,
+html.zara .ring-white,
+html.zara .ring-white\/30 {
+  --tw-ring-color: #000000 !important;
+}
+
+/* Hovers in Zara mode */
+html[data-theme="zara"] .hover\:bg-zinc-950:hover,
+html[data-theme="zara"] .hover\:bg-zinc-900:hover,
+html[data-theme="zara"] .hover\:bg-zinc-800:hover,
+html.zara .hover\:bg-zinc-950:hover,
+html.zara .hover\:bg-zinc-900:hover,
+html.zara .hover\:bg-zinc-800:hover {
+  background-color: #e4e4e7 !important;
+}
+
+html[data-theme="zara"] .bg-zinc-900,
+html[data-theme="zara"] .bg-zinc-800,
+html[data-theme="zara"] [class*="bg-zinc-900"],
+html[data-theme="zara"] [class*="bg-zinc-800"],
+html.zara .bg-zinc-900,
+html.zara .bg-zinc-800,
+html.zara [class*="bg-zinc-900"],
+html.zara [class*="bg-zinc-800"] {
+  background-color: #f4f4f5 !important;
+}
+
+/* Inverted badges, primary active action buttons */
+html[data-theme="zara"] .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color),
+html.zara .bg-white.text-black:not([class*="bg-[#228B22]"]):not(.preserve-color) {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+html[data-theme="zara"] .bg-white.text-black:not([class*="bg-[#228B22]"]) *,
+html.zara .bg-white.text-black:not([class*="bg-[#228B22]"]) * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html[data-theme="zara"] .hover\:bg-zinc-200:hover,
+html.zara .hover\:bg-zinc-200:hover {
+  background-color: #27272a !important;
+}
+
+/* Date strip dot indicator in zara mode */
+html[data-theme="zara"] .date-strip-dot,
+html.zara .date-strip-dot {
+  background-color: #09090b !important;
+}
+
+/* SVG Fill Inversion */
+html[data-theme="zara"] .fill-white,
+html.zara .fill-white {
+  fill: #000000 !important;
+}
+
+html[data-theme="zara"] .fill-zinc-700,
+html[data-theme="zara"] .fill-zinc-500,
+html.zara .fill-zinc-700,
+html.zara .fill-zinc-500 {
+  fill: #71717a !important;
+}
+
 
 
 /* -------------------------------------------------------------------------- */
@@ -469,21 +732,21 @@ html.light .fill-zinc-500 {
 /* Default / generic lesson widgets in Dark Mode */
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
-:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
   background-color: #111114 !important;
   border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 html[data-theme="dark"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
 html.dark .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
-:root:not([data-theme="light"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
   background-color: #1a1a20 !important;
 }
 
 /* Break pills in Dark Mode with solid opaque background */
 html[data-theme="dark"] .bg-break-stripes,
 html.dark .bg-break-stripes,
-:root:not([data-theme="light"]) .bg-break-stripes {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .bg-break-stripes {
   background-color: #0c0c0e !important;
   background-image: repeating-linear-gradient(
     -45deg,
@@ -494,10 +757,28 @@ html.dark .bg-break-stripes,
   ) !important;
 }
 
-/* Light mode clean rendering */
+/* Light and Zara mode clean rendering */
 html[data-theme="light"] .timetable-widget,
-html.light .timetable-widget {
+html.light .timetable-widget,
+html[data-theme="zara"] .timetable-widget,
+html.zara .timetable-widget {
   opacity: 1;
+}
+
+/* Generic lesson widgets in Light and Zara Mode */
+html[data-theme="light"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+html.light .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+html[data-theme="zara"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget),
+html.zara .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget) {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+html[data-theme="light"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
+html.light .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
+html[data-theme="zara"] .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover,
+html.zara .timetable-widget:not(.lab-widget):not(.lecture-widget):not(.tutorial-widget):hover {
+  background-color: #f4f4f5 !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -528,25 +809,33 @@ html.light .timetable-widget {
   color: #ffffff !important;
 }
 
-/* Light Mode: Delicate, very light shade of orange */
+/* Light and Zara Mode: Delicate, very light shade of orange */
 html[data-theme="light"] .lab-widget,
-html.light .lab-widget {
+html.light .lab-widget,
+html[data-theme="zara"] .lab-widget,
+html.zara .lab-widget {
   background-color: #fff7ed !important; /* Tailwind orange-50 */
   border-color: #fdba74 !important; /* Tailwind orange-300 */
 }
 
 html[data-theme="light"] .lab-widget:hover,
-html.light .lab-widget:hover {
+html.light .lab-widget:hover,
+html[data-theme="zara"] .lab-widget:hover,
+html.zara .lab-widget:hover {
   background-color: #ffedd5 !important; /* Tailwind orange-100 */
 }
 
 html[data-theme="light"] .lab-accent-bar,
-html.light .lab-accent-bar {
+html.light .lab-accent-bar,
+html[data-theme="zara"] .lab-accent-bar,
+html.zara .lab-accent-bar {
   background-color: #f97316 !important;
 }
 
 html[data-theme="light"] .lab-badge,
-html.light .lab-badge {
+html.light .lab-badge,
+html[data-theme="zara"] .lab-badge,
+html.zara .lab-badge {
   background-color: #ea580c !important;
   color: #ffffff !important;
   border-color: #ea580c !important;
@@ -580,32 +869,42 @@ html.light .lab-badge {
   color: #122810 !important;
 }
 
-/* Light Mode: Pastel sage green (#c2deb9) completely opaque */
+/* Light and Zara Mode: Pastel sage green (#c2deb9) completely opaque */
 html[data-theme="light"] .lecture-widget,
-html.light .lecture-widget {
+html.light .lecture-widget,
+html[data-theme="zara"] .lecture-widget,
+html.zara .lecture-widget {
   background-color: #c2deb9 !important; /* Soft sage pastel, completely opaque */
   border-color: #8bb380 !important;
 }
 
 html[data-theme="light"] .lecture-widget:hover,
-html.light .lecture-widget:hover {
+html.light .lecture-widget:hover,
+html[data-theme="zara"] .lecture-widget:hover,
+html.zara .lecture-widget:hover {
   background-color: #b2d4aa !important;
 }
 
 html[data-theme="light"] .lecture-accent-bar,
-html.light .lecture-accent-bar {
+html.light .lecture-accent-bar,
+html[data-theme="zara"] .lecture-accent-bar,
+html.zara .lecture-accent-bar {
   background-color: #3b6631 !important;
 }
 
 html[data-theme="light"] .lecture-badge,
-html.light .lecture-badge {
+html.light .lecture-badge,
+html[data-theme="zara"] .lecture-badge,
+html.zara .lecture-badge {
   background-color: #3b6631 !important;
   color: #ffffff !important;
   border-color: #3b6631 !important;
 }
 
 html[data-theme="light"] .lecture-badge *,
-html.light .lecture-badge * {
+html.light .lecture-badge *,
+html[data-theme="zara"] .lecture-badge *,
+html.zara .lecture-badge * {
   color: #ffffff !important;
 }
 
@@ -637,32 +936,42 @@ html.light .lecture-badge * {
   color: #e4e4e7 !important;
 }
 
-/* Light Mode: Delicate, light shade of white */
+/* Light and Zara Mode: Delicate, light shade of white */
 html[data-theme="light"] .tutorial-widget,
-html.light .tutorial-widget {
+html.light .tutorial-widget,
+html[data-theme="zara"] .tutorial-widget,
+html.zara .tutorial-widget {
   background-color: #f8fafc !important; /* Tailwind slate-50 */
   border-color: #cbd5e1 !important; /* Tailwind slate-300 */
 }
 
 html[data-theme="light"] .tutorial-widget:hover,
-html.light .tutorial-widget:hover {
+html.light .tutorial-widget:hover,
+html[data-theme="zara"] .tutorial-widget:hover,
+html.zara .tutorial-widget:hover {
   background-color: #f1f5f9 !important; /* Tailwind slate-100 */
 }
 
 html[data-theme="light"] .tutorial-accent-bar,
-html.light .tutorial-accent-bar {
+html.light .tutorial-accent-bar,
+html[data-theme="zara"] .tutorial-accent-bar,
+html.zara .tutorial-accent-bar {
   background-color: #64748b !important;
 }
 
 html[data-theme="light"] .tutorial-badge,
-html.light .tutorial-badge {
+html.light .tutorial-badge,
+html[data-theme="zara"] .tutorial-badge,
+html.zara .tutorial-badge {
   background-color: #e2e8f0 !important;
   color: #0f172a !important;
   border-color: #cbd5e1 !important;
 }
 
 html[data-theme="light"] .tutorial-badge *,
-html.light .tutorial-badge * {
+html.light .tutorial-badge *,
+html[data-theme="zara"] .tutorial-badge *,
+html.zara .tutorial-badge * {
   color: #0f172a !important;
 }
 
@@ -680,41 +989,51 @@ html.light .tutorial-badge * {
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-/* Light Mode: Crisp white pill with distinct dark border and inverted black room tag */
+/* Light and Zara Mode: Crisp white pill with distinct dark border and inverted black room tag */
 html[data-theme="light"] .room-highlight-pill,
-html.light .room-highlight-pill {
+html.light .room-highlight-pill,
+html[data-theme="zara"] .room-highlight-pill,
+html.zara .room-highlight-pill {
   background-color: #ffffff !important;
   border: 1.5px solid rgba(0, 0, 0, 0.35) !important;
   color: #000000 !important;
 }
 
 html[data-theme="light"] .room-highlight-pill *,
-html.light .room-highlight-pill * {
+html.light .room-highlight-pill *,
+html[data-theme="zara"] .room-highlight-pill *,
+html.zara .room-highlight-pill * {
   color: #000000 !important;
   stroke: #000000 !important;
 }
 
 html[data-theme="light"] .room-code-tag,
-html.light .room-code-tag {
+html.light .room-code-tag,
+html[data-theme="zara"] .room-code-tag,
+html.zara .room-code-tag {
   background-color: #000000 !important;
   color: #ffffff !important;
   border: 1px solid #000000 !important;
 }
 
 html[data-theme="light"] .room-code-tag *,
-html.light .room-code-tag * {
+html.light .room-code-tag *,
+html[data-theme="zara"] .room-code-tag *,
+html.zara .room-code-tag * {
   color: #ffffff !important;
 }
 
 html[data-theme="light"] .room-desc-text,
-html.light .room-desc-text {
+html.light .room-desc-text,
+html[data-theme="zara"] .room-desc-text,
+html.zara .room-desc-text {
   color: #27272a !important;
 }
 
 /* Dark Mode: Soft, balanced pill with subtle border and muted room tag */
 html[data-theme="dark"] .room-highlight-pill,
 html.dark .room-highlight-pill,
-:root:not([data-theme="light"]) .room-highlight-pill {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .room-highlight-pill {
   background-color: #18181b !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   color: #e4e4e7 !important;
@@ -722,14 +1041,14 @@ html.dark .room-highlight-pill,
 
 html[data-theme="dark"] .room-highlight-pill *,
 html.dark .room-highlight-pill *,
-:root:not([data-theme="light"]) .room-highlight-pill * {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .room-highlight-pill * {
   color: #e4e4e7 !important;
   stroke: #e4e4e7 !important;
 }
 
 html[data-theme="dark"] .room-code-tag,
 html.dark .room-code-tag,
-:root:not([data-theme="light"]) .room-code-tag {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .room-code-tag {
   background-color: #27272a !important;
   color: #f4f4f5 !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
@@ -737,13 +1056,13 @@ html.dark .room-code-tag,
 
 html[data-theme="dark"] .room-code-tag *,
 html.dark .room-code-tag *,
-:root:not([data-theme="light"]) .room-code-tag * {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .room-code-tag * {
   color: #f4f4f5 !important;
 }
 
 html[data-theme="dark"] .room-desc-text,
 html.dark .room-desc-text,
-:root:not([data-theme="light"]) .room-desc-text {
+:root:not([data-theme="light"]):not([data-theme="zara"]) .room-desc-text {
   color: #a1a1aa !important;
 }
 

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palettes Grid</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #212529;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    .theme-section {
+      margin-bottom: 40px;
+    }
+
+    .theme-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .color-card {
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e9ecef;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .swatch {
+      height: 140px;
+      width: 100%;
+    }
+
+    .info {
+      padding: 14px 16px;
+    }
+
+    .color-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 4px;
+    }
+
+    .color-code {
+      font-size: 13px;
+      color: #6c757d;
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      margin-bottom: 2px;
+    }
+
+    .color-hex {
+      font-size: 13px;
+      color: #868e96;
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Color Grid</h1>
+
+    <!-- ZARA'S THEME -->
+    <div class="theme-section">
+      <h2 class="theme-title">ZARA’S THEME</h2>
+      <div class="grid">
+        <div class="color-card">
+          <div class="swatch" style="background-color: #F3E0BE;"></div>
+          <div class="info">
+            <div class="color-name">Vanilla Custard</div>
+            <div class="color-code">12-0815 TCX</div>
+            <div class="color-hex">#F3E0BE</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #DE838D;"></div>
+          <div class="info">
+            <div class="color-name">Flamingo Plume</div>
+            <div class="color-code">16-1615 TCX</div>
+            <div class="color-hex">#DE838D</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #73362A;"></div>
+          <div class="info">
+            <div class="color-name">Brandy Brown</div>
+            <div class="color-code">18-1541 TCX</div>
+            <div class="color-hex">#73362A</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 2 -->
+    <div class="theme-section">
+      <h2 class="theme-title">Theme 2</h2>
+      <div class="grid">
+        <div class="color-card">
+          <div class="swatch" style="background-color: #3C2D2E;"></div>
+          <div class="info">
+            <div class="color-name">Chocolate Plum</div>
+            <div class="color-code">19-1110 TCX</div>
+            <div class="color-hex">#3C2D2E</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #F8DE8D;"></div>
+          <div class="info">
+            <div class="color-name">Popcorn</div>
+            <div class="color-code">12-0825 TCX</div>
+            <div class="color-hex">#F8DE8D</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #9BB7D4;"></div>
+          <div class="info">
+            <div class="color-name">Cerulean</div>
+            <div class="color-code">15-4020 TCX</div>
+            <div class="color-hex">#9BB7D4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 3 -->
+    <div class="theme-section">
+      <h2 class="theme-title">Theme 3</h2>
+      <div class="grid">
+        <div class="color-card">
+          <div class="swatch" style="background-color: #F0DEBD;"></div>
+          <div class="info">
+            <div class="color-name">Alabaster Gleam</div>
+            <div class="color-code">12-0812 TCX</div>
+            <div class="color-hex">#F0DEBD</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #674550;"></div>
+          <div class="info">
+            <div class="color-name">Plum Wine</div>
+            <div class="color-code">18-1411 TCX</div>
+            <div class="color-hex">#674550</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #756D47;"></div>
+          <div class="info">
+            <div class="color-name">Olive Drab</div>
+            <div class="color-code">18-0622 TCX</div>
+            <div class="color-hex">#756D47</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 4 -->
+    <div class="theme-section">
+      <h2 class="theme-title">Theme 4</h2>
+      <div class="grid">
+        <div class="color-card">
+          <div class="swatch" style="background-color: #56352D;"></div>
+          <div class="info">
+            <div class="color-name">Chocolate Fondant</div>
+            <div class="color-code">19-1432 TCX</div>
+            <div class="color-hex">#56352D</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #E2C4A6;"></div>
+          <div class="info">
+            <div class="color-name">Apricot Illusion</div>
+            <div class="color-code">14-1120 TCX</div>
+            <div class="color-hex">#E2C4A6</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="swatch" style="background-color: #213245;"></div>
+          <div class="info">
+            <div class="color-name">Dress Blues</div>
+            <div class="color-code">19-4024 TCX</div>
+            <div class="color-hex">#213245</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

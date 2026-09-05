@@ -2,7 +2,7 @@ import React from "react";
 
 export const AmbientBackground: React.FC = () => {
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[1] select-none ambient-background-layer">
       {/* Subtle dispersed floating pink and blue balls */}
       {/* Top Left Pink Ball */}
       <div

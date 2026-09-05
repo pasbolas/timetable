@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { StorageService, ThemeMode } from "../services/storage";
 
-export type ResolvedTheme = "dark" | "light";
+export type ResolvedTheme = "dark" | "light" | "zara";
 
 export const THEME_META_COLORS: Record<ResolvedTheme, string> = {
   dark: "#000000",
   light: "#f4f4f5",
+  zara: "#F3E0BE",
 };
 
 export const THEME_OPTIONS: Array<{
@@ -35,9 +36,19 @@ export const THEME_OPTIONS: Array<{
     previewText: "#000000",
     icon: "sun",
   },
+  {
+    id: "zara",
+    label: "Zara",
+    sublabel: "Vanilla Custard",
+    previewBg: "#F3E0BE",
+    previewBorder: "#000000",
+    previewText: "#000000",
+    icon: "sparkles",
+  },
 ];
 
 function resolveThemeMode(mode: ThemeMode): ResolvedTheme {
+  if (mode === "zara") return "zara";
   return mode === "light" ? "light" : "dark";
 }
 
@@ -51,11 +62,12 @@ function applyThemeToDOM(resolved: ResolvedTheme, mode: ThemeMode) {
   root.setAttribute("data-theme-mode", mode);
 
   // Set class for tailwind darkMode class selector
+  root.classList.remove("light", "dark", "zara");
   if (resolved === "light") {
-    root.classList.remove("dark");
     root.classList.add("light");
+  } else if (resolved === "zara") {
+    root.classList.add("zara");
   } else {
-    root.classList.remove("light");
     root.classList.add("dark");
   }
 
@@ -122,6 +134,6 @@ export function useTheme() {
     themeMode,
     resolvedTheme,
     setThemeMode,
-    isDark: resolvedTheme !== "light",
+    isDark: resolvedTheme === "dark",
   };
 }

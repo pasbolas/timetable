@@ -329,11 +329,11 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   </span>
                 </div>
 
-                {/* 2-Option Selector: Dark and Light */}
-                <div className="grid grid-cols-2 gap-2">
-                  {THEME_OPTIONS.filter(o => o.id === 'dark' || o.id === 'light').map((opt) => {
+                {/* Theme Selector: Dark, Light, Zara */}
+                <div className="grid grid-cols-3 gap-2">
+                  {THEME_OPTIONS.map((opt) => {
                     const isSelected = themeMode === opt.id;
-                    const Icon = opt.id === "dark" ? Moon : Sun;
+                    const Icon = opt.id === "dark" ? Moon : opt.id === "zara" ? Sparkles : Sun;
 
                     return (
                       <button
@@ -343,16 +343,16 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                           setThemeMode(opt.id);
                           triggerHapticFeedback();
                         }}
-                        className={`p-2.5 rounded-xl border transition-all active:scale-95 flex items-center justify-between text-left ${
+                        className={`p-2 sm:p-2.5 rounded-xl border transition-all active:scale-95 flex items-center justify-between text-left ${
                           isSelected
                             ? "bg-zinc-800 text-white border-white/40 shadow-xs ring-1 ring-white/30"
                             : "bg-zinc-950 hover:bg-zinc-900 border-white/20 text-white"
                         }`}
                       >
-                        <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex items-center gap-1.5 min-w-0">
                           {/* Mini Palette Swatch */}
                           <div
-                            className="w-4 h-4 rounded-full border shrink-0 flex items-center justify-center shadow-xs"
+                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border shrink-0 flex items-center justify-center shadow-xs"
                             style={{
                               backgroundColor: opt.previewBg,
                               borderColor: opt.previewBorder,
@@ -363,9 +363,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                               style={{ backgroundColor: opt.previewText }}
                             />
                           </div>
-                          <div className="text-xs font-black truncate flex items-center gap-1.5">
-                            <Icon className="w-3.5 h-3.5" />
-                            <span>{opt.label}</span>
+                          <div className="text-xs font-black truncate flex items-center gap-1">
+                            <Icon className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate">{opt.label}</span>
                           </div>
                         </div>
 
