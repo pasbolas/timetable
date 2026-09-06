@@ -891,23 +891,23 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     )}
 
                     {/* Independent Student Project Disclaimer */}
-                    <div className="pt-2 px-2 text-center select-text">
+                    <div className="pt-2 pb-2 px-2 text-center select-text">
                       <p className="text-[10px] leading-relaxed text-zinc-500 font-medium">
                         MyTimetable is an independent, open-source student companion app and is not officially affiliated with or endorsed by TU Dublin, DCU, or Scientia.
                       </p>
                     </div>
+                  </div>
 
-                    {/* Rick & Morty Peeking Sticker Attached to Bottom */}
-                    <div
-                      className="mt-auto pt-6 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 -mb-px shrink-0 leading-none"
-                    >
-                      <img
-                        src="/rick-morty-clean.png?v=2"
-                        alt="Rick and Morty"
-                        className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-1"
-                        loading="eager"
-                      />
-                    </div>
+                  {/* Rick & Morty Peeking Sticker Attached to Bottom */}
+                  <div
+                    className="flex justify-center items-end select-none pointer-events-none overflow-hidden shrink-0 leading-none relative z-10 -mb-px pt-1"
+                  >
+                    <img
+                      src="/rick-morty-clean.png?v=2"
+                      alt="Rick and Morty"
+                      className="w-48 sm:w-56 max-w-[240px] object-contain select-none pointer-events-none block translate-y-1"
+                      loading="eager"
+                    />
                   </div>
                 </motion.div>
               </div>
