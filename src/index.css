@@ -548,6 +548,37 @@ html.zara div.timeline-subheader-surface {
   border-bottom-width: 2px !important;
 }
 
+html[data-theme="zara"] .timeline-share-btn,
+html.zara .timeline-share-btn {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(0, 0, 0, 0.25) !important;
+  color: #000000 !important;
+}
+
+html[data-theme="zara"] .timeline-share-btn:hover,
+html.zara .timeline-share-btn:hover {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html[data-theme="zara"] .timeline-share-btn svg,
+html.zara .timeline-share-btn svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+html[data-theme="light"] .timeline-share-btn,
+html.light .timeline-share-btn {
+  background-color: #e4e4e7 !important;
+  border-color: #d4d4d8 !important;
+  color: #09090b !important;
+}
+
+html[data-theme="light"] .timeline-share-btn svg,
+html.light .timeline-share-btn svg {
+  color: #09090b !important;
+  stroke: #09090b !important;
+}
+
 /* Preference tab / drawer header in Zara mode */
 html[data-theme="zara"] .preference-drawer-header,
 html.zara .preference-drawer-header,

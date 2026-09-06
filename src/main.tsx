@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
 import { HeroUIProvider } from "@heroui/react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import App from "./App";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
@@ -15,8 +16,10 @@ registerSW({ immediate: true });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <HeroUIProvider>
-      <App />
-    </HeroUIProvider>
+    <ErrorBoundary>
+      <HeroUIProvider>
+        <App />
+      </HeroUIProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

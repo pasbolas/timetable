@@ -1,11 +1,14 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
-import { Clock, Info, ChevronRight, User, Coffee } from "lucide-react";
-import { DayData, NormalizedLesson } from "../types/timetable";
+import { Clock, Info, ChevronRight, User, Coffee, Share2, Check, Loader2 } from "lucide-react";
+import { DayData, NormalizedLesson, ProgramSearchResult } from "../types/timetable";
 import { EmptyState } from "./EmptyState";
 import { LessonDetailModal } from "./LessonDetailModal";
 import { RoomBadge } from "./RoomBadge";
+import { shareDayTimetableImage } from "../services/imageExport";
+import { triggerHapticFeedback } from "../services/haptics";
+import { StorageService } from "../services/storage";
 
 // Date transition variants for silky blur-in blur-out transitions
 const dateBlurVariants = {
@@ -47,6 +50,7 @@ interface DayTimelineProps {
   isToday: boolean;
   isLessonActive: (start: moment.Moment, end: moment.Moment) => boolean;
   isLessonPast: (end: moment.Moment) => boolean;
+  selectedProgram?: ProgramSearchResult;
 }
 
 // Convert 24-hour index to 12-hour formatted string (e.g. 9 -> "9 AM", 12 -> "12 PM", 14 -> "2 PM")
@@ -67,8 +71,50 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   isToday,
   isLessonActive,
   isLessonPast,
+  selectedProgram,
 }) => {
   const [selectedLesson, setSelectedLesson] = useState<NormalizedLesson | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
+
+  const activeDateKey = activeDate.format("YYYY-MM-DD");
+
+  const handleShareDay = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSharing) return;
+
+    triggerHapticFeedback();
+    setIsSharing(true);
+    setShareFeedback(null);
+
+    try {
+      const effectiveDayData: DayData = dayData || {
+        day: activeDate,
+        dateKey: activeDateKey,
+        lessons: [],
+        breaks: [],
+      };
+
+      const effectiveProgram = selectedProgram || StorageService.getSelectedProgram();
+
+      const result = await shareDayTimetableImage(
+        effectiveDayData,
+        activeDate,
+        effectiveProgram
+      );
+
+      if (result.success) {
+        triggerHapticFeedback();
+        const msg = result.method === "shared" ? "Shared!" : "Saved!";
+        setShareFeedback(msg);
+        setTimeout(() => setShareFeedback(null), 2500);
+      }
+    } catch (err) {
+      console.warn("Day timetable share error:", err);
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   const isWeekend = activeDate.isoWeekday() >= 6;
   const lessons = dayData?.lessons || [];
@@ -109,8 +155,6 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
   const currentMinutesFromStart = (nowHour - startHour) * 60 + nowMinute;
   const currentLiveY = GRID_PADDING_Y + (currentMinutesFromStart / 60) * HOUR_HEIGHT;
 
-  const activeDateKey = activeDate.format("YYYY-MM-DD");
-
   // When switching between dates, smoothly reset scroll to top of day timeline
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -147,7 +191,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <AnimatePresence mode="wait" initial={false}>
             {isLoading && (
               <motion.span
@@ -163,17 +207,42 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               </motion.span>
             )}
 
-            {!isLoading && !error && lessons.length > 0 && (
-              <motion.span
+            {!isLoading && !error && (
+              <motion.div
                 key={`count-${activeDateKey}`}
                 initial={{ opacity: 0, filter: "blur(6px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, filter: "blur(6px)" }}
                 transition={{ duration: 0.14 }}
-                className="text-[11px] font-bold text-white"
+                className="flex items-center gap-2"
               >
-                {lessons.length} {lessons.length === 1 ? "class" : "classes"}
-              </motion.span>
+                {lessons.length > 0 && (
+                  <span className="text-[11px] font-bold text-white">
+                    {lessons.length} {lessons.length === 1 ? "class" : "classes"}
+                  </span>
+                )}
+
+                {/* Share Day Timetable as Image Button */}
+                <button
+                  type="button"
+                  onClick={handleShareDay}
+                  disabled={isSharing}
+                  aria-label="Share day timetable as image"
+                  title="Share this day's timetable as an image"
+                  className="p-1 sm:p-1.5 rounded-lg border border-white/20 hover:border-white/50 active:scale-95 transition-all flex items-center justify-center cursor-pointer text-white bg-white/10 hover:bg-white/20 shadow-xs timeline-share-btn"
+                >
+                  {isSharing ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  ) : shareFeedback ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black px-1 text-white">
+                      <Check className="w-3 h-3 text-emerald-400 stroke-[3]" />
+                      <span>{shareFeedback}</span>
+                    </span>
+                  ) : (
+                    <Share2 className="w-3.5 h-3.5 text-white" />
+                  )}
+                </button>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

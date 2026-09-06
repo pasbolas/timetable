@@ -1,7 +1,8 @@
 import { ProgramSearchResult, RawTimetableEvent } from "../types/timetable";
-import { TIMETABLE_CONFIG } from "../config/timetableConfig";
+import { TIMETABLE_CONFIG, UniversityId, UNIVERSITIES } from "../config/timetableConfig";
 
 const KEYS = {
+  UNIVERSITY: "mytimetable_university",
   SELECTED_PROGRAM: "mytimetable_selected_program",
   RECENT_PROGRAMS: "mytimetable_recent_programs",
   TIMETABLE_CACHE_PREFIX: "mytimetable_cache_",
@@ -9,11 +10,42 @@ const KEYS = {
   SAVED_GROUPS: "mytimetable_saved_groups", // e.g. custom preferred lab groups
   TOUR_COMPLETED: "mytimetable_tour_completed",
   COURSE_ONBOARDED: "mytimetable_course_onboarded",
+  ANALYTICS_ENABLED: "mytimetable_analytics_enabled",
 };
 
 export type ThemeMode = "dark" | "light" | "zara";
 
 export class StorageService {
+  static getActiveUniversityId(): UniversityId {
+    try {
+      const stored = localStorage.getItem(KEYS.UNIVERSITY);
+      if (stored === "dcu" || stored === "tudublin") {
+        return stored;
+      }
+    } catch (e) {
+      console.warn("Error reading university from localStorage:", e);
+    }
+    return "tudublin";
+  }
+
+  static setActiveUniversityId(id: UniversityId): void {
+    try {
+      const current = this.getActiveUniversityId();
+      if (current !== id) {
+        localStorage.setItem(KEYS.UNIVERSITY, id);
+        // Clear cached events when switching universities so schedules don't collide
+        this.clearAllCaches();
+        // Set selected program to the new university's default program
+        const targetUni = UNIVERSITIES[id];
+        if (targetUni) {
+          this.setSelectedProgram(targetUni.defaultProgram);
+          localStorage.setItem(KEYS.RECENT_PROGRAMS, JSON.stringify([targetUni.defaultProgram]));
+        }
+      }
+    } catch (e) {
+      console.warn("Error setting university in localStorage:", e);
+    }
+  }
   static getSelectedProgram(): ProgramSearchResult {
     try {
       const stored = localStorage.getItem(KEYS.SELECTED_PROGRAM);
@@ -60,6 +92,53 @@ export class StorageService {
     }
   }
 
+  /**
+   * Automatically evicts older cached weeks to prevent localStorage quota exhaustion (5MB limit)
+   */
+  static pruneOldCaches(maxKeep: number = 4): void {
+    try {
+      const cacheKeys: { key: string; timestamp: number }[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(KEYS.TIMETABLE_CACHE_PREFIX)) {
+          try {
+            const item = JSON.parse(localStorage.getItem(k) || "{}");
+            cacheKeys.push({ key: k, timestamp: item.timestamp || 0 });
+          } catch {
+            // Corrupted JSON entry; clean up immediately
+            localStorage.removeItem(k);
+          }
+        }
+      }
+      if (cacheKeys.length > maxKeep) {
+        // Sort ascending by timestamp (oldest first)
+        cacheKeys.sort((a, b) => a.timestamp - b.timestamp);
+        const toRemove = cacheKeys.slice(0, cacheKeys.length - maxKeep);
+        toRemove.forEach((item) => localStorage.removeItem(item.key));
+      }
+    } catch (e) {
+      console.warn("Error pruning localStorage cache:", e);
+    }
+  }
+
+  /**
+   * Purges all cached timetable weeks
+   */
+  static clearAllCaches(): void {
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(KEYS.TIMETABLE_CACHE_PREFIX)) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    } catch (e) {
+      console.warn("Error clearing timetable caches:", e);
+    }
+  }
+
   static getCachedEvents(programId: string, weekKey: string): RawTimetableEvent[] | null {
     try {
       const key = `${KEYS.TIMETABLE_CACHE_PREFIX}${programId}_${weekKey}`;
@@ -69,6 +148,9 @@ export class StorageService {
         // Valid for up to 7 days
         if (Date.now() - parsed.timestamp < 7 * 24 * 60 * 60 * 1000) {
           return parsed.events;
+        } else {
+          // Expired cache entry; clean up immediately
+          localStorage.removeItem(key);
         }
       }
     } catch (e) {
@@ -79,6 +161,9 @@ export class StorageService {
 
   static setCachedEvents(programId: string, weekKey: string, events: RawTimetableEvent[]): void {
     try {
+      // Proactively evict oldest caches to maintain max 4 cached weeks
+      this.pruneOldCaches(4);
+
       const key = `${KEYS.TIMETABLE_CACHE_PREFIX}${programId}_${weekKey}`;
       localStorage.setItem(
         key,
@@ -89,6 +174,10 @@ export class StorageService {
       );
     } catch (e) {
       console.warn("Error caching timetable events:", e);
+      // If QuotaExceededError still occurs, aggressively prune down to 1
+      try {
+        this.pruneOldCaches(1);
+      } catch {}
     }
   }
 

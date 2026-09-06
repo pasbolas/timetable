@@ -45,21 +45,21 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/scientia-eu-v4-api-d4-01\.azurewebsites\.net\/api\/Public\/CategoryTypes\/Categories\/Events\/Filter\/.*/i,
+            urlPattern: /^https:\/\/scientia-eu-v4-api-(d4-01|d1-03)\.azurewebsites\.net\/api\/Public\/CategoryTypes\/Categories\/Events\/Filter\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "timetable-events-cache",
               expiration: {
                 maxEntries: 30,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+                maxAgeSeconds: 60 * 60 * 24 * 2 // 2 days
               },
               cacheableResponse: {
-                statuses: [0, 200]
+                statuses: [200]
               }
             }
           },
           {
-            urlPattern: /^https:\/\/scientia-eu-v4-api-d4-01\.azurewebsites\.net\/api\/Public\/CategoryTypes\/.*\/Categories\/FilterWithCache\/.*/i,
+            urlPattern: /^https:\/\/scientia-eu-v4-api-(d4-01|d1-03)\.azurewebsites\.net\/api\/Public\/CategoryTypes\/.*\/Categories\/FilterWithCache\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "timetable-search-cache",
@@ -68,7 +68,7 @@ export default defineConfig({
                 maxAgeSeconds: 60 * 60 * 24 * 3 // 3 days
               },
               cacheableResponse: {
-                statuses: [0, 200]
+                statuses: [200]
               }
             }
           }

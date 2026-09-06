@@ -22,13 +22,22 @@ interface CourseYearSetupModalProps {
   currentProgramId?: string;
 }
 
-const POPULAR_COURSES = [
-  { code: "TU856", name: "Computer Science (Full-Time)" },
-  { code: "TU857", name: "Computer Science (Infrastructure)" },
-  { code: "TU858", name: "Computer Science (International)" },
-  { code: "TU756", name: "Computing (General)" },
-  { code: "TU854", name: "Data Science & AI" },
-];
+const POPULAR_COURSES_BY_UNI: Record<string, { code: string; name: string }[]> = {
+  tudublin: [
+    { code: "TU856", name: "Computer Science (Full-Time)" },
+    { code: "TU857", name: "Computer Science (Infrastructure)" },
+    { code: "TU858", name: "Computer Science (International)" },
+    { code: "TU756", name: "Computing (General)" },
+    { code: "TU854", name: "Data Science & AI" },
+  ],
+  dcu: [
+    { code: "COMSCI", name: "Computer Science" },
+    { code: "CASE", name: "Computing for Business" },
+    { code: "BSI", name: "Business Studies International" },
+    { code: "MSD", name: "Marketing, Innovation & Tech" },
+    { code: "DS", name: "Data Science" },
+  ],
+};
 
 const slideVariants = {
   enter: (dir: number) => ({
@@ -54,6 +63,9 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   onSelectProgram,
   currentProgramId: _currentProgramId,
 }) => {
+  const activeUniId = StorageService.getActiveUniversityId();
+  const popularCourses = POPULAR_COURSES_BY_UNI[activeUniId] || POPULAR_COURSES_BY_UNI.tudublin;
+
   // Phase state: "input" (course ID entry) -> "year" (course minimized to left, dial visible)
   const [phase, setPhase] = useState<"input" | "year">("input");
   const [direction, setDirection] = useState<number>(1);
@@ -125,7 +137,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
     };
   }, [courseQuery]);
 
-  // Extract year number from program name, e.g. "TU856/3" -> 3, or "/ 2" -> 2
+  // Extract year number from program name, e.g. "TU856/3" -> 3, "COMSCI2" -> 2, or "- 2" -> 2
   const extractYearFromProgram = (program: ProgramSearchResult): number => {
     const match = program.Name.match(/\/([0-9]+)/);
     if (match) {
@@ -134,6 +146,14 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
     const stageMatch = program.Name.match(/stage\s*([0-9]+)|year\s*([0-9]+)/i);
     if (stageMatch) {
       return parseInt(stageMatch[1] || stageMatch[2], 10);
+    }
+    const hyphenMatch = program.Name.match(/[-–]\s*([1-6])\b/);
+    if (hyphenMatch) {
+      return parseInt(hyphenMatch[1], 10);
+    }
+    const codeEndDigit = program.Name.match(/^([A-Za-z]+)([1-6])\b/);
+    if (codeEndDigit) {
+      return parseInt(codeEndDigit[2], 10);
     }
     return 1;
   };
@@ -319,7 +339,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                     Enter Your Course ID
                   </h2>
                   <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-sm mx-auto font-medium">
-                    Type your degree code (e.g. <span className="font-bold text-white">TU856</span>) or keyword to find your timetable.
+                    Type your degree code (e.g. <span className="font-bold text-white">{activeUniId === "dcu" ? "COMSCI" : "TU856"}</span>) or keyword to find your timetable.
                   </p>
                 </div>
 
@@ -336,7 +356,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                         handleSelectCourse(courseQuery.trim());
                       }
                     }}
-                    placeholder="e.g. TU856, TU857, TU756..."
+                    placeholder={activeUniId === "dcu" ? "e.g. COMSCI, CASE, BSI..." : "e.g. TU856, TU857, TU756..."}
                     className="w-full pl-3 pr-3 py-3 bg-transparent text-white placeholder-zinc-500 font-bold text-base focus:outline-none"
                   />
                   {courseQuery ? (
@@ -357,7 +377,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 {isSearching && (
                   <div className="flex items-center justify-center py-4 text-white gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span className="text-xs font-bold">Checking TU Dublin timetable records...</span>
+                    <span className="text-xs font-bold">Checking {activeUniId === "dcu" ? "DCU" : "TU Dublin"} timetable records...</span>
                   </div>
                 )}
 
@@ -406,7 +426,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                     Popular Course IDs
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {POPULAR_COURSES.map((c) => (
+                    {popularCourses.map((c) => (
                       <button
                         key={c.code}
                         onClick={() => handleSelectCourse(c.code, c.name)}
@@ -421,7 +441,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                               {c.name.split(" (")[0]}
                             </div>
                             <div className="text-[10px] text-zinc-400 font-medium truncate">
-                              TU Dublin
+                              {activeUniId === "dcu" ? "DCU" : "TU Dublin"}
                             </div>
                           </div>
                         </div>

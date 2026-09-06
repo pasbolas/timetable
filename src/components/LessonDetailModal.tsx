@@ -169,13 +169,43 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
     if (lesson.staffName) {
       text += `Instructor: ${lesson.staffName}\n`;
     }
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    triggerHapticFeedback();
-    trackEvent("Copy Lesson Info", {
-      module: lesson.Description,
+
+    const copyToClipboard = async (content: string): Promise<boolean> => {
+      if (navigator?.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(content);
+          return true;
+        } catch {
+          // Fall through to textarea execCommand fallback
+        }
+      }
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = content;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        const successful = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        return successful;
+      } catch (err) {
+        console.warn("Clipboard copy fallback failed:", err);
+        return false;
+      }
+    };
+
+    copyToClipboard(text).then((success) => {
+      if (success) {
+        setCopied(true);
+        triggerHapticFeedback();
+        trackEvent("Copy Lesson Info", {
+          module: lesson.Description,
+        });
+        setTimeout(() => setCopied(false), 2000);
+      }
     });
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const sheetVariants = {

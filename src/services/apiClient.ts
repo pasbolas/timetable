@@ -58,6 +58,11 @@ export class TimetableAPI {
           { DayOfWeek: 5 },
           { DayOfWeek: 6 },
         ],
+        Weeks: [],
+        TimePeriods: [
+          { Description: "All Day", StartTime: "00:00", EndTime: "23:59", IsDefault: true },
+        ],
+        DatePeriods: [],
       },
       CategoryTypesWithIdentities: [
         {

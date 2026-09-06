@@ -9,7 +9,6 @@ import { DayTimeline } from "./components/DayTimeline";
 import { MenuDrawer } from "./components/MenuDrawer";
 import { SearchModal } from "./components/SearchModal";
 import { CourseYearSetupModal } from "./components/CourseYearSetupModal";
-import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { InteractiveTour } from "./components/InteractiveTour";
 import { AmbientBackground } from "./components/AmbientBackground";
 import { DesktopWeekGrid } from "./components/DesktopWeekGrid";
@@ -221,6 +220,7 @@ export function App() {
             isToday={isTodayActive}
             isLessonActive={isLessonActive}
             isLessonPast={isLessonPast}
+            selectedProgram={selectedProgram}
           />
         </div>
       </main>
@@ -278,9 +278,6 @@ export function App() {
         isOpen={isTourOpen}
         onClose={handleTourClose}
       />
-
-      {/* PWA Install Banner */}
-      <PWAInstallPrompt />
 
       {/* Vercel Web Analytics */}
       <Analytics />
