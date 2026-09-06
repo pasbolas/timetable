@@ -5,6 +5,7 @@
 :root {
   color-scheme: dark;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --topbar-height: calc(59px + env(safe-area-inset-top, 0px));
 }
 
 *,
@@ -543,6 +544,8 @@ html.zara div.timeline-subheader-surface {
   background-color: #DE838D !important;
   border-top-color: #000000 !important;
   border-bottom-color: #000000 !important;
+  border-top-width: 2px !important;
+  border-bottom-width: 2px !important;
 }
 
 /* Preference tab / drawer header in Zara mode */
@@ -666,9 +669,9 @@ html.zara .tour-step-card-header .tour-badge {
 /* Onboarding Confirm Button in Zara Mode */
 html[data-theme="zara"] .course-confirm-btn,
 html.zara .course-confirm-btn {
-  background-color: #000000 !important;
+  background-color: #16a34a !important;
   color: #ffffff !important;
-  border-color: #000000 !important;
+  border-color: #15803d !important;
 }
 
 html[data-theme="zara"] .course-confirm-btn *,
@@ -679,7 +682,7 @@ html.zara .course-confirm-btn * {
 
 html[data-theme="zara"] .course-confirm-btn:hover,
 html.zara .course-confirm-btn:hover {
-  background-color: #27272a !important;
+  background-color: #15803d !important;
 }
 
 html[data-theme="zara"] .top-bar-surface .bg-zinc-900,

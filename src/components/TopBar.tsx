@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment-timezone";
 import {
@@ -88,8 +88,39 @@ export const TopBar: React.FC<TopBarProps> = ({
     }
   };
 
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const updateTopBarHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.getBoundingClientRect().height;
+        if (height > 0) {
+          document.documentElement.style.setProperty("--topbar-height", `${height}px`);
+        }
+      }
+    };
+
+    updateTopBarHeight();
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && headerRef.current) {
+      ro = new ResizeObserver(updateTopBarHeight);
+      ro.observe(headerRef.current);
+    }
+
+    window.addEventListener("resize", updateTopBarHeight);
+    window.addEventListener("orientationchange", updateTopBarHeight);
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", updateTopBarHeight);
+      window.removeEventListener("orientationchange", updateTopBarHeight);
+    };
+  }, []);
+
   return (
     <header
+      ref={headerRef}
       className="sticky top-0 z-30 bg-black border-b border-white/20 transition-colors select-none w-full max-w-full overflow-hidden top-bar-surface"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >

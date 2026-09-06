@@ -2,22 +2,50 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { triggerHapticFeedback } from "../services/haptics";
 
 // ── Orb colour palette ──────────────────────────────────────────────────────
-const ORB_PALETTE = ["#DE838D","#83B4DE","#83DEB4","#DEC883","#B483DE"];
+const ORB_PALETTE = ["#DE838D", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6"];
 
-function hexToRgb(hex: string) {
-  return {
-    r: parseInt(hex.slice(1, 3), 16),
-    g: parseInt(hex.slice(3, 5), 16),
-    b: parseInt(hex.slice(5, 7), 16),
-  };
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
 }
 
-/** Linear-interpolate between two hex colours, returns an rgb() string */
+function parseColor(c: string): RGB {
+  if (typeof c !== "string") return { r: 222, g: 131, b: 141 };
+  const trimmed = c.trim();
+  if (trimmed.startsWith("#")) {
+    const hex = trimmed.replace("#", "");
+    if (hex.length === 3) {
+      return {
+        r: parseInt(hex[0] + hex[0], 16) || 0,
+        g: parseInt(hex[1] + hex[1], 16) || 0,
+        b: parseInt(hex[2] + hex[2], 16) || 0,
+      };
+    }
+    return {
+      r: parseInt(hex.slice(0, 2), 16) || 0,
+      g: parseInt(hex.slice(2, 4), 16) || 0,
+      b: parseInt(hex.slice(4, 6), 16) || 0,
+    };
+  }
+  const match = trimmed.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  if (match) {
+    return {
+      r: parseInt(match[1], 10) || 0,
+      g: parseInt(match[2], 10) || 0,
+      b: parseInt(match[3], 10) || 0,
+    };
+  }
+  return { r: 222, g: 131, b: 141 };
+}
+
+/** Linear-interpolate between two colours (hex or rgb), returns an rgb() string */
 function lerpColor(a: string, b: string, t: number): string {
-  const ca = hexToRgb(a), cb = hexToRgb(b);
-  const r  = Math.round(ca.r + (cb.r - ca.r) * t);
-  const g  = Math.round(ca.g + (cb.g - ca.g) * t);
-  const bl = Math.round(ca.b + (cb.b - ca.b) * t);
+  const ca = parseColor(a), cb = parseColor(b);
+  const clampedT = Math.max(0, Math.min(1, isNaN(t) ? 0 : t));
+  const r  = Math.round(ca.r + (cb.r - ca.r) * clampedT);
+  const g  = Math.round(ca.g + (cb.g - ca.g) * clampedT);
+  const bl = Math.round(ca.b + (cb.b - ca.b) * clampedT);
   return `rgb(${r},${g},${bl})`;
 }
 
@@ -125,13 +153,13 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
       const clamped = Math.max(0, Math.min(years.length - 1, Math.round(targetIndex)));
       const start = visualIndex;
       const startTime = performance.now();
-      const duration = 240; // ms
+      const duration = 380; // ms for a graceful, weighted glide
 
       const animate = (time: number) => {
         const elapsed = time - startTime;
         const progress = Math.min(1, elapsed / duration);
-        // easeOutCubic
-        const ease = 1 - Math.pow(1 - progress, 3);
+        // Smooth easeOutQuart: 1 - (1 - progress)^4
+        const ease = 1 - Math.pow(1 - progress, 4);
         const current = start + (clamped - start) * ease;
         setVisualIndex(current);
 
@@ -199,6 +227,58 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
     snapTo(target);
   };
 
+  // Continuous target color calculation from visualIndex
+  const activeColorIndex = Math.max(0, Math.min(years.length - 1, visualIndex));
+  const fromColorIdx = Math.floor(activeColorIndex);
+  const toColorIdx = Math.min(years.length - 1, fromColorIdx + 1);
+  const colorFrac = activeColorIndex - fromColorIdx;
+
+  const fromHex = ORB_PALETTE[fromColorIdx % ORB_PALETTE.length];
+  const toHex = ORB_PALETTE[toColorIdx % ORB_PALETTE.length];
+  const targetRgb = parseColor(lerpColor(fromHex, toHex, colorFrac));
+
+  const [currentRgb, setCurrentRgb] = useState<RGB>(targetRgb);
+  const currentRgbRef = useRef<RGB>(targetRgb);
+  const colorAnimFrameRef = useRef<number | null>(null);
+
+  // Smooth, gradual color animation loop: blends slowly without jerky shifts
+  useEffect(() => {
+    const updateColor = () => {
+      const cur = currentRgbRef.current;
+      const speed = isDraggingRef.current ? 0.08 : 0.055;
+      const dr = (targetRgb.r - cur.r) * speed;
+      const dg = (targetRgb.g - cur.g) * speed;
+      const db = (targetRgb.b - cur.b) * speed;
+
+      if (Math.abs(dr) > 0.1 || Math.abs(dg) > 0.1 || Math.abs(db) > 0.1) {
+        const next: RGB = {
+          r: cur.r + dr,
+          g: cur.g + dg,
+          b: cur.b + db,
+        };
+        currentRgbRef.current = next;
+        setCurrentRgb(next);
+        colorAnimFrameRef.current = requestAnimationFrame(updateColor);
+      } else {
+        currentRgbRef.current = targetRgb;
+        setCurrentRgb(targetRgb);
+      }
+    };
+
+    if (colorAnimFrameRef.current) {
+      cancelAnimationFrame(colorAnimFrameRef.current);
+    }
+    colorAnimFrameRef.current = requestAnimationFrame(updateColor);
+
+    return () => {
+      if (colorAnimFrameRef.current) {
+        cancelAnimationFrame(colorAnimFrameRef.current);
+      }
+    };
+  }, [targetRgb.r, targetRgb.g, targetRgb.b]);
+
+  const animatedColor = `rgb(${Math.round(currentRgb.r)},${Math.round(currentRgb.g)},${Math.round(currentRgb.b)})`;
+
   // Active item coordinates (follows continuous drag or rests at apex)
   const activeIndex = Math.max(0, Math.min(years.length - 1, Math.round(visualIndex)));
   const activeYear = years[activeIndex] || years[0];
@@ -216,43 +296,44 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
       className={`relative w-full h-full select-none touch-none overflow-hidden flex items-center ${className}`}
       style={{ minHeight: "380px" }}
     >
-      {/* Compute dynamic per-year colours from continuous visualIndex */}
-      {(() => {
-        // (colours computed inline below in defs via dynamicOrbColors)
-        return null;
-      })()}
-
       {/* Complete Unified SVG Dial for Perfect Subpixel Alignment */}
       <svg
         className="absolute inset-0 w-full h-full"
         style={{ overflow: "hidden" }}
       >
         <defs>
-          {/* Dynamic per-year orb gradients — recomputed every render from lerpColor */}
+          {/* Active Center Glow - slowly morphs colors with smooth animation */}
+          <radialGradient id="activeApexGlow" cx="42%" cy="50%" r="60%" gradientUnits="objectBoundingBox">
+            <stop offset="0%"   stopColor={animatedColor} stopOpacity="1" style={{ stopColor: animatedColor, stopOpacity: 1 }} />
+            <stop offset="35%"  stopColor={animatedColor} stopOpacity="0.95" style={{ stopColor: animatedColor, stopOpacity: 0.95 }} />
+            <stop offset="70%"  stopColor={animatedColor} stopOpacity="0.55" style={{ stopColor: animatedColor, stopOpacity: 0.55 }} />
+            <stop offset="100%" stopColor={animatedColor} stopOpacity="0" style={{ stopColor: animatedColor, stopOpacity: 0 }} />
+          </radialGradient>
+
+          {/* Dynamic per-year orb gradients - each year blends between its own color and the animated color */}
           {ORB_PALETTE.map((ownColor, i) => {
-            const clampedVI  = Math.max(0, Math.min(ORB_PALETTE.length - 1, visualIndex));
-            const fromIdx    = Math.floor(clampedVI);
-            const toIdx      = Math.min(ORB_PALETTE.length - 1, fromIdx + 1);
-            const frac       = clampedVI - fromIdx;
-            const activeBlend = lerpColor(ORB_PALETTE[fromIdx], ORB_PALETTE[toIdx], frac);
-            const dist       = Math.abs(i - visualIndex);
-            const proximity  = Math.max(0, 1 - dist * 1.2);
-            const color      = lerpColor(ownColor, activeBlend, proximity * 0.75);
+            const dist = Math.abs(i - visualIndex);
+            const proximity = Math.max(0, 1 - dist * 1.0);
+            const color = lerpColor(ownColor, animatedColor, proximity * 0.75);
             return (
-              <radialGradient key={i} id={`orbYear${i}`} cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox">
-                <stop offset="0%"   stopColor={color} stopOpacity="1" />
-                <stop offset="100%" stopColor={color} stopOpacity="0" />
+              <radialGradient key={i} id={`orbYear${i}`} cx="50%" cy="50%" r="52%" gradientUnits="objectBoundingBox">
+                <stop offset="0%"   stopColor={color} stopOpacity="1" style={{ stopColor: color, stopOpacity: 1 }} />
+                <stop offset="45%"  stopColor={color} stopOpacity="0.85" style={{ stopColor: color, stopOpacity: 0.85 }} />
+                <stop offset="100%" stopColor={color} stopOpacity="0" style={{ stopColor: color, stopOpacity: 0 }} />
               </radialGradient>
             );
           })}
-          {/* Mist blur — selected (heavy) */}
-          <filter id="mistSelected" x="-80%" y="-80%" width="260%" height="260%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="28" />
+
+          {/* Dense core mist blur */}
+          <filter id="mistBlur" x="-100%" y="-100%" width="300%" height="300%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="32" />
           </filter>
-          {/* Mist blur — inactive (lighter) */}
-          <filter id="mistDim" x="-80%" y="-80%" width="260%" height="260%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="18" />
+
+          {/* Wide atmospheric ambient bloom */}
+          <filter id="mistBloom" x="-120%" y="-120%" width="340%" height="340%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="48" />
           </filter>
+
           {/* Clip orbs to INSIDE of arc only — prevents bleeding onto numbers */}
           <clipPath id="orbInnerClip">
             <path d={`
@@ -265,11 +346,71 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
               Z
             `} />
           </clipPath>
+
           {/* Clip to SVG canvas */}
           <clipPath id="dialClip">
             <rect x="0" y="0" width={dimensions.width} height={dimensions.height} />
           </clipPath>
         </defs>
+
+        {/* Ambient Mist & Orbs clipped strictly to the inside of the arc */}
+        <g clipPath="url(#dialClip)">
+          <g clipPath="url(#orbInnerClip)">
+            {/* Layer 1: Wide Atmospheric Bloom for high luminescence */}
+            <circle
+              cx={apexX - 52}
+              cy={centerY}
+              r={185}
+              fill="url(#activeApexGlow)"
+              filter="url(#mistBloom)"
+              style={{ opacity: 0.85 }}
+            />
+
+            {/* Layer 2: Intense Core Glow */}
+            <circle
+              cx={apexX - 44}
+              cy={centerY}
+              r={150}
+              fill="url(#activeApexGlow)"
+              filter="url(#mistBlur)"
+              style={{ opacity: 1 }}
+            />
+
+            {/* Layer 3: Individual Year Orbs along the arc curve */}
+            {years.map((year, index) => {
+              const angle = getAngleForIndex(index, visualIndex);
+              const isVisible = Math.abs(angle) <= maxArcAngle + 0.15;
+              if (!isVisible) return null;
+
+              const coords = getArcCoords(angle);
+              const distFromActive = Math.abs(index - visualIndex);
+              const nx = Math.cos(angle);
+              const ny = Math.sin(angle);
+
+              // Smooth continuous sizing with higher base presence
+              const factor = Math.max(0, 1 - Math.min(1, distFromActive / 1.5));
+              const smoothFactor = factor * factor * (3 - 2 * factor);
+              const orbRadius = 70 + 65 * smoothFactor;
+              const orbOpacity = 0.55 + 0.45 * smoothFactor;
+
+              const orbCx = coords.x - 52 * nx;
+              const orbCy = coords.y - 52 * ny;
+              const orbGradId = `orbYear${index % ORB_PALETTE.length}`;
+
+              return (
+                <circle
+                  key={`orb-node-${year.yearNumber}`}
+                  cx={orbCx}
+                  cy={orbCy}
+                  r={orbRadius}
+                  fill={`url(#${orbGradId})`}
+                  filter="url(#mistBlur)"
+                  style={{ opacity: orbOpacity }}
+                />
+              );
+            })}
+          </g>
+        </g>
 
         {/* Subtle Arc Path */}
         <path
@@ -305,25 +446,8 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
 
           const opacity = isSelected ? 1 : Math.max(0.18, 1 - distanceToActive * 0.38);
 
-          // ── Orb geometry ──────────────────────────────────────────────────────
-          const orbRadius  = isSelected ? 110 : 65;
-          const orbOpacity = isSelected ? 1 : 0.80;
-          const orbCx      = coords.x - 55 * nx;
-          const orbCy      = coords.y - 55 * ny;
-          const orbGradId  = `orbYear${index % ORB_PALETTE.length}`;
-
           return (
             <g key={`year-item-${year.yearNumber}`} clipPath="url(#dialClip)">
-              {/* Wrap in clip group so clip applies AFTER the blur filter */}
-              <g clipPath="url(#orbInnerClip)">
-                <circle
-                  cx={orbCx} cy={orbCy} r={orbRadius}
-                  fill={`url(#${orbGradId})`}
-                  filter={isSelected ? "url(#mistSelected)" : "url(#mistDim)"}
-                  style={{ opacity: orbOpacity }}
-                />
-              </g>
-
               {/* Dot on the Arc for this item */}
               <circle
                 cx={coords.x}

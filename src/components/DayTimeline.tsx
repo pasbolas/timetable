@@ -120,10 +120,10 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
     <div className="w-full max-w-full flex-1 flex flex-col">
       {/* Subheader: Date & class counter - Sticky flush below TopBar when scrolling lessons */}
       <div
-        className="z-20 border-t-2 border-b-2 border-white flex items-center justify-between px-3 sm:px-6 py-2.5 transition-colors shadow-xs w-full max-w-full timeline-subheader-surface"
+        className="z-20 bg-black border-t-2 border-b-2 border-white flex items-center justify-between px-3 sm:px-6 py-2.5 transition-colors shadow-xs w-full max-w-full timeline-subheader-surface"
         style={{
           position: lessons.length > 0 ? "sticky" : "relative",
-          top: lessons.length > 0 ? "calc(58px + env(safe-area-inset-top, 0px))" : undefined,
+          top: lessons.length > 0 ? "var(--topbar-height, calc(59px + env(safe-area-inset-top, 0px)))" : undefined,
         }}
       >
         <AnimatePresence mode="wait" initial={false}>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   X,
   Loader2,
   GraduationCap,
   ArrowRight,
-  Maximize2,
-  RotateCcw
+  Pencil
 } from "lucide-react";
 import { ProgramSearchResult } from "../types/timetable";
 import { TimetableAPI } from "../services/apiClient";
@@ -30,6 +30,23 @@ const POPULAR_COURSES = [
   { code: "TU854", name: "Data Science & AI" },
 ];
 
+const slideVariants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? "100%" : "-100%",
+  }),
+  center: {
+    x: "0%",
+  },
+  exit: (dir: number) => ({
+    x: dir > 0 ? "-100%" : "100%",
+  }),
+};
+
+const slideTransition = {
+  duration: 0.38,
+  ease: [0.32, 0.72, 0, 1] as const,
+};
+
 export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   isOpen,
   isMandatory = false,
@@ -39,6 +56,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
 }) => {
   // Phase state: "input" (course ID entry) -> "year" (course minimized to left, dial visible)
   const [phase, setPhase] = useState<"input" | "year">("input");
+  const [direction, setDirection] = useState<number>(1);
   const [courseQuery, setCourseQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<ProgramSearchResult[]>([]);
@@ -54,9 +72,10 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Reset or initialize on open
+  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
+      setDirection(1);
       setPhase("input");
       setCourseQuery("");
       setSearchResults([]);
@@ -105,8 +124,6 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     };
   }, [courseQuery]);
-
-  if (!isOpen) return null;
 
   // Extract year number from program name, e.g. "TU856/3" -> 3, or "/ 2" -> 2
   const extractYearFromProgram = (program: ProgramSearchResult): number => {
@@ -188,7 +205,8 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
       const defaultYear = sortedYears.find((y) => y.yearNumber === 3) || sortedYears[0];
       setSelectedYearNumber(defaultYear.yearNumber);
 
-      // Transition smoothly: course card minimizes to the left!
+      // Slide forward to year selection page
+      setDirection(1);
       setPhase("year");
     } catch (e) {
       setSearchError("Failed to fetch course years. Please try another course ID.");
@@ -219,17 +237,41 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm"
-      onClick={isMandatory ? undefined : onClose}
-    >
-      <div
-        className="w-full sm:max-w-2xl h-full sm:h-[620px] bg-black text-white sm:rounded-2xl border border-white/20 flex flex-col overflow-hidden relative transition-colors shadow-2xl course-setup-modal"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          minHeight: "100dvh sm:620px",
-        }}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="course-year-setup-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-0 bg-black/80 backdrop-blur-sm overflow-hidden"
+          onClick={isMandatory ? undefined : onClose}
+        >
+          <motion.div
+            key="course-year-setup-page"
+            initial={{ y: "100%", opacity: 0.95 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0.95 }}
+            transition={{
+              type: "spring",
+              damping: 30,
+              stiffness: 280,
+              mass: 0.9,
+            }}
+            className="w-full h-full bg-black text-white flex flex-col overflow-hidden relative transition-colors shadow-2xl course-setup-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100vw",
+              height: "100dvh",
+              maxHeight: "100dvh",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          >
         {/* Top Minimal Bar */}
         <div
           className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b border-white/15 bg-black course-setup-header"
@@ -253,182 +295,212 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
         </div>
 
         {/* Dynamic Body Content */}
-        <div className="flex-1 flex flex-col relative overflow-hidden px-4 sm:px-8 pb-6 bg-black text-white">
-          {/* ========================================================= */}
-          {/* PHASE 1: ENTER COURSE ID                                  */}
-          {/* ========================================================= */}
-          {phase === "input" && (
-            <div className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full py-2 relative z-10">
-              <div className="text-center mb-5">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-800 text-white border border-zinc-700 mb-3">
-                  <GraduationCap className="w-6 h-6 text-white" />
+        <div className="flex-1 relative overflow-hidden bg-black text-white w-full">
+          <AnimatePresence initial={false} custom={direction}>
+            {/* ========================================================= */}
+            {/* PHASE 1: ENTER COURSE ID                                  */}
+            {/* ========================================================= */}
+            {phase === "input" && (
+              <motion.div
+                key="input-phase"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+                className="absolute inset-0 w-full h-full flex flex-col justify-center max-w-lg mx-auto px-4 sm:px-8 py-2 z-10"
+              >
+                <div className="text-center mb-5">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-800 text-white border border-zinc-700 mb-3">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Enter Your Course ID
+                  </h2>
+                  <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-sm mx-auto font-medium">
+                    Type your degree code (e.g. <span className="font-bold text-white">TU856</span>) or keyword to find your timetable.
+                  </p>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  Enter Your Course ID
-                </h2>
-                <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-sm mx-auto font-medium">
-                  Type your degree code (e.g. <span className="font-bold text-white">TU856</span>) or keyword to find your timetable.
-                </p>
-              </div>
 
-              {/* Main Course ID Input Bar - Plain 2D */}
-              <div className="relative flex items-center w-full rounded-xl bg-zinc-950 mb-3.5 transition-colors" style={{ border: "1.5px solid #56352D" }}>
-                <Search className="w-5 h-5 ml-3.5 text-white shrink-0" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={courseQuery}
-                  onChange={(e) => setCourseQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && courseQuery.trim()) {
-                      handleSelectCourse(courseQuery.trim());
-                    }
-                  }}
-                  placeholder="e.g. TU856, TU857, TU756..."
-                  className="w-full pl-3 pr-3 py-3 bg-transparent text-white placeholder-zinc-500 font-bold text-base focus:outline-none"
-                />
-                {courseQuery ? (
-                  <button
-                    onClick={() => setCourseQuery("")}
-                    className="mr-3 p-1 rounded text-white hover:bg-zinc-800 transition-colors"
-                  >
-                    <X className="w-4 h-4 text-white" />
-                  </button>
-                ) : (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 mr-3 rounded bg-zinc-900 text-white border border-white/50 select-none">
-                    ↵ Enter
-                  </span>
-                )}
-              </div>
-
-              {/* Live Search Results or Suggestions */}
-              {isSearching && (
-                <div className="flex items-center justify-center py-4 text-white gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span className="text-xs font-bold">Checking TU Dublin timetable records...</span>
-                </div>
-              )}
-
-              {/* Matching Search Results Dropdown List */}
-              {!isSearching && searchResults.length > 0 && (
-                <div className="max-h-56 overflow-y-auto space-y-1 pr-1 mb-4 rounded-xl bg-zinc-950 p-2 border border-white/20">
-                  {searchResults.slice(0, 5).map((prog) => {
-                    const { code: shortCode, title: progTitle } = parseProgramCodeAndTitle(
-                      prog.Name,
-                      prog.Description
-                    );
-                    const baseCode = shortCode.split("/")[0];
-                    return (
-                      <button
-                        key={prog.Identity}
-                        onClick={() => handleSelectCourse(baseCode, progTitle, searchResults)}
-                        className="w-full text-left p-2.5 rounded-lg hover:bg-zinc-900 border border-white/20 flex items-center justify-between transition-colors"
-                      >
-                        <div className="min-w-0 pr-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold px-2 py-0.5 rounded shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
-                              {baseCode}
-                            </span>
-                            <span className="text-xs font-bold text-white truncate">
-                              {progTitle}
-                            </span>
-                          </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-white shrink-0" />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Search Error Notice */}
-              {!isSearching && searchError && (
-                <div className="p-2.5 mb-3 rounded-xl bg-zinc-950 border border-white/20 text-xs text-white text-center font-bold">
-                  {searchError}
-                </div>
-              )}
-
-              {/* Quick Pick Chips / Popular Courses as Plain 2D Cards */}
-              <div className="pt-2">
-                <div className="text-[11px] font-black uppercase tracking-wider text-white mb-2 px-1">
-                  Popular Course IDs
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {POPULAR_COURSES.map((c) => (
+                {/* Main Course ID Input Bar - Plain 2D */}
+                <div className="relative flex items-center w-full rounded-xl bg-zinc-950 mb-3.5 transition-colors" style={{ border: "1.5px solid #56352D" }}>
+                  <Search className="w-5 h-5 ml-3.5 text-white shrink-0" />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={courseQuery}
+                    onChange={(e) => setCourseQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && courseQuery.trim()) {
+                        handleSelectCourse(courseQuery.trim());
+                      }
+                    }}
+                    placeholder="e.g. TU856, TU857, TU756..."
+                    className="w-full pl-3 pr-3 py-3 bg-transparent text-white placeholder-zinc-500 font-bold text-base focus:outline-none"
+                  />
+                  {courseQuery ? (
                     <button
-                      key={c.code}
-                      onClick={() => handleSelectCourse(c.code, c.name)}
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-white/20 transition-colors text-left"
+                      onClick={() => setCourseQuery("")}
+                      className="mr-3 p-1 rounded text-white hover:bg-zinc-800 transition-colors"
                     >
-                      <div className="flex items-center gap-2.5 min-w-0 pr-1">
-                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
-                          {c.code}
-                        </span>
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-white truncate">
-                            {c.name.split(" (")[0]}
+                      <X className="w-4 h-4 text-white" />
+                    </button>
+                  ) : (
+                    <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 mr-3 rounded bg-zinc-900 text-white border border-white/50 select-none">
+                      ↵ Enter
+                    </span>
+                  )}
+                </div>
+
+                {/* Live Search Results or Suggestions */}
+                {isSearching && (
+                  <div className="flex items-center justify-center py-4 text-white gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span className="text-xs font-bold">Checking TU Dublin timetable records...</span>
+                  </div>
+                )}
+
+                {/* Matching Search Results Dropdown List */}
+                {!isSearching && searchResults.length > 0 && (
+                  <div className="max-h-56 overflow-y-auto space-y-1 pr-1 mb-4 rounded-xl bg-zinc-950 p-2 border border-white/20">
+                    {searchResults.slice(0, 5).map((prog) => {
+                      const { code: shortCode, title: progTitle } = parseProgramCodeAndTitle(
+                        prog.Name,
+                        prog.Description
+                      );
+                      const baseCode = shortCode.split("/")[0];
+                      return (
+                        <button
+                          key={prog.Identity}
+                          onClick={() => handleSelectCourse(baseCode, progTitle, searchResults)}
+                          className="w-full text-left p-2.5 rounded-lg hover:bg-zinc-900 border border-white/20 flex items-center justify-between transition-colors"
+                        >
+                          <div className="min-w-0 pr-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold px-2 py-0.5 rounded shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
+                                {baseCode}
+                              </span>
+                              <span className="text-xs font-bold text-white truncate">
+                                {progTitle}
+                              </span>
+                            </div>
                           </div>
-                          <div className="text-[10px] text-zinc-400 font-medium truncate">
-                            TU Dublin
+                          <ArrowRight className="w-4 h-4 text-white shrink-0" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Search Error Notice */}
+                {!isSearching && searchError && (
+                  <div className="p-2.5 mb-3 rounded-xl bg-zinc-950 border border-white/20 text-xs text-white text-center font-bold">
+                    {searchError}
+                  </div>
+                )}
+
+                {/* Quick Pick Chips / Popular Courses as Plain 2D Cards */}
+                <div className="pt-2">
+                  <div className="text-[11px] font-black uppercase tracking-wider text-white mb-2 px-1">
+                    Popular Course IDs
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {POPULAR_COURSES.map((c) => (
+                      <button
+                        key={c.code}
+                        onClick={() => handleSelectCourse(c.code, c.name)}
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-white/20 transition-colors text-left"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0 pr-1">
+                          <span className="px-2 py-0.5 rounded-lg text-xs font-bold shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
+                            {c.code}
+                          </span>
+                          <div className="min-w-0">
+                            <div className="text-xs font-bold text-white truncate">
+                              {c.name.split(" (")[0]}
+                            </div>
+                            <div className="text-[10px] text-zinc-400 font-medium truncate">
+                              TU Dublin
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-white shrink-0" />
-                    </button>
-                  ))}
+                        <ArrowRight className="w-3.5 h-3.5 text-white shrink-0" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
 
-          {/* ========================================================= */}
-          {/* PHASE 2: COURSE MINIMISED TO LEFT + ROTARY YEAR DIAL       */}
-          {/* ========================================================= */}
-          {phase === "year" && (
-            <div className="flex-1 flex flex-col relative w-full h-full bg-black text-white -mx-4 sm:-mx-8">
-              {/* Minimized Course Badge / Card on the Left */}
-              <div className="flex items-center justify-between pb-2 z-40 px-4 sm:px-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/25 transition-colors">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-100 border border-zinc-700">
-                    {selectedCourseCode}
-                  </span>
-                  <span className="text-xs font-bold text-white max-w-[170px] sm:max-w-xs truncate">
-                    {selectedCourseTitle}
-                  </span>
+            {/* ========================================================= */}
+            {/* PHASE 2: COURSE MINIMISED TO LEFT + ROTARY YEAR DIAL       */}
+            {/* ========================================================= */}
+            {phase === "year" && (
+              <motion.div
+                key="year-phase"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+                className="absolute inset-0 w-full h-full flex flex-col bg-black text-white"
+              >
+                {/* Selected Course Badge / Card Aligned to the Right */}
+                <div className="flex items-center justify-end pt-3 sm:pt-4 pb-2 z-40 px-4 sm:px-8">
+                  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/25 transition-colors">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-100 border border-zinc-700 shrink-0">
+                      {selectedCourseCode}
+                    </span>
+                    <span className="text-xs font-bold text-white max-w-[170px] sm:max-w-xs truncate">
+                      {selectedCourseTitle}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setDirection(-1);
+                        setPhase("input");
+                      }}
+                      className="inline-flex items-center justify-center w-6 h-6 rounded-lg text-white hover:bg-zinc-800 border border-white/20 transition-colors ml-2 shrink-0 cursor-pointer"
+                      title="Change course ID"
+                    >
+                      <Pencil className="w-3.5 h-3.5 text-current" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* The Rotary Arc Wheel */}
+                <div className="flex-1 relative w-full flex items-center bg-black">
+                  <CourseYearDial
+                    years={availableYears}
+                    selectedYear={selectedYearNumber}
+                    onSelectYear={(yr) => setSelectedYearNumber(yr)}
+                  />
+                </div>
+
+                {/* Bottom Right Confirm Button - Plain 2D */}
+                <div className="absolute right-4 bottom-4 sm:right-6 sm:bottom-6 z-40">
                   <button
-                    onClick={() => setPhase("input")}
-                    className="p-1 text-white hover:bg-zinc-800 rounded border border-white/20 transition-colors ml-1"
-                    title="Change course ID"
+                    type="button"
+                    onClick={handleConfirmSelection}
+                    style={{
+                      backgroundColor: "#16a34a",
+                      borderColor: "#15803d",
+                      color: "#ffffff",
+                    }}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm border shadow-md transition-all active:scale-95 cursor-pointer course-confirm-btn"
                   >
-                    <RotateCcw className="w-3.5 h-3.5 text-white" />
+                    <span className="font-extrabold text-white">Confirm & Continue</span>
+                    <ArrowRight className="w-4 h-4 text-white shrink-0" />
                   </button>
                 </div>
-              </div>
-
-              {/* The Rotary Arc Wheel */}
-              <div className="flex-1 relative w-full flex items-center bg-black">
-                <CourseYearDial
-                  years={availableYears}
-                  selectedYear={selectedYearNumber}
-                  onSelectYear={(yr) => setSelectedYearNumber(yr)}
-                />
-              </div>
-
-              {/* Bottom Right Confirm Button - Plain 2D */}
-              <div className="absolute right-2 bottom-2 sm:right-4 sm:bottom-4 z-40">
-                <button
-                  type="button"
-                  onClick={handleConfirmSelection}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm border border-zinc-600 transition-colors cursor-pointer shadow-sm course-confirm-btn"
-                >
-                  <Maximize2 className="w-4 h-4 text-white" />
-                  <span>Confirm & Continue</span>
-                </button>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
