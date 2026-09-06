@@ -227,7 +227,7 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
     snapTo(target);
   };
 
-  // Continuous target color calculation from visualIndex
+  // Continuous target color calculation directly from visualIndex (0ms latency, 0 extra re-renders)
   const activeColorIndex = Math.max(0, Math.min(years.length - 1, visualIndex));
   const fromColorIdx = Math.floor(activeColorIndex);
   const toColorIdx = Math.min(years.length - 1, fromColorIdx + 1);
@@ -235,49 +235,16 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
 
   const fromHex = ORB_PALETTE[fromColorIdx % ORB_PALETTE.length];
   const toHex = ORB_PALETTE[toColorIdx % ORB_PALETTE.length];
-  const targetRgb = parseColor(lerpColor(fromHex, toHex, colorFrac));
+  const animatedColor = lerpColor(fromHex, toHex, colorFrac);
 
-  const [currentRgb, setCurrentRgb] = useState<RGB>(targetRgb);
-  const currentRgbRef = useRef<RGB>(targetRgb);
-  const colorAnimFrameRef = useRef<number | null>(null);
-
-  // Smooth, gradual color animation loop: blends slowly without jerky shifts
+  // Clean up any ongoing snap animation when component unmounts
   useEffect(() => {
-    const updateColor = () => {
-      const cur = currentRgbRef.current;
-      const speed = isDraggingRef.current ? 0.08 : 0.055;
-      const dr = (targetRgb.r - cur.r) * speed;
-      const dg = (targetRgb.g - cur.g) * speed;
-      const db = (targetRgb.b - cur.b) * speed;
-
-      if (Math.abs(dr) > 0.1 || Math.abs(dg) > 0.1 || Math.abs(db) > 0.1) {
-        const next: RGB = {
-          r: cur.r + dr,
-          g: cur.g + dg,
-          b: cur.b + db,
-        };
-        currentRgbRef.current = next;
-        setCurrentRgb(next);
-        colorAnimFrameRef.current = requestAnimationFrame(updateColor);
-      } else {
-        currentRgbRef.current = targetRgb;
-        setCurrentRgb(targetRgb);
-      }
-    };
-
-    if (colorAnimFrameRef.current) {
-      cancelAnimationFrame(colorAnimFrameRef.current);
-    }
-    colorAnimFrameRef.current = requestAnimationFrame(updateColor);
-
     return () => {
-      if (colorAnimFrameRef.current) {
-        cancelAnimationFrame(colorAnimFrameRef.current);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [targetRgb.r, targetRgb.g, targetRgb.b]);
-
-  const animatedColor = `rgb(${Math.round(currentRgb.r)},${Math.round(currentRgb.g)},${Math.round(currentRgb.b)})`;
+  }, []);
 
   // Active item coordinates (follows continuous drag or rests at apex)
   const activeIndex = Math.max(0, Math.min(years.length - 1, Math.round(visualIndex)));
@@ -296,43 +263,48 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
       className={`relative w-full h-full select-none touch-none overflow-hidden flex items-center ${className}`}
       style={{ minHeight: "380px" }}
     >
+      {/* High-performance GPU-composited ambient backdrop glow */}
+      <div
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          left: `${apexX - 160}px`,
+          top: `${centerY - 160}px`,
+          width: "320px",
+          height: "320px",
+          background: `radial-gradient(circle, ${animatedColor} 0%, rgba(0,0,0,0) 70%)`,
+          opacity: 0.45,
+          filter: "blur(36px)",
+          transform: "translate3d(0, 0, 0)",
+          willChange: "background",
+        }}
+        aria-hidden="true"
+      />
+
       {/* Complete Unified SVG Dial for Perfect Subpixel Alignment */}
       <svg
         className="absolute inset-0 w-full h-full"
         style={{ overflow: "hidden" }}
       >
         <defs>
-          {/* Active Center Glow - slowly morphs colors with smooth animation */}
-          <radialGradient id="activeApexGlow" cx="42%" cy="50%" r="60%" gradientUnits="objectBoundingBox">
-            <stop offset="0%"   stopColor={animatedColor} stopOpacity="1" style={{ stopColor: animatedColor, stopOpacity: 1 }} />
-            <stop offset="35%"  stopColor={animatedColor} stopOpacity="0.95" style={{ stopColor: animatedColor, stopOpacity: 0.95 }} />
-            <stop offset="70%"  stopColor={animatedColor} stopOpacity="0.55" style={{ stopColor: animatedColor, stopOpacity: 0.55 }} />
-            <stop offset="100%" stopColor={animatedColor} stopOpacity="0" style={{ stopColor: animatedColor, stopOpacity: 0 }} />
+          {/* Active Center Glow - smooth multi-stop gradient with natural quadratic falloff */}
+          <radialGradient id="activeApexGlow" cx="45%" cy="50%" r="55%" gradientUnits="objectBoundingBox">
+            <stop offset="0%" stopColor={animatedColor} stopOpacity="0.85" />
+            <stop offset="30%" stopColor={animatedColor} stopOpacity="0.55" />
+            <stop offset="60%" stopColor={animatedColor} stopOpacity="0.2" />
+            <stop offset="85%" stopColor={animatedColor} stopOpacity="0.04" />
+            <stop offset="100%" stopColor={animatedColor} stopOpacity="0" />
           </radialGradient>
 
-          {/* Dynamic per-year orb gradients - each year blends between its own color and the animated color */}
-          {ORB_PALETTE.map((ownColor, i) => {
-            const dist = Math.abs(i - visualIndex);
-            const proximity = Math.max(0, 1 - dist * 1.0);
-            const color = lerpColor(ownColor, animatedColor, proximity * 0.75);
-            return (
-              <radialGradient key={i} id={`orbYear${i}`} cx="50%" cy="50%" r="52%" gradientUnits="objectBoundingBox">
-                <stop offset="0%"   stopColor={color} stopOpacity="1" style={{ stopColor: color, stopOpacity: 1 }} />
-                <stop offset="45%"  stopColor={color} stopOpacity="0.85" style={{ stopColor: color, stopOpacity: 0.85 }} />
-                <stop offset="100%" stopColor={color} stopOpacity="0" style={{ stopColor: color, stopOpacity: 0 }} />
-              </radialGradient>
-            );
-          })}
-
-          {/* Dense core mist blur */}
-          <filter id="mistBlur" x="-100%" y="-100%" width="300%" height="300%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="32" />
-          </filter>
-
-          {/* Wide atmospheric ambient bloom */}
-          <filter id="mistBloom" x="-120%" y="-120%" width="340%" height="340%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="48" />
-          </filter>
+          {/* Static per-year orb gradients - multi-stop falloff replaces heavy feGaussianBlur */}
+          {ORB_PALETTE.map((paletteColor, i) => (
+            <radialGradient key={i} id={`orbYear${i}`} cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stopColor={paletteColor} stopOpacity="0.85" />
+              <stop offset="30%" stopColor={paletteColor} stopOpacity="0.55" />
+              <stop offset="65%" stopColor={paletteColor} stopOpacity="0.2" />
+              <stop offset="85%" stopColor={paletteColor} stopOpacity="0.04" />
+              <stop offset="100%" stopColor={paletteColor} stopOpacity="0" />
+            </radialGradient>
+          ))}
 
           {/* Clip orbs to INSIDE of arc only — prevents bleeding onto numbers */}
           <clipPath id="orbInnerClip">
@@ -356,24 +328,22 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
         {/* Ambient Mist & Orbs clipped strictly to the inside of the arc */}
         <g clipPath="url(#dialClip)">
           <g clipPath="url(#orbInnerClip)">
-            {/* Layer 1: Wide Atmospheric Bloom for high luminescence */}
+            {/* Layer 1: Wide Atmospheric Bloom */}
             <circle
               cx={apexX - 52}
               cy={centerY}
               r={185}
               fill="url(#activeApexGlow)"
-              filter="url(#mistBloom)"
-              style={{ opacity: 0.85 }}
+              style={{ opacity: 0.7 }}
             />
 
             {/* Layer 2: Intense Core Glow */}
             <circle
               cx={apexX - 44}
               cy={centerY}
-              r={150}
+              r={140}
               fill="url(#activeApexGlow)"
-              filter="url(#mistBlur)"
-              style={{ opacity: 1 }}
+              style={{ opacity: 0.95 }}
             />
 
             {/* Layer 3: Individual Year Orbs along the arc curve */}
@@ -404,7 +374,6 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
                   cy={orbCy}
                   r={orbRadius}
                   fill={`url(#${orbGradId})`}
-                  filter="url(#mistBlur)"
                   style={{ opacity: orbOpacity }}
                 />
               );
