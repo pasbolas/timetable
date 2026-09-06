@@ -756,7 +756,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     </motion.div>
 
                     {/* Drawer Header */}
-                    <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
+                    <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar min-h-[54px]">
                       <button
                         onClick={() => {
                           triggerHapticFeedback();
@@ -764,14 +764,14 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                         }}
                         onPointerDown={(e) => e.stopPropagation()}
                         onTouchStart={(e) => e.stopPropagation()}
-                        className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer"
+                        className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer relative z-10"
                         title="Back to preferences"
                       >
                         <ChevronLeft className="w-3.5 h-3.5 text-white" />
                         <span>Back</span>
                       </button>
 
-                      <div className="text-center">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none select-none">
                         <span className="font-black text-sm text-white block leading-none">
                           More Settings
                         </span>
@@ -785,7 +785,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                         }}
                         onPointerDown={(e) => e.stopPropagation()}
                         onTouchStart={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer"
+                        className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer relative z-10"
                         title="Close"
                       >
                         <X className="w-5 h-5 text-white" />
@@ -1066,7 +1066,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 </motion.div>
 
                 {/* Header Bar */}
-                <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
+                <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar min-h-[54px]">
                   <button
                     onClick={() => {
                       triggerHapticFeedback();
@@ -1074,14 +1074,14 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     }}
                     onPointerDown={(e) => e.stopPropagation()}
                     onTouchStart={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer relative z-10"
                     title="Back to preferences"
                   >
                     <ChevronLeft className="w-3.5 h-3.5 text-white" />
                     <span>Back</span>
                   </button>
 
-                  <div className="text-center">
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none select-none">
                     <span className="font-black text-sm text-white block leading-none">
                       About Me
                     </span>
@@ -1095,7 +1095,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     }}
                     onPointerDown={(e) => e.stopPropagation()}
                     onTouchStart={(e) => e.stopPropagation()}
-                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer"
+                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer relative z-10"
                     title="Close"
                   >
                     <X className="w-5 h-5 text-white" />
