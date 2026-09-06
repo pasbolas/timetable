@@ -361,7 +361,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     className="w-full mt-1.5 py-2 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 border border-zinc-600 shadow-sm active:scale-98 transition-all"
                   >
                     <Search className="w-3.5 h-3.5 text-white" />
-                    Change Degree / Course
+                    Change University / Degree / Course
                   </button>
                 </div>
               </div>
