@@ -619,8 +619,8 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     <div className="flex items-center gap-2.5 pl-1 min-w-0">
                       <div className="w-7 h-7 rounded-lg overflow-hidden border border-zinc-700 shrink-0 bg-zinc-800 flex items-center justify-center shadow-xs">
                         <img
-                          src="/morty-about.jpg"
-                          alt="Morty"
+                          src="/rick-about.png"
+                          alt="Rick"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                         />
                       </div>
@@ -1035,14 +1035,14 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   className="w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] rounded-full blur-3xl opacity-85"
                   style={{
                     background:
-                      "radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(168, 85, 247, 0.22) 35%, rgba(99, 102, 241, 0.12) 55%, transparent 72%)",
+                      "radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(99, 102, 241, 0.22) 35%, rgba(168, 85, 247, 0.12) 55%, transparent 72%)",
                   }}
                 />
                 <div
                   className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full blur-2xl opacity-75"
                   style={{
                     background:
-                      "radial-gradient(circle, rgba(251, 146, 60, 0.22) 0%, rgba(244, 114, 182, 0.14) 45%, transparent 70%)",
+                      "radial-gradient(circle, rgba(34, 197, 94, 0.24) 0%, rgba(56, 189, 248, 0.15) 45%, transparent 70%)",
                     transform: "translate(-10px, -20px)",
                   }}
                 />
@@ -1085,7 +1085,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     <span className="font-black text-sm text-white block leading-none">
                       About Me
                     </span>
-                    <span className="text-[10px] font-bold text-zinc-400">Morty Smith</span>
+                    <span className="text-[10px] font-bold text-zinc-400">Rick Sanchez</span>
                   </div>
 
                   <button
@@ -1108,24 +1108,24 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 {/* Hero Avatar Card */}
                 <div className="flex flex-col items-center text-center pt-2">
                   <div className="relative mb-3 group">
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border-2 border-white/30 shadow-2xl bg-zinc-900 ring-4 ring-pink-500/20">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border-2 border-white/30 shadow-2xl bg-zinc-900 ring-4 ring-cyan-500/25">
                       <img
-                        src="/morty-about.jpg"
-                        alt="Morty Smith"
+                        src="/rick-about.png"
+                        alt="Rick Sanchez"
                         className="w-full h-full object-cover select-none"
                       />
                     </div>
-                    <div className="absolute -bottom-2 -right-1 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-white/30 text-[10px] font-black text-pink-300 shadow-md flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-pink-400 animate-pulse" />
+                    <div className="absolute -bottom-2 -right-1 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-white/30 text-[10px] font-black text-cyan-300 shadow-md flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
                       <span>C-137</span>
                     </div>
                   </div>
 
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
-                    Morty Smith
+                    Rick Sanchez
                   </h3>
                   <p className="text-xs font-semibold text-zinc-400 mt-1">
-                    Earth Dimension C-137 • High School Student
+                    Scientist. Whatever.
                   </p>
                 </div>
 
@@ -1134,15 +1134,27 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 {/* Intro Text Paragraphs */}
                 <div className="space-y-2.5 text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-medium">
                   <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/15 shadow-xs">
-                    Hi, I’m Morty, and, uh... I live with my family. There’s four of us. Well, four and my grandpa, I guess. My mom, dad, sister... shit, yeah. Anyway, my grandpa’s a scientist, or, like, some insanely smart asshole who keeps taking me places. Space, other dimensions, random planets, all that weird shit. I don’t even know anymore.
+                    Okay, phase coupler at forty-two percent, voltage regulator’s drifting again because apparently this piece of shit was assembled by blind fucking monkeys. Morty, don’t touch the blue wire. No, seriously, keep your dumb little hands off it unless you want the field geometry to fold in on itself and turn this whole garage into a screaming ball of plasma.
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/15 shadow-xs">
-                    Sometimes I’m at school and then, like, five minutes later I’m running from some alien because apparently that’s just a normal fucking Tuesday now. Wait, I was talking about my family. Right. My dad’s... whatever. My sister gets pissed off a lot. My mom is constantly dealing with my grandpa’s bullshit.
+                    Flux gate stable... barely. Oscillator’s off by point-zero-three. Fuck it, compensate through the secondary coil, drop resistance by six ohms, reroute through the auxiliary bus... there.
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/15 shadow-xs space-y-2">
+                    <p className="font-semibold text-zinc-300">Why the fuck is the heat sink vibrating?</p>
+                    <p className="text-zinc-400">Oh, good. Fantastic. Love that.</p>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/15 shadow-xs">
-                    Oh, fuck, I think I have homework due. Anyway, yeah, my life is pretty normal, except for all the insane shit that makes it completely not normal.
+                    Kill the feedback loop before this bastard starts cooking itself, isolate the quantum relay, bypass the fried regulator, and if that capacitor pops again I’m throwing this whole goddamn thing into another dimension.
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/15 shadow-xs space-y-1.5 font-semibold text-zinc-300">
+                    <p>Morty, hand me the micro-driver.</p>
+                    <p>The small one.</p>
+                    <p className="text-red-400 font-bold">No, the fucking small one.</p>
+                    <p className="text-zinc-400 italic">Jesus fucking Christ.</p>
                   </div>
                 </div>
 
