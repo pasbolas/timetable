@@ -616,6 +616,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                 </div>
               </div>
 
+              {/* Independent Student Project Disclaimer */}
+              <div className="pt-3.5 px-2 text-center select-text">
+                <p className="text-[10.5px] leading-relaxed text-zinc-400 font-medium">
+                  MyTimetable is an independent, open-source student companion app and is not officially affiliated with or endorsed by TU Dublin, DCU, or Scientia.
+                </p>
+              </div>
+
               {/* Rick & Morty Peeking Sticker Attached to Bottom */}
               <div
                 className="mt-auto pt-6 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-4 -mb-px shrink-0 leading-none"
@@ -912,6 +919,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                         </div>
                       </div>
                     )}
+
+                    {/* Independent Student Project Disclaimer */}
+                    <div className="pt-2 px-2 text-center select-text">
+                      <p className="text-[10px] leading-relaxed text-zinc-500 font-medium">
+                        MyTimetable is an independent, open-source student companion app and is not officially affiliated with or endorsed by TU Dublin, DCU, or Scientia.
+                      </p>
+                    </div>
 
                     {/* Rick & Morty Peeking Sticker Attached to Bottom */}
                     <div
