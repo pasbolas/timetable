@@ -27,7 +27,6 @@ import { ProgramSearchResult, DayData } from "../types/timetable";
 import { generateLessonsIcs, downloadIcsFile } from "../services/icalExport";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 import { triggerHapticFeedback } from "../services/haptics";
-import { UNIVERSITY_LIST, UniversityId } from "../config/timetableConfig";
 import { StorageService } from "../services/storage";
 import { useTheme, THEME_OPTIONS } from "../hooks/useTheme";
 import { usePWAInstall } from "../hooks/usePWAInstall";
@@ -132,21 +131,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, isMoreOpen, isAboutOpen, onClose]);
 
-  const [activeUniversityId, setActiveUniversityId] = React.useState<UniversityId>(() =>
-    StorageService.getActiveUniversityId()
-  );
 
-  const handleSelectUniversity = (uniId: UniversityId) => {
-    if (uniId === activeUniversityId) return;
-    triggerHapticFeedback();
-    setActiveUniversityId(uniId);
-    StorageService.setActiveUniversityId(uniId);
-    const newProg = StorageService.getSelectedProgram();
-    onSelectProgram(newProg);
-    setTimeout(() => {
-      onRefresh();
-    }, 50);
-  };
 
   const { code: shortCode, title: programTitle } = parseProgramCodeAndTitle(
     selectedProgram.Name,
@@ -361,6 +346,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-zinc-800 text-zinc-100 border border-zinc-700">
                       {shortCode}
                     </span>
+                    <span className="text-[11px] font-bold text-zinc-400">
+                      {StorageService.getActiveUniversityId() === "dcu" ? "DCU" : "TU Dublin"}
+                    </span>
                   </div>
                   <div className="text-xs font-bold text-white line-clamp-2">
                     {programTitle}
@@ -380,49 +368,6 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
               {/* Cute Wavy Lines Divider in Middle of Settings */}
               <CuteWavyDivider />
-
-              {/* University Selector */}
-              <div className="transition-all duration-300">
-                <div className="flex items-center justify-between mb-2 px-0.5">
-                  <div className="flex items-center gap-1.5 text-[11px] font-black text-white uppercase tracking-wider">
-                    <GraduationCap className="w-3.5 h-3.5 text-white" />
-                    <span>University</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-zinc-400">
-                    {activeUniversityId === "dcu" ? "DCU" : "TU Dublin"}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  {UNIVERSITY_LIST.map((uni) => {
-                    const isSelected = activeUniversityId === uni.id;
-                    return (
-                      <button
-                        key={uni.id}
-                        type="button"
-                        onClick={() => handleSelectUniversity(uni.id)}
-                        className={`p-2.5 sm:p-3 rounded-xl border transition-all active:scale-95 flex items-center justify-between text-left cursor-pointer ${
-                          isSelected
-                            ? "bg-zinc-800 text-white border-white/40 shadow-xs ring-1 ring-white/30"
-                            : "bg-zinc-950 hover:bg-zinc-900 border-white/20 text-white"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-6 h-6 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-                            <GraduationCap className="w-3.5 h-3.5 text-white" />
-                          </div>
-                          <span className="text-xs font-black text-white truncate">
-                            {uni.shortName}
-                          </span>
-                        </div>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 shrink-0 ml-1 stroke-[3] text-white" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
 
               {/* Colour Mode Switcher */}
               <div className="transition-all duration-300">

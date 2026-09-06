@@ -74,9 +74,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   const popularCourses = POPULAR_COURSES_BY_UNI[selectedUniId] || POPULAR_COURSES_BY_UNI.tudublin;
 
   // Phase state: "uni" (university selection) -> "input" (course ID entry) -> "year" (course minimized to left, dial visible)
-  const [phase, setPhase] = useState<"uni" | "input" | "year">(() =>
-    isMandatory || !StorageService.hasCompletedCourseOnboarding() ? "uni" : "input"
-  );
+  const [phase, setPhase] = useState<"uni" | "input" | "year">("uni");
   const [direction, setDirection] = useState<number>(1);
   const [courseQuery, setCourseQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -96,20 +94,14 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
-      const isFirstSetup = isMandatory || !StorageService.hasCompletedCourseOnboarding();
       setSelectedUniId(StorageService.getActiveUniversityId());
       setDirection(1);
-      setPhase(isFirstSetup ? "uni" : "input");
+      setPhase("uni");
       setCourseQuery("");
       setSearchResults([]);
       setSearchError(null);
-      if (!isFirstSetup) {
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 120);
-      }
     }
-  }, [isOpen, isMandatory]);
+  }, [isOpen]);
 
   const handleSelectUniversity = (uniId: UniversityId) => {
     triggerHapticFeedback();
@@ -473,7 +465,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 <div className="flex justify-center pb-1 shrink-0">
                   <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-white/15 text-[11px] text-zinc-300 font-medium shadow-xs">
                     <Sparkles className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span>Switch university anytime in <span className="text-white font-semibold">Settings</span></span>
+                    <span>Select your institution to browse degree courses</span>
                   </div>
                 </div>
               </motion.div>
