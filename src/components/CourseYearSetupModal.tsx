@@ -6,13 +6,18 @@ import {
   Loader2,
   GraduationCap,
   ArrowRight,
-  Pencil
+  Pencil,
+  ChevronLeft,
+  Building2,
+  Sparkles,
 } from "lucide-react";
 import { ProgramSearchResult } from "../types/timetable";
 import { TimetableAPI } from "../services/apiClient";
 import { parseProgramCodeAndTitle } from "../services/transformer";
 import { CourseYearDial, YearOption } from "./CourseYearDial";
 import { StorageService } from "../services/storage";
+import { UniversityId, UNIVERSITY_LIST } from "../config/timetableConfig";
+import { triggerHapticFeedback } from "../services/haptics";
 
 interface CourseYearSetupModalProps {
   isOpen: boolean;
@@ -63,11 +68,15 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   onSelectProgram,
   currentProgramId: _currentProgramId,
 }) => {
-  const activeUniId = StorageService.getActiveUniversityId();
-  const popularCourses = POPULAR_COURSES_BY_UNI[activeUniId] || POPULAR_COURSES_BY_UNI.tudublin;
+  const [selectedUniId, setSelectedUniId] = useState<UniversityId>(() =>
+    StorageService.getActiveUniversityId()
+  );
+  const popularCourses = POPULAR_COURSES_BY_UNI[selectedUniId] || POPULAR_COURSES_BY_UNI.tudublin;
 
-  // Phase state: "input" (course ID entry) -> "year" (course minimized to left, dial visible)
-  const [phase, setPhase] = useState<"input" | "year">("input");
+  // Phase state: "uni" (university selection) -> "input" (course ID entry) -> "year" (course minimized to left, dial visible)
+  const [phase, setPhase] = useState<"uni" | "input" | "year">(() =>
+    isMandatory || !StorageService.hasCompletedCourseOnboarding() ? "uni" : "input"
+  );
   const [direction, setDirection] = useState<number>(1);
   const [courseQuery, setCourseQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -87,16 +96,34 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
+      const isFirstSetup = isMandatory || !StorageService.hasCompletedCourseOnboarding();
+      setSelectedUniId(StorageService.getActiveUniversityId());
       setDirection(1);
-      setPhase("input");
+      setPhase(isFirstSetup ? "uni" : "input");
       setCourseQuery("");
       setSearchResults([]);
       setSearchError(null);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 120);
+      if (!isFirstSetup) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 120);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, isMandatory]);
+
+  const handleSelectUniversity = (uniId: UniversityId) => {
+    triggerHapticFeedback();
+    setSelectedUniId(uniId);
+    StorageService.setActiveUniversityId(uniId);
+    setCourseQuery("");
+    setSearchResults([]);
+    setSearchError(null);
+    setDirection(1);
+    setPhase("input");
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 120);
+  };
 
   // Debounced search when user types
   useEffect(() => {
@@ -297,17 +324,38 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           className="px-6 pt-5 pb-3 flex items-center justify-between z-40 relative border-b border-white/15 bg-black course-setup-header"
           style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 20px)" }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 course-step-badge">
-            <span className="w-2 h-2 rounded-full bg-zinc-300 course-step-dot" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-100 course-step-text">
-              {phase === "input" ? "Step 1 • Enter Course ID" : "Step 2 • Select Course Year"}
-            </span>
+          <div className="flex items-center gap-2">
+            {phase !== "uni" && (
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHapticFeedback();
+                  setDirection(-1);
+                  if (phase === "year") setPhase("input");
+                  else if (phase === "input") setPhase("uni");
+                }}
+                className="p-1.5 rounded-lg text-white border border-white/20 hover:bg-zinc-800 transition-colors cursor-pointer"
+                title="Go back"
+              >
+                <ChevronLeft className="w-4 h-4 text-white" />
+              </button>
+            )}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-100 course-step-badge">
+              <span className="w-2 h-2 rounded-full bg-zinc-300 course-step-dot" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-100 course-step-text">
+                {phase === "uni"
+                  ? "Step 1 • Choose University"
+                  : phase === "input"
+                  ? "Step 2 • Enter Course ID"
+                  : "Step 3 • Select Course Year"}
+              </span>
+            </div>
           </div>
 
           {!isMandatory && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-white border border-white/20 hover:bg-zinc-800 transition-colors course-close-btn"
+              className="p-1.5 rounded-lg text-white border border-white/20 hover:bg-zinc-800 transition-colors course-close-btn cursor-pointer"
             >
               <X className="w-5 h-5 text-white" />
             </button>
@@ -317,6 +365,120 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
         {/* Dynamic Body Content */}
         <div className="flex-1 relative overflow-hidden bg-black text-white w-full">
           <AnimatePresence initial={false} custom={direction}>
+            {/* ========================================================= */}
+            {/* PHASE 0: CHOOSE YOUR UNIVERSITY (STEP 1 ON FIRST SETUP)   */}
+            {/* ========================================================= */}
+            {phase === "uni" && (
+              <motion.div
+                key="uni-phase"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+                className="absolute inset-0 w-full h-full flex flex-col justify-between max-w-lg mx-auto px-4 sm:px-6 py-4 sm:py-6 z-10 select-none overflow-hidden"
+              >
+                {/* Header */}
+                <div className="text-center pt-1 sm:pt-2 shrink-0">
+                  <div className="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-zinc-900 border border-zinc-700 mb-2.5 shadow-md">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
+                    Select Your University
+                  </h2>
+                  <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto font-medium leading-normal">
+                    Choose your university to load official lecture timetables and course modules.
+                  </p>
+                </div>
+
+                {/* University Options List */}
+                <div className="space-y-2.5 my-auto w-full shrink-0">
+                  {UNIVERSITY_LIST.map((uni) => {
+                    const isSelected = selectedUniId === uni.id;
+                    const isTudublin = uni.id === "tudublin";
+                    const exampleCodes = isTudublin
+                      ? ["TU856", "TU857", "TU756"]
+                      : ["COMSCI", "CASE", "BSI"];
+                    const campusLocation = isTudublin
+                      ? "Grangegorman • Tallaght • Bolton St"
+                      : "Glasnevin • St Patrick's";
+
+                    return (
+                      <button
+                        key={uni.id}
+                        type="button"
+                        onClick={() => handleSelectUniversity(uni.id)}
+                        className={`group w-full p-3 sm:p-4 rounded-2xl border text-left transition-all duration-200 relative overflow-hidden flex flex-col justify-between cursor-pointer active:scale-[0.98] ${
+                          isSelected
+                            ? "bg-zinc-900/95 border-white/60 shadow-xl ring-2 ring-white/30"
+                            : "bg-zinc-950/80 hover:bg-zinc-900/90 border-white/20 hover:border-white/40 shadow-md"
+                        }`}
+                      >
+                        {/* Ambient Card Glow */}
+                        <div
+                          className={`absolute -right-8 -bottom-8 w-28 h-28 rounded-full blur-2xl pointer-events-none opacity-25 group-hover:opacity-45 transition-opacity ${
+                            isTudublin ? "bg-cyan-500" : "bg-emerald-500"
+                          }`}
+                        />
+
+                        {/* Main row: Icon + Names + Arrow */}
+                        <div className="flex items-center justify-between gap-3 w-full">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div
+                              className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border shrink-0 shadow-xs ${
+                                isTudublin
+                                  ? "bg-cyan-500/10 text-cyan-300 border-cyan-500/30"
+                                  : "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
+                              }`}
+                            >
+                              <Building2 className="w-5 h-5" />
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="font-black text-lg sm:text-xl text-white tracking-tight leading-snug truncate">
+                                {uni.shortName}
+                              </div>
+                              <div className="text-[11px] font-semibold text-zinc-400 leading-none truncate mt-0.5">
+                                {uni.name}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center text-white shrink-0 group-hover:border-white/50 group-hover:bg-zinc-800 transition-all">
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </div>
+
+                        {/* Sub row: Campuses & Example codes */}
+                        <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between gap-2 text-[10px] text-zinc-400 font-medium">
+                          <span className="truncate">{campusLocation}</span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {exampleCodes.map((code) => (
+                              <span
+                                key={code}
+                                className="font-bold px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-300 border border-white/10"
+                              >
+                                {code}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Footnote Badge */}
+                <div className="flex justify-center pb-1 shrink-0">
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-white/15 text-[11px] text-zinc-300 font-medium shadow-xs">
+                    <Sparkles className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                    <span>Switch university anytime in <span className="text-white font-semibold">Settings</span></span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* ========================================================= */}
             {/* PHASE 1: ENTER COURSE ID                                  */}
             {/* ========================================================= */}
@@ -331,6 +493,26 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 transition={slideTransition}
                 className="absolute inset-0 w-full h-full flex flex-col justify-center max-w-lg mx-auto px-4 sm:px-8 py-2 z-10"
               >
+                {/* Active University Switcher Badge */}
+                <div className="flex items-center justify-center mb-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHapticFeedback();
+                      setDirection(-1);
+                      setPhase("uni");
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 border border-white/20 text-xs font-bold text-zinc-200 hover:text-white hover:bg-zinc-800 hover:border-white/40 transition-all cursor-pointer shadow-xs active:scale-95 group"
+                    title="Change University"
+                  >
+                    <Building2 className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                    <span>{selectedUniId === "dcu" ? "DCU" : "TU Dublin"}</span>
+                    <span className="text-[10px] text-zinc-500 group-hover:text-zinc-300 font-normal">
+                      • Change
+                    </span>
+                  </button>
+                </div>
+
                 <div className="text-center mb-5">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-800 text-white border border-zinc-700 mb-3">
                     <GraduationCap className="w-6 h-6 text-white" />
@@ -339,7 +521,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                     Enter Your Course ID
                   </h2>
                   <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-sm mx-auto font-medium">
-                    Type your degree code (e.g. <span className="font-bold text-white">{activeUniId === "dcu" ? "COMSCI" : "TU856"}</span>) or keyword to find your timetable.
+                    Type your degree code (e.g. <span className="font-bold text-white">{selectedUniId === "dcu" ? "COMSCI" : "TU856"}</span>) or keyword to find your timetable.
                   </p>
                 </div>
 
@@ -356,7 +538,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                         handleSelectCourse(courseQuery.trim());
                       }
                     }}
-                    placeholder={activeUniId === "dcu" ? "e.g. COMSCI, CASE, BSI..." : "e.g. TU856, TU857, TU756..."}
+                    placeholder={selectedUniId === "dcu" ? "e.g. COMSCI, CASE, BSI..." : "e.g. TU856, TU857, TU756..."}
                     className="w-full pl-3 pr-3 py-3 bg-transparent text-white placeholder-zinc-500 font-bold text-base focus:outline-none"
                   />
                   {courseQuery ? (
@@ -377,7 +559,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                 {isSearching && (
                   <div className="flex items-center justify-center py-4 text-white gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span className="text-xs font-bold">Checking {activeUniId === "dcu" ? "DCU" : "TU Dublin"} timetable records...</span>
+                    <span className="text-xs font-bold">Checking {selectedUniId === "dcu" ? "DCU" : "TU Dublin"} timetable records...</span>
                   </div>
                 )}
 
@@ -441,7 +623,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                               {c.name.split(" (")[0]}
                             </div>
                             <div className="text-[10px] text-zinc-400 font-medium truncate">
-                              {activeUniId === "dcu" ? "DCU" : "TU Dublin"}
+                              {selectedUniId === "dcu" ? "DCU" : "TU Dublin"}
                             </div>
                           </div>
                         </div>
