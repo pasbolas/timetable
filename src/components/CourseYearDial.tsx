@@ -1,6 +1,26 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { triggerHapticFeedback } from "../services/haptics";
 
+// ── Orb colour palette ──────────────────────────────────────────────────────
+const ORB_PALETTE = ["#DE838D","#83B4DE","#83DEB4","#DEC883","#B483DE"];
+
+function hexToRgb(hex: string) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16),
+    g: parseInt(hex.slice(3, 5), 16),
+    b: parseInt(hex.slice(5, 7), 16),
+  };
+}
+
+/** Linear-interpolate between two hex colours, returns an rgb() string */
+function lerpColor(a: string, b: string, t: number): string {
+  const ca = hexToRgb(a), cb = hexToRgb(b);
+  const r  = Math.round(ca.r + (cb.r - ca.r) * t);
+  const g  = Math.round(ca.g + (cb.g - ca.g) * t);
+  const bl = Math.round(ca.b + (cb.b - ca.b) * t);
+  return `rgb(${r},${g},${bl})`;
+}
+
 export interface YearOption {
   yearNumber: number; // e.g. 1, 2, 3, 4, 5
   yearCode: string;   // e.g. "01", "02", "03", "04", "05"
@@ -196,11 +216,61 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
       className={`relative w-full h-full select-none touch-none overflow-hidden flex items-center ${className}`}
       style={{ minHeight: "380px" }}
     >
+      {/* Compute dynamic per-year colours from continuous visualIndex */}
+      {(() => {
+        // (colours computed inline below in defs via dynamicOrbColors)
+        return null;
+      })()}
+
       {/* Complete Unified SVG Dial for Perfect Subpixel Alignment */}
       <svg
         className="absolute inset-0 w-full h-full"
-        style={{ overflow: "visible" }}
+        style={{ overflow: "hidden" }}
       >
+        <defs>
+          {/* Dynamic per-year orb gradients — recomputed every render from lerpColor */}
+          {ORB_PALETTE.map((ownColor, i) => {
+            const clampedVI  = Math.max(0, Math.min(ORB_PALETTE.length - 1, visualIndex));
+            const fromIdx    = Math.floor(clampedVI);
+            const toIdx      = Math.min(ORB_PALETTE.length - 1, fromIdx + 1);
+            const frac       = clampedVI - fromIdx;
+            const activeBlend = lerpColor(ORB_PALETTE[fromIdx], ORB_PALETTE[toIdx], frac);
+            const dist       = Math.abs(i - visualIndex);
+            const proximity  = Math.max(0, 1 - dist * 1.2);
+            const color      = lerpColor(ownColor, activeBlend, proximity * 0.75);
+            return (
+              <radialGradient key={i} id={`orbYear${i}`} cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox">
+                <stop offset="0%"   stopColor={color} stopOpacity="1" />
+                <stop offset="100%" stopColor={color} stopOpacity="0" />
+              </radialGradient>
+            );
+          })}
+          {/* Mist blur — selected (heavy) */}
+          <filter id="mistSelected" x="-80%" y="-80%" width="260%" height="260%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="28" />
+          </filter>
+          {/* Mist blur — inactive (lighter) */}
+          <filter id="mistDim" x="-80%" y="-80%" width="260%" height="260%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="18" />
+          </filter>
+          {/* Clip orbs to INSIDE of arc only — prevents bleeding onto numbers */}
+          <clipPath id="orbInnerClip">
+            <path d={`
+              M ${pTop.x.toFixed(1)},0
+              L 0,0
+              L 0,${dimensions.height}
+              L ${pBottom.x.toFixed(1)},${dimensions.height}
+              L ${pBottom.x.toFixed(1)},${pBottom.y.toFixed(1)}
+              A ${radius} ${radius} 0 0,0 ${pTop.x.toFixed(1)},${pTop.y.toFixed(1)}
+              Z
+            `} />
+          </clipPath>
+          {/* Clip to SVG canvas */}
+          <clipPath id="dialClip">
+            <rect x="0" y="0" width={dimensions.width} height={dimensions.height} />
+          </clipPath>
+        </defs>
+
         {/* Subtle Arc Path */}
         <path
           d={arcPathData}
@@ -235,8 +305,25 @@ export const CourseYearDial: React.FC<CourseYearDialProps> = ({
 
           const opacity = isSelected ? 1 : Math.max(0.18, 1 - distanceToActive * 0.38);
 
+          // ── Orb geometry ──────────────────────────────────────────────────────
+          const orbRadius  = isSelected ? 110 : 65;
+          const orbOpacity = isSelected ? 1 : 0.80;
+          const orbCx      = coords.x - 55 * nx;
+          const orbCy      = coords.y - 55 * ny;
+          const orbGradId  = `orbYear${index % ORB_PALETTE.length}`;
+
           return (
-            <g key={`year-item-${year.yearNumber}`}>
+            <g key={`year-item-${year.yearNumber}`} clipPath="url(#dialClip)">
+              {/* Wrap in clip group so clip applies AFTER the blur filter */}
+              <g clipPath="url(#orbInnerClip)">
+                <circle
+                  cx={orbCx} cy={orbCy} r={orbRadius}
+                  fill={`url(#${orbGradId})`}
+                  filter={isSelected ? "url(#mistSelected)" : "url(#mistDim)"}
+                  style={{ opacity: orbOpacity }}
+                />
+              </g>
+
               {/* Dot on the Arc for this item */}
               <circle
                 cx={coords.x}

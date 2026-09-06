@@ -429,7 +429,7 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                     <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                       Lecturer / Instructor
                     </div>
-                    <div className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mt-0.5">
+                    <div className="text-sm font-bold text-black dark:text-white mt-0.5">
                       {lesson.staffName.includes(",")
                         ? `${lesson.staffName.split(",")[1].trim()} ${lesson.staffName.split(",")[0].trim()}`
                         : lesson.staffName}
@@ -441,18 +441,10 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
               {/* Multi-group Breakdown if collapsed: Spaced, Clean & Visually Pleasing */}
               {lesson.collapsedLocations && lesson.Locations && lesson.Locations.length > 0 && (
                 <div className="space-y-3 pt-1">
-                  <div className="flex items-center justify-between px-1">
+                  <div className="flex items-center justify-center px-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
                       <Users className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
                       <span>Sub-Groups & Rooms</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-semibold text-zinc-500 hidden sm:inline">
-                        Tap heart to favourite
-                      </span>
-                      <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 px-2.5 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-800">
-                        {lesson.Locations.length} Groups
-                      </span>
                     </div>
                   </div>
 
@@ -476,17 +468,35 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
                       );
 
                       return (
-                        <div
+                        <motion.div
+                          layout
                           key={`${loc.originalIdx}-${groupLabel}`}
-                          className={`p-3.5 sm:p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800 space-y-2.5 transition-all ${
-                            isFav ? "ring-1.5 ring-zinc-400 dark:ring-zinc-500 bg-zinc-100 dark:bg-zinc-900/90" : ""
+                          transition={{
+                            layout: {
+                              type: "spring",
+                              stiffness: 350,
+                              damping: 28,
+                              mass: 0.8,
+                            },
+                          }}
+                          className={`p-3.5 sm:p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800 space-y-2.5 transition-colors duration-200 ${
+                            isFav
+                              ? "ring-1.5 ring-zinc-400 dark:ring-zinc-500 bg-zinc-100 dark:bg-zinc-900/90 relative z-10 shadow-sm"
+                              : "relative z-0"
                           }`}
                         >
                           {/* Header: Group Badge + Room Tag & Favourite Heart Button */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1.5 flex-1 min-w-0">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold text-xs tracking-tight border border-zinc-300/80 dark:border-zinc-700">
-                                <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 dark:bg-zinc-400" />
+                              <span
+                                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl font-bold text-xs tracking-tight shadow-xs border"
+                                style={{
+                                  backgroundColor: "#DE838D",
+                                  borderColor: "#c96e78",
+                                  color: "#ffffff",
+                                }}
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-white/90" />
                                 {groupLabel}
                               </span>
 
@@ -500,9 +510,15 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                             {/* Right side: Room Tag with Heart Favourite Button under it */}
                             <div className="flex flex-col items-end gap-1.5 shrink-0">
-                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 shadow-xs">
-                                <MapPin className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
-                                <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                              <div
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl shadow-xs border text-slate-800 dark:text-sky-100"
+                                style={{
+                                  backgroundColor: "rgba(155, 183, 212, 0.22)",
+                                  borderColor: "rgba(155, 183, 212, 0.5)",
+                                }}
+                              >
+                                <MapPin className="w-3.5 h-3.5 shrink-0 text-slate-600 dark:text-sky-300" />
+                                <span className="text-xs font-bold">
                                   {roomCode}
                                 </span>
                               </div>
@@ -537,14 +553,14 @@ export const LessonDetailModal: React.FC<LessonDetailModalProps> = ({
 
                           {/* Instructor Line */}
                           {staffFormatted && (
-                            <div className="flex items-center gap-2 pt-1 border-t border-zinc-200 dark:border-zinc-800/80 text-xs text-zinc-500 dark:text-zinc-400 pl-1">
-                              <User className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                            <div className="flex items-center gap-2 pt-1 border-t border-zinc-200 dark:border-zinc-800/80 text-xs pl-1">
+                              <User className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-300 shrink-0" />
+                              <span className="font-bold text-black dark:text-white">
                                 {staffFormatted}
                               </span>
                             </div>
                           )}
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>

@@ -321,7 +321,7 @@ export const WeekDateStrip: React.FC<WeekDateStripProps> = ({
       <footer
         className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none w-full px-3 sm:px-4 transition-all flex flex-col items-center justify-end md:hidden"
         style={{
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)",
           paddingTop: "4px",
         }}
       >

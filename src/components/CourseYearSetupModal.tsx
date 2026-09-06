@@ -272,7 +272,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
               </div>
 
               {/* Main Course ID Input Bar - Plain 2D */}
-              <div className="relative flex items-center w-full rounded-xl bg-zinc-950 border border-white/25 mb-3.5 transition-colors">
+              <div className="relative flex items-center w-full rounded-xl bg-zinc-950 mb-3.5 transition-colors" style={{ border: "1.5px solid #56352D" }}>
                 <Search className="w-5 h-5 ml-3.5 text-white shrink-0" />
                 <input
                   ref={inputRef}
@@ -326,7 +326,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                       >
                         <div className="min-w-0 pr-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-100 shrink-0 border border-zinc-700">
+                            <span className="text-xs font-bold px-2 py-0.5 rounded shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
                               {baseCode}
                             </span>
                             <span className="text-xs font-bold text-white truncate">
@@ -361,7 +361,7 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
                       className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-white/20 transition-colors text-left"
                     >
                       <div className="flex items-center gap-2.5 min-w-0 pr-1">
-                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-zinc-800 text-zinc-100 shrink-0 border border-zinc-700">
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold shrink-0 border border-zinc-700" style={{ background: '#DE838D', color: '#fff' }}>
                           {c.code}
                         </span>
                         <div className="min-w-0">
@@ -385,9 +385,9 @@ export const CourseYearSetupModal: React.FC<CourseYearSetupModalProps> = ({
           {/* PHASE 2: COURSE MINIMISED TO LEFT + ROTARY YEAR DIAL       */}
           {/* ========================================================= */}
           {phase === "year" && (
-            <div className="flex-1 flex flex-col relative w-full h-full bg-black text-white">
+            <div className="flex-1 flex flex-col relative w-full h-full bg-black text-white -mx-4 sm:-mx-8">
               {/* Minimized Course Badge / Card on the Left */}
-              <div className="flex items-center justify-between pb-2 z-40">
+              <div className="flex items-center justify-between pb-2 z-40 px-4 sm:px-8">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/25 transition-colors">
                   <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-100 border border-zinc-700">
                     {selectedCourseCode}
