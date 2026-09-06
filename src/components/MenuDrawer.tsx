@@ -114,6 +114,24 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
     }
   }, [isOpen]);
 
+  // Keyboard accessibility: Escape cleanly steps back or closes
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (isAboutOpen) {
+          setIsAboutOpen(false);
+        } else if (isMoreOpen) {
+          setIsMoreOpen(false);
+        } else {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, isMoreOpen, isAboutOpen, onClose]);
+
   const [activeUniversityId, setActiveUniversityId] = React.useState<UniversityId>(() =>
     StorageService.getActiveUniversityId()
   );
@@ -278,51 +296,52 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               </div>
 
               {/* Preference Drawer Header Area */}
-              <div
-                className="preference-drawer-header shrink-0 relative z-10 cursor-grab active:cursor-grabbing touch-none select-none"
-                onPointerDown={(e) => mainDragControls.start(e)}
-              >
-              {/* Big Minimise Handle at the Top */}
-              <motion.div
-                onClick={() => {
-                  triggerHapticFeedback();
-                  onClose();
-                }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.92 }}
-                className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
-                title="Tap or drag down to minimise"
-              >
-                <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
-              </motion.div>
+              <div className="preference-drawer-header shrink-0 relative z-10 select-none">
+                {/* Big Minimise Handle at the Top */}
+                <motion.div
+                  onPointerDown={(e) => mainDragControls.start(e)}
+                  onClick={() => {
+                    triggerHapticFeedback();
+                    onClose();
+                  }}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="w-full pt-3.5 pb-2 cursor-grab active:cursor-grabbing touch-none flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
+                  title="Tap or drag down to minimise"
+                >
+                  <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
+                </motion.div>
 
-              {/* Drawer Header */}
-              <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0 preference-drawer-icon-box">
-                    <GraduationCap className="w-5 h-5 text-white" />
+                {/* Drawer Header */}
+                <div className="px-4 py-3 border-b border-white/15 flex items-center justify-between shrink-0 bg-black/85 backdrop-blur-md relative z-10 preference-drawer-bar">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center shrink-0 preference-drawer-icon-box">
+                      <GraduationCap className="w-5 h-5 text-white" />
+                    </div>
+                    <h2 className="font-black text-lg sm:text-xl text-white tracking-tight leading-none m-0 p-0 preference-drawer-title">
+                      Preference
+                    </h2>
                   </div>
-                  <h2 className="font-black text-lg sm:text-xl text-white tracking-tight leading-none m-0 p-0 preference-drawer-title">
-                    Preference
-                  </h2>
-                </div>
 
-                <div className="flex items-center gap-1.5">
-                  {isOffline && (
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-white/20 bg-zinc-900 text-white font-bold">
-                      <WifiOff className="w-2.5 h-2.5 text-white" />
-                      Offline
-                    </span>
-                  )}
-                  <button
-                    onClick={onClose}
-                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn"
-                  >
-                    <X className="w-5 h-5 text-white" />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {isOffline && (
+                      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-white/20 bg-zinc-900 text-white font-bold">
+                        <WifiOff className="w-2.5 h-2.5 text-white" />
+                        Offline
+                      </span>
+                    )}
+                    <button
+                      onClick={onClose}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer"
+                      title="Close"
+                    >
+                      <X className="w-5 h-5 text-white" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
             {/* Drawer Scrollable Body */}
             <div
@@ -651,6 +670,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/75 backdrop-blur-md cursor-pointer drawer-backdrop"
             onClick={() => setIsMoreOpen(false)}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              setIsMoreOpen(false);
+            }}
           />
 
           {/* More Sheet Container */}
@@ -716,19 +739,17 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                   </div>
 
                   {/* More Settings Drawer Header Area */}
-                  <div
-                    className="preference-drawer-header shrink-0 relative z-10 cursor-grab active:cursor-grabbing touch-none select-none"
-                    onPointerDown={(e) => moreDragControls.start(e)}
-                  >
+                  <div className="preference-drawer-header shrink-0 relative z-10 select-none">
                     {/* Minimise Handle at the Top */}
                     <motion.div
+                      onPointerDown={(e) => moreDragControls.start(e)}
                       onClick={() => {
                         triggerHapticFeedback();
                         setIsMoreOpen(false);
                       }}
                       whileHover={{ scale: 1.04 }}
                       whileTap={{ scale: 0.92 }}
-                      className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
+                      className="w-full pt-3.5 pb-2 cursor-grab active:cursor-grabbing touch-none flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
                       title="Tap or drag down to minimise"
                     >
                       <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
@@ -741,7 +762,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                           triggerHapticFeedback();
                           setIsMoreOpen(false);
                         }}
-                        className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer"
                         title="Back to preferences"
                       >
                         <ChevronLeft className="w-3.5 h-3.5 text-white" />
@@ -760,7 +783,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                           setIsMoreOpen(false);
                           onClose();
                         }}
-                        className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer"
                         title="Close"
                       >
                         <X className="w-5 h-5 text-white" />
@@ -955,6 +980,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/75 backdrop-blur-md cursor-pointer drawer-backdrop"
               onClick={() => setIsAboutOpen(false)}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                setIsAboutOpen(false);
+              }}
             />
 
             {/* About Sheet Container */}
@@ -989,7 +1018,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={{ top: 0, bottom: 0.4 }}
               onDragEnd={(_, info) => {
-                if (info.offset.y > 80 || info.velocity.y > 320) {
+                if (info.offset.y > 60 || info.velocity.y > 250) {
                   triggerHapticFeedback();
                   setIsAboutOpen(false);
                 }
@@ -1020,19 +1049,17 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               </div>
 
               {/* About Drawer Header Area */}
-              <div
-                className="preference-drawer-header shrink-0 relative z-10 cursor-grab active:cursor-grabbing touch-none select-none"
-                onPointerDown={(e) => aboutDragControls.start(e)}
-              >
+              <div className="preference-drawer-header shrink-0 relative z-10 select-none">
                 {/* Minimise Handle */}
                 <motion.div
+                  onPointerDown={(e) => aboutDragControls.start(e)}
                   onClick={() => {
                     triggerHapticFeedback();
                     setIsAboutOpen(false);
                   }}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.92 }}
-                  className="w-full pt-3.5 pb-2 cursor-pointer flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
+                  className="w-full pt-3.5 pb-2 cursor-grab active:cursor-grabbing touch-none flex flex-col items-center justify-center group transition-transform shrink-0 relative z-10"
                   title="Tap or drag down to minimise"
                 >
                   <div className="w-20 h-2 bg-zinc-600 group-hover:bg-zinc-500 rounded-full transition-colors shadow-xs preference-drawer-handle" />
@@ -1045,7 +1072,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                       triggerHapticFeedback();
                       setIsAboutOpen(false);
                     }}
-                    className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1.5 text-xs font-bold py-1 px-2.5 rounded-xl border border-white/20 hover:bg-zinc-900 text-white transition-colors preference-drawer-back-btn cursor-pointer"
                     title="Back to preferences"
                   >
                     <ChevronLeft className="w-3.5 h-3.5 text-white" />
@@ -1064,7 +1093,9 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                       setIsAboutOpen(false);
                       onClose();
                     }}
-                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-xl text-white border border-white/20 hover:bg-zinc-900 active:scale-95 transition-all preference-drawer-close-btn cursor-pointer"
                     title="Close"
                   >
                     <X className="w-5 h-5 text-white" />
@@ -1073,7 +1104,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
               </div>
 
               {/* Scrollable Body */}
-              <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4 pb-0 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y">
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4 pb-12 space-y-4 no-scrollbar bg-transparent relative z-10 flex flex-col touch-pan-y scroll-smooth">
                 {/* Hero Avatar Card */}
                 <div className="flex flex-col items-center text-center pt-2">
                   <div className="relative mb-3 group">
@@ -1117,7 +1148,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
 
                 {/* Rick & Morty Peeking Sticker Attached to Bottom */}
                 <div
-                  className="mt-auto pt-6 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-5 -mb-px shrink-0 leading-none"
+                  className="pt-6 pb-4 flex justify-center items-end select-none pointer-events-none overflow-hidden -mx-5 -mb-px shrink-0 leading-none"
                 >
                   <img
                     src="/rick-morty-clean.png?v=2"
